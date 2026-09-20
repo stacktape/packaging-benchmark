@@ -1,0 +1,96 @@
+name: benchmark
+
+# Runs the same runner as a local run, on ubuntu-latest.
+#
+# A hosted runner is a noisy, shared, two-core machine. Use this workflow to check that the benchmark still
+# runs end to end and that the fixtures still package, not to produce numbers worth quoting. Timings from a
+# hosted runner should never be compared with timings from a developer machine.
+#
+# Secrets and variables this workflow reads, all optional:
+#
+#   secrets.SERVERLESS_ACCESS_KEY   a Serverless Framework v4 licence key. Without it, `serverless package`
+#                                   refuses to run and the Serverless rows are recorded as blocked.
+#   secrets.AWS_ROLE_TO_ASSUME      an IAM role with sts:GetCallerIdentity only. Stacktape's `package` resolves
+#                                   AWS identity because the account and region take part in stable resource
+#                                   names. It deploys nothing. Without it, the Stacktape rows are skipped.
+#   vars.AWS_REGION                 default eu-west-1.
+#
+# SST is not run here and cannot be: it has no packaging command that does not bootstrap an AWS account.
+# See fixtures/sst/README.md.
+#
+# The Stacktape CLI: this repository pins a published `stacktape` version. The numbers in results/RESULTS.md
+# in this repository were produced with a source build of the Stacktape monorepo instead; set STACKTAPE_REPO
+# to a checkout of it to reproduce that, or install the published CLI and point the runner at it.
+
+on:
+  workflow_dispatch:
+    inputs:
+      shapes:
+        description: 'Comma-separated shape ids (default: all)'
+        required: false
+        default: ''
+      samples:
+        description: 'Samples per measurement'
+        required: false
+        default: '3'
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: '11.17.0'
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: '1.4.1'
+
+      - name: Configure AWS credentials (read-only identity for Stacktape)
+        if: ${{ secrets.AWS_ROLE_TO_ASSUME != '' }}
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-region: ${{ vars.AWS_REGION || 'eu-west-1' }}
+
+      - name: Generate fixtures
+        run: node fixtures/generate.ts
+
+      - name: Install fixtures
+        run: node bench/run.ts install
+        env:
+          BENCH_SHAPES: ${{ inputs.shapes }}
+
+      - name: Pull container base images
+        run: |
+          docker pull --quiet node:24-slim
+          docker pull --quiet node:24
+
+      - name: Run the benchmark
+        run: node bench/run.ts all
+        env:
+          BENCH_SHAPES: ${{ inputs.shapes }}
+          BENCH_SAMPLES: ${{ inputs.samples }}
+          BENCH_AWS_REGION: ${{ vars.AWS_REGION || 'eu-west-1' }}
+          SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
+          # Deliberately not set: BENCH_ALLOW_SST_AWS_BOOTSTRAP. SST's only non-deploy path bootstraps AWS.
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: results
+          path: |
+            results/results.json
+            results/RESULTS.md
+            tmp/run.log

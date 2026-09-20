@@ -347,20 +347,44 @@ const lambda = () => {
 // S5 incremental
 // ---------------------------------------------------------------------------
 
+const INCREMENTAL_SCENARIOS = [
+  {
+    id: 'handler',
+    label: 'one statement appended to one handler',
+    file: (dir: string) => join(dir, 'src', 'handlers', handlerFileName(1)),
+    edit: (source: string) =>
+      `${source}\nexport const benchmarkTouch = 'S5 one-line change to ${handlerFileName(1)}';\n`
+  },
+  {
+    // An appended unused export is tree-shaken out of a non-entry module, so the shared-code scenario
+    // edits a string literal on a code path every handler actually runs.
+    id: 'shared-lib',
+    label: 'one line changed in lib/util.ts, which every handler imports',
+    file: (dir: string) => join(dir, 'src', 'lib', 'util.ts'),
+    edit: (source: string) => {
+      const edited = source.replace(
+        "'content-type': 'application/json'",
+        "'content-type': 'application/json; charset=utf-8'"
+      );
+      if (edited === source) throw new Error('shared-lib scenario found nothing to change in lib/util.ts');
+      return edited;
+    }
+  }
+] as const;
+
+const INCREMENTAL_REPEATS = Number(process.env.BENCH_INCREMENTAL_REPEATS ?? 3);
+
 const incremental = () => {
   const results = loadResults();
   results.incremental = [];
   const shape = SHAPES.find((s) => s.id === 'n25')!;
+  const config: ConfigName = 'likeforlike';
 
   for (const toolId of TOOLS) {
     const adapter = adapters[toolId];
     if (!adapter.availability().ok) continue;
     const dir = projectDir(shape.id, toolId);
     if (!exists(join(dir, 'node_modules'))) continue;
-
-    const handlerPath = join(dir, 'src', 'handlers', handlerFileName(1));
-    const original = readFileSync(handlerPath, 'utf8');
-    const config: ConfigName = 'likeforlike';
 
     const packageOnce = () => {
       const prepared = adapter.prepare(dir, config);
@@ -371,29 +395,56 @@ const incremental = () => {
       return { ok: result.exitCode === 0, wallMs: Math.round(result.wallMs), artifacts };
     };
 
-    try {
-      adapter.cleanCaches(dir, config);
-      const run1 = packageOnce();
-      writeFileSync(
-        handlerPath,
-        `${original}\nexport const benchmarkTouch = 'S5 one-line change to ${handlerFileName(1)}';\n`
-      );
-      const run2 = packageOnce();
-      const run3 = packageOnce();
-      writeFileSync(handlerPath, original);
+    for (const scenario of INCREMENTAL_SCENARIOS) {
+      const path = scenario.file(dir);
+      const original = readFileSync(path, 'utf8');
+      const first: number[] = [];
+      const changed: number[] = [];
+      const unchanged: number[] = [];
+      let lastDiffs: { byChange: unknown; byNoChange: unknown } | null = null;
+      let ok = true;
+
+      try {
+        for (let repeat = 0; repeat < INCREMENTAL_REPEATS; repeat += 1) {
+          writeFileSync(path, original);
+          adapter.cleanCaches(dir, config);
+          const run1 = packageOnce();
+          writeFileSync(path, scenario.edit(original));
+          const run2 = packageOnce();
+          // Run 3 leaves the file exactly as run 2 left it: nothing changed since the previous package.
+          const run3 = packageOnce();
+          first.push(run1.wallMs);
+          changed.push(run2.wallMs);
+          unchanged.push(run3.wallMs);
+          ok = ok && run1.ok && run2.ok && run3.ok;
+          lastDiffs = {
+            byChange: diffArtifacts(run1.artifacts, run2.artifacts),
+            byNoChange: diffArtifacts(run2.artifacts, run3.artifacts)
+          };
+        }
+      } finally {
+        writeFileSync(path, original);
+      }
 
       results.incremental.push({
         tool: toolId,
         shape: shape.id,
         config,
-        runs: { first: run1.wallMs, afterOneLineChange: run2.wallMs, unchanged: run3.wallMs },
-        changedByOneLineChange: diffArtifacts(run1.artifacts, run2.artifacts),
-        changedByNoChange: diffArtifacts(run1.artifacts, run3.artifacts),
-        ok: run1.ok && run2.ok && run3.ok
+        scenario: scenario.id,
+        scenarioLabel: scenario.label,
+        repeats: INCREMENTAL_REPEATS,
+        runs: {
+          first: Math.round(median(first)),
+          afterOneLineChange: Math.round(median(changed)),
+          unchanged: Math.round(median(unchanged))
+        },
+        samples: { first, afterOneLineChange: changed, unchanged },
+        changedByOneLineChange: lastDiffs?.byChange,
+        changedByNoChange: lastDiffs?.byNoChange,
+        ok
       });
-      log(`incremental ${toolId}: done`);
-    } finally {
-      writeFileSync(handlerPath, original);
+      log(`incremental ${toolId} / ${scenario.id}: done`);
+      saveResults(results);
     }
   }
   saveResults(results);

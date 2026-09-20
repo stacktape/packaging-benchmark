@@ -138,10 +138,13 @@ const createStacktapeAdapter = (ctx: ToolContext): ToolAdapter => ({
       }
     }
 
-    const reported = stdout.match(/Packaged compute resources[^(]*\(([0-9.]+)s\)/);
+    // The CLI writes colour escapes into its progress lines, so strip them before matching.
+    const plain = stdout.replace(/\[[0-9;]*m/g, '');
+    // The CLI prints its own packaging duration as either `(321ms)` or `(1.1s)`.
+    const reported = plain.match(/Packaged compute resources[^(]*\(([0-9.]+)\s*(ms|s)\)/);
     return {
       artifacts,
-      toolReportedMs: reported ? Math.round(Number(reported[1]) * 1000) : null,
+      toolReportedMs: reported ? Math.round(Number(reported[1]) * (reported[2] === 'ms' ? 1 : 1000)) : null,
       notes
     };
   },
@@ -229,13 +232,15 @@ const createCdkAdapter = (): ToolAdapter => ({
 
     for (const entry of readdirSync(out, { withFileTypes: true })) {
       if (!entry.isDirectory() || !entry.name.startsWith('asset.')) continue;
-      artifacts.push(
-        measureDirectory({
-          root: join(out, entry.name),
-          name: assetToFunction.get(entry.name) ?? entry.name,
-          kind: 'function'
-        })
-      );
+      const functionName = assetToFunction.get(entry.name);
+      if (!functionName) {
+        // An asset directory the current template no longer references: CDK names assets by content
+        // hash and leaves the previous one behind, so a warm run after a source change keeps both.
+        // Only what this synth actually produced is measured.
+        notes.push(`ignored stale asset directory ${entry.name}`);
+        continue;
+      }
+      artifacts.push(measureDirectory({ root: join(out, entry.name), name: functionName, kind: 'function' }));
     }
     if (artifacts.length === 0) notes.push('cdk.out contained no asset directories');
     return { artifacts, toolReportedMs: null, notes };

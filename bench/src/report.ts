@@ -113,36 +113,58 @@ export const writeReport = (results: Any, path: string) => {
     lines.push(table(headers, rows), '');
   }
 
-  // --- Stacktape adjusted for the source-CLI self-build ---------------------
+  // --- where Stacktape's wall clock goes ------------------------------------
   const overheadMs = (results.overhead as Any)?.medianMs as number | undefined;
-  if (overheadMs && lambda.some((m) => m.tool === 'stacktape')) {
-    lines.push('## Stacktape package time without the source-CLI self-build', '');
+  const selfReported = lambda.filter((m) => m.ok && m.toolReportedMs !== null);
+  if (overheadMs && selfReported.length > 0) {
+    lines.push('## Where the Stacktape wall clock goes', '');
     lines.push(
-      'These runs used the source-built CLI from the Stacktape monorepo. Its development wrapper rebuilds ' +
-        `the whole CLI with Bun on every invocation, which costs ${secs(overheadMs)} (median) before any ` +
-        'packaging work starts. A published Stacktape binary does not pay that. The table above is the raw ' +
-        'wall clock; this one subtracts that constant. Neither is corrected for the other tools\' own ' +
-        'start-up cost, which is included in their numbers.',
+      'These runs used the source-built CLI from the Stacktape monorepo. Its development wrapper rebuilds the ' +
+        `whole CLI with Bun on every invocation before it does anything else, which costs ${secs(overheadMs)} ` +
+        '(median, measured separately; samples below). A published Stacktape binary does not pay that - it ' +
+        'pays ordinary process start-up instead, which this benchmark did not measure.',
       ''
     );
-    const rows = SHAPE_ORDER.filter((shape) =>
-      lambda.some((m) => m.shape === shape && m.tool === 'stacktape' && m.ok)
-    ).map((shape) => {
-      const pick = (config: ConfigLike, mode: string) =>
-        lambda.find((m) => m.shape === shape && m.tool === 'stacktape' && m.config === config && m.mode === mode);
-      const adjust = (m: Any | undefined) =>
-        m?.ok ? secs(Math.max(0, m.medianMs - overheadMs)) : '-';
-      return [
-        shapeLabel[shape] ?? shape,
-        adjust(pick('likeforlike', 'cold')),
-        adjust(pick('likeforlike', 'warm')),
-        adjust(pick('defaults', 'cold')),
-        adjust(pick('defaults', 'warm'))
-      ];
-    });
+    lines.push(
+      'The CLI also prints the duration of its own packaging phase. That figure excludes process start-up, ' +
+        'configuration loading and the AWS identity lookup, so it is not comparable with any other tool here ' +
+        '- no other tool prints an equivalent - but it does separate the packaging work from the harness ' +
+        'around it. The self-build constant dominates, and only the packaging phase grows with the number ' +
+        'of functions.',
+      ''
+    );
+    lines.push(
+      'The last two columns do not add up exactly to the first. The constant was measured in its own set of ' +
+        'runs, and the run-to-run spread on this machine is a few hundred milliseconds. For the same reason ' +
+        'no adjusted package time is offered: subtracting the constant would leave a residual smaller than ' +
+        'the noise, presented as if it were a measurement.',
+      ''
+    );
+    const rows: (string | number)[][] = [];
+    for (const shape of SHAPE_ORDER) {
+      for (const config of ['likeforlike', 'defaults'] as ConfigLike[]) {
+        const m = lambda.find(
+          (x) => x.shape === shape && x.tool === 'stacktape' && x.config === config && x.mode === 'cold' && x.ok
+        );
+        if (!m) continue;
+        rows.push([
+          shapeLabel[shape] ?? shape,
+          config,
+          secs(m.medianMs),
+          secs(overheadMs),
+          m.toolReportedMs ? secs(m.toolReportedMs) : '-'
+        ]);
+      }
+    }
     lines.push(
       table(
-        ['Shape', 'like-for-like cold', 'like-for-like warm', 'defaults cold', 'defaults warm'],
+        [
+          'Shape',
+          'Configuration',
+          'Measured wall clock (cold, median)',
+          'Source-CLI self-build (constant)',
+          'Packaging phase as the CLI reports it'
+        ],
         rows
       ),
       ''
@@ -220,15 +242,21 @@ export const writeReport = (results: Any, path: string) => {
   // --- incremental ---------------------------------------------------------
   lines.push('## S5 - incremental packaging (25 functions, like-for-like)', '');
   lines.push(
-    'Package once, append one statement to one handler, package again, then package a third time with no ' +
-      'change. Artifacts are compared by the hash of their contents, not by the zip bytes, which carry ' +
-      'timestamps. Every tool here skips uploading an artifact whose hash is unchanged - CDK by asset hash, ' +
-      'SST by Pulumi asset hash, Stacktape by its own digest. Serverless Framework re-uploads everything ' +
-      'regardless.',
+    'Package once, append one statement, package again, then package a third time with nothing further ' +
+      'changed. Two scenarios: a change to one handler, and a change to a file in `lib/` that every handler ' +
+      'imports. Artifacts are compared by the hash of their contents, not by the zip bytes, which carry ' +
+      'timestamps. Times are medians over the recorded repeats.',
+    ''
+  );
+  lines.push(
+    'Every tool here skips uploading an artifact whose hash is unchanged - CDK by asset hash, SST by Pulumi ' +
+      'asset hash, Stacktape by its own digest. Serverless Framework re-uploads every function artifact on ' +
+      'every deployment regardless of whether it changed.',
     ''
   );
   const incRows = ((results.incremental ?? []) as Any[]).map((row) => [
     row.tool,
+    row.scenarioLabel ?? row.scenario ?? '-',
     secs(row.runs.first),
     secs(row.runs.afterOneLineChange),
     secs(row.runs.unchanged),
@@ -240,21 +268,31 @@ export const writeReport = (results: Any, path: string) => {
     table(
       [
         'Tool',
+        'Change',
         'Run 1',
-        'Run 2 (one line changed)',
-        'Run 3 (no change)',
+        'Run 2 (after the change)',
+        'Run 3 (nothing changed since run 2)',
         'Artifacts re-hashed by the change',
-        'Bytes re-uploaded',
-        'Artifacts re-hashed with no change'
+        'Bytes that would be re-uploaded',
+        'Artifacts re-hashed by no change'
       ],
       incRows
     ),
     ''
   );
   for (const row of (results.incremental ?? []) as Any[]) {
-    if (row.changedByOneLineChange.changedCount > 0) {
+    const names = row.changedByOneLineChange.changedNames as string[];
+    if (names.length > 0 && names.length <= 6) {
+      lines.push(`- ${row.tool}, ${row.scenario}: re-hashed ${names.join(', ')}.`);
+    } else if (names.length > 6) {
       lines.push(
-        `- ${row.tool}: the one-line change re-hashed ${row.changedByOneLineChange.changedNames.join(', ')}.`
+        `- ${row.tool}, ${row.scenario}: re-hashed ${names.length} artifacts, including ${names.slice(0, 4).join(', ')}.`
+      );
+    }
+    if (row.changedByNoChange.changedCount > 0) {
+      lines.push(
+        `- ${row.tool}, ${row.scenario}: **${row.changedByNoChange.changedCount} artifact(s) re-hashed with no ` +
+          'source change at all**, which means a redeploy would re-upload them for nothing.'
       );
     }
   }
@@ -278,17 +316,29 @@ export const writeReport = (results: Any, path: string) => {
 
   // --- containers ----------------------------------------------------------
   lines.push('## Containers', '');
+  lines.push(
+    'The same application as a long-running HTTP service. Image size is `docker image inspect ' +
+      "--format '{{.Size}}'`, the uncompressed image size. (On Docker 29 with the containerd image store, " +
+      '`docker image ls` prints a different, larger figure for the same image - it is not the number used ' +
+      'here.) Cold build prunes the build cache and passes `--no-cache`; warm rebuild changes one line of ' +
+      '`src/server.ts` and builds again with the cache on. Base images were pulled before any timing.',
+    ''
+  );
   const containerRows = ((results.containers ?? []) as Any[])
     .filter((row) => row.variant)
     .map((row) => [
       row.label ?? row.variant,
+      row.baseImage ?? '-',
       row.imageSizeBytes ? mb(row.imageSizeBytes) : '-',
       secs(row.coldBuildMs),
       secs(row.warmRebuildMs),
       row.ok ? 'ok' : `failed: ${String(row.error ?? '').slice(0, 120)}`
     ]);
   lines.push(
-    table(['Variant', 'Image size', 'Cold build (no cache)', 'Warm rebuild (one line changed)', 'Status'], containerRows),
+    table(
+      ['Variant', 'Runtime base', 'Image size', 'Cold build (no cache)', 'Warm rebuild (one line changed)', 'Status'],
+      containerRows
+    ),
     ''
   );
 

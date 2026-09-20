@@ -23,13 +23,34 @@ const dockerImageSize = (reference: string) => {
   return Number(result.stdout.trim().split('\n').pop());
 };
 
+/**
+ * repository:tag -> image id. A rebuild keeps the tag and changes the id, so comparing ids finds the
+ * image a run produced even when the tag already existed.
+ */
+/** Reads /etc/os-release out of an image, so the report can say which base each variant ships on. */
+const imageBase = (reference: string) => {
+  const result = runOnce({
+    command: 'docker',
+    args: ['run', '--rm', '--entrypoint', '/bin/sh', reference, '-c', 'cat /etc/os-release'],
+    cwd: process.cwd(),
+    timeoutMs: 120000
+  });
+  if (result.exitCode !== 0) return null;
+  return result.stdout.match(/PRETTY_NAME="([^"]+)"/)?.[1] ?? null;
+};
+
 const listImages = () => {
   const result = runOnce({
     command: 'docker',
-    args: ['image', 'ls', '--format', '{{.Repository}}:{{.Tag}}'],
+    args: ['image', 'ls', '--format', '{{.Repository}}:{{.Tag}}\t{{.ID}}'],
     cwd: process.cwd()
   });
-  return new Set(result.stdout.split('\n').map((l) => l.trim()).filter(Boolean));
+  const map = new Map<string, string>();
+  for (const line of result.stdout.split('\n')) {
+    const [reference, id] = line.split('\t');
+    if (reference && id && !reference.startsWith('<none>')) map.set(reference.trim(), id.trim());
+  }
+  return map;
 };
 
 const prunePBuildCache = () =>
@@ -91,7 +112,9 @@ export const runContainerBenchmark = ({
       variant,
       label: variant === 'expert' ? 'Expert hand-written Dockerfile' : 'Naive Dockerfile',
       ok: cold.exitCode === 0 && warm.exitCode === 0,
+      imageReference: tag,
       imageSizeBytes: size,
+      baseImage: cold.exitCode === 0 ? imageBase(tag) : null,
       coldBuildMs: Math.round(cold.wallMs),
       warmRebuildMs: Math.round(warm.wallMs),
       command: `docker builder prune -af && docker build --no-cache -t ${tag} .`,
@@ -133,12 +156,10 @@ export const runContainerBenchmark = ({
     prunePBuildCache();
     const cold = runOnce(command);
     const after = listImages();
-    const newImages = [...after].filter((image) => !before.has(image) && !image.startsWith('<none>'));
-    const candidate =
-      newImages.find((image) => image.includes(ctx.projectName)) ??
-      newImages[0] ??
-      [...after].find((image) => image.includes(ctx.projectName)) ??
-      null;
+    const touched = [...after.entries()]
+      .filter(([reference, id]) => before.get(reference) !== id)
+      .map(([reference]) => reference);
+    const candidate = touched[0] ?? null;
     const size = candidate ? dockerImageSize(candidate) : null;
 
     const revert = touchSource(stacktapeDir, 'container-stacktape');
@@ -154,6 +175,8 @@ export const runContainerBenchmark = ({
       coldBuildMs: Math.round(cold.wallMs),
       warmRebuildMs: Math.round(warm.wallMs),
       warmupMs: Math.round(warmup.wallMs),
+      imagesTouchedByTheColdBuild: touched,
+      baseImage: candidate ? imageBase(candidate) : null,
       command: `docker builder prune -af && stacktape package --configPath ${join(stacktapeDir, 'stacktape.yml')} ...`,
       error: cold.exitCode === 0 ? null : (cold.stderr || cold.stdout).slice(-2000)
     });
