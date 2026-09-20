@@ -1,0 +1,25 @@
+{
+  "name": "packaging-benchmark-n50-cdk",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "3.1136.0",
+    "@aws-sdk/lib-dynamodb": "3.1136.0",
+    "@aws-sdk/client-s3": "3.1136.0",
+    "date-fns": "4.4.0",
+    "jose": "6.2.12",
+    "nanoid": "6.0.1",
+    "pino": "10.3.1",
+    "zod": "4.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "24.9.2",
+    "typescript": "5.9.3",
+    "aws-cdk": "2.1142.0",
+    "aws-cdk-lib": "2.270.0",
+    "constructs": "10.8.1",
+    "esbuild": "0.28.2",
+    "tsx": "4.23.15"
+  }
+}

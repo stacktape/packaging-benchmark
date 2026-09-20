@@ -1,0 +1,10 @@
+{
+  "name": "packaging-benchmark-mono10-serverless",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "@types/node": "24.9.2",
+    "typescript": "5.9.3",
+    "serverless": "4.42.0"
+  }
+}

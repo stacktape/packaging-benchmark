@@ -1,0 +1,10 @@
+packages:
+  - apps/*
+  - packages/*
+minimumReleaseAge: 0
+allowBuilds:
+  esbuild: true
+  sst: true
+  serverless: true
+  protobufjs: true
+  "@parcel/watcher": true

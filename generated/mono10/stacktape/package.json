@@ -1,0 +1,9 @@
+{
+  "name": "packaging-benchmark-mono10-stacktape",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "@types/node": "24.9.2",
+    "typescript": "5.9.3"
+  }
+}

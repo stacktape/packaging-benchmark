@@ -1,0 +1,22 @@
+# scratch output of the runner
+tmp/
+
+# installed dependencies
+node_modules/
+
+# tool outputs inside generated fixtures
+generated/**/.stacktape/
+generated/**/.stacktape-stack-info/
+generated/**/cdk.out/
+generated/**/cdk.out.*/
+generated/**/.sst/
+generated/**/.serverless/
+generated/**/dist/
+
+# lockfiles of the generated fixtures: every direct dependency is pinned exactly in package.json,
+# and these are recreated by `pnpm install` on a fresh clone
+generated/**/pnpm-lock.yaml
+generated/**/package-lock.json
+
+*.tsbuildinfo
+.DS_Store

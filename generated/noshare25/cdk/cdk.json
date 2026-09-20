@@ -1,0 +1,7 @@
+{
+  "app": "node_modules/.bin/tsx bin/app.ts",
+  "versionReporting": false,
+  "context": {
+    "@aws-cdk/core:newStyleStackSynthesis": true
+  }
+}

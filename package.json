@@ -1,0 +1,32 @@
+{
+  "name": "stacktape-packaging-benchmark",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Reproducible benchmark of Lambda packaging speed and artifact size across Stacktape, AWS CDK, SST and Serverless Framework, plus a container comparison.",
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "generate": "node fixtures/generate.ts",
+    "install:fixtures": "node bench/run.ts install",
+    "bench": "node bench/run.ts all",
+    "bench:lambda": "node bench/run.ts lambda",
+    "bench:containers": "node bench/run.ts containers",
+    "report": "node bench/run.ts report"
+  },
+  "devDependencies": {
+    "@types/node": "24.9.2",
+    "typescript": "5.9.3"
+  },
+  "benchmarkedVersions": {
+    "comment": "Versions the fixtures pin. The generator writes them into every generated project; this block is the single place to read them from.",
+    "stacktape": "<v4 prerelease>",
+    "aws-cdk": "2.1142.0",
+    "aws-cdk-lib": "2.270.0",
+    "constructs": "10.8.1",
+    "esbuild": "0.28.2",
+    "sst": "4.17.1",
+    "serverless": "4.42.0"
+  }
+}
