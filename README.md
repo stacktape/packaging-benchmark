@@ -10,10 +10,11 @@ The numbers live in [`results/RESULTS.md`](results/RESULTS.md) and, in machine-r
 [`results/results.json`](results/results.json). This file explains what was measured, how, and what the numbers
 do not say.
 
-This benchmark is maintained by Stacktape. Two of the four tools could not be measured on this run, for reasons
-that have nothing to do with Stacktape; both are documented in full, including the one where the result is
-unflattering to Stacktape. Read [what this benchmark does not measure](#what-this-benchmark-does-not-measure)
-before quoting anything from it.
+This benchmark is maintained by Stacktape, so treat it as an interested party's measurement and check it. Two of
+the four tools could not be measured on this run; why, and exactly what was tried, is written down rather than
+glossed over. The places where Stacktape comes off worse are in the headline section, not buried. Read
+[what this benchmark does not measure](#what-this-benchmark-does-not-measure) and the
+[caveats](#caveats) before quoting anything from it.
 
 ---
 
@@ -253,11 +254,12 @@ that has deployed at least once, repeated packaging can skip work these numbers 
 
 ### Stacktape packages helper Lambdas the tables do not count
 
-Every Stacktape `package` run also materialises Stacktape's own infrastructure helper Lambdas
-(`stacktapeServiceLambda` and friends, a few megabytes in total). They are Stacktape's service code, not
-application code, and only the ones a stack actually uses are deployed — but on a first deployment they are real
-bytes that go to AWS, and the tables in this repository do not include them. CDK has a comparable cost in its
-bootstrap stack, which is likewise not counted.
+Every Stacktape `package` run also materialises Stacktape's own infrastructure helper Lambdas, alongside the
+application artifacts and in addition to them: `stacktapeServiceLambda` (2.86 MB zipped), `uptimeProber`
+(0.91 MB) and three smaller ones (22–24 KB each), about 3.8 MB in total. They are Stacktape's service code rather
+than application code, and only the ones a stack actually uses are deployed — but on a first deployment they are
+real bytes that go to AWS, and the tables in this repository do not include them. CDK has a comparable cost in
+its bootstrap stack, which is likewise not counted.
 
 ### Stacktape and the other tools use different bundlers
 
