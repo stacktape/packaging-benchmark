@@ -4,19 +4,23 @@
  *   node bench/run.ts install       install every generated fixture (warm dependency install)
  *   node bench/run.ts lambda        package-time and size for every shape, tool and configuration
  *   node bench/run.ts incremental   S5: package, change one handler, package again, package unchanged
- *   node bench/run.ts overhead      the fixed cost of the source-built Stacktape CLI rebuilding itself
+ *   node bench/run.ts overhead      Stacktape CLI start-up, the floor under every Stacktape measurement
  *   node bench/run.ts containers    image size, cold build and warm rebuild for the three container paths
+ *   node bench/run.ts sst           DEPLOYS TO AWS. See fixtures/sst/README.md before running it.
  *   node bench/run.ts report        rewrite results/RESULTS.md from results/results.json
- *   node bench/run.ts all           everything above, in order
+ *   node bench/run.ts all           everything except `sst`, in order
  *
  * Environment:
  *   STACKTAPE_REPO                 path to the Stacktape monorepo (default: ../stacktape)
+ *   STACKTAPE_BINARY               the Stacktape CLI executable to measure
+ *                                  (default: <repo>/apps/cli/__dist/linux/stacktape)
  *   BENCH_AWS_PROFILE              AWS profile for Stacktape's read-only identity lookup (default: default)
  *   BENCH_AWS_REGION               default: eu-west-1
  *   SERVERLESS_ACCESS_KEY          enables the Serverless Framework runs
- *   BENCH_ALLOW_SST_AWS_BOOTSTRAP  enables the SST runs; see fixtures/sst/README.md before setting it
+ *   BENCH_ALLOW_SST_AWS_BOOTSTRAP  required by `run.ts sst`; it deploys real AWS resources
  *   BENCH_SAMPLES                  samples per measurement (default: 3)
  *   BENCH_SHAPES                   comma-separated shape ids to restrict the run to
+ *   BENCH_TOOLS                    comma-separated tool ids to restrict the run to
  */
 
 import { appendFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
@@ -37,6 +41,7 @@ import {
 import { type ConfigName, createAdapters, type ToolContext } from './src/tools.ts';
 import { writeReport } from './src/report.ts';
 import { runContainerBenchmark } from './src/containers.ts';
+import { runSstBenchmark } from './src/sst.ts';
 
 const repoRoot = dirname(dirname(fileURLToPath(import.meta.url)));
 const generatedDir = join(repoRoot, 'generated');
@@ -48,8 +53,12 @@ const logFile = join(tmpDir, 'run.log');
 const CONFIGS: ConfigName[] = ['likeforlike', 'defaults'];
 const SAMPLES = Number(process.env.BENCH_SAMPLES ?? 3);
 
+const stacktapeRepo = process.env.STACKTAPE_REPO ?? join(dirname(repoRoot), 'stacktape');
+
 const ctx: ToolContext = {
-  stacktapeRepo: process.env.STACKTAPE_REPO ?? join(dirname(repoRoot), 'stacktape'),
+  stacktapeRepo,
+  stacktapeBinary:
+    process.env.STACKTAPE_BINARY ?? join(stacktapeRepo, 'apps', 'cli', '__dist', 'linux', 'stacktape'),
   awsProfile: process.env.BENCH_AWS_PROFILE ?? 'default',
   awsRegion: process.env.BENCH_AWS_REGION ?? 'eu-west-1',
   projectName: 'pkgbench',
@@ -70,6 +79,11 @@ const log = (message: string) => {
 const selectedShapes = () => {
   const only = process.env.BENCH_SHAPES?.split(',').map((s) => s.trim()).filter(Boolean);
   return only?.length ? SHAPES.filter((s) => only.includes(s.id)) : SHAPES;
+};
+
+const selectedTools = () => {
+  const only = process.env.BENCH_TOOLS?.split(',').map((s) => s.trim()).filter(Boolean);
+  return only?.length ? TOOLS.filter((t) => only.includes(t)) : [...TOOLS];
 };
 
 const projectDir = (shapeId: string, toolId: string) => join(generatedDir, shapeId, toolId);
@@ -96,6 +110,7 @@ type Measurement = {
   artifacts: Artifact[];
   totals: {
     functionCount: number;
+    artifactCount: number;
     layerCount: number;
     functionUnzippedBytes: number;
     functionZippedBytes: number;
@@ -107,12 +122,15 @@ type Measurement = {
   notes: string[];
 };
 
+type Any = Record<string, any>;
+
 type Results = {
   environment: unknown;
   blocked: { tool: string; reason: string }[];
   lambda: Measurement[];
   incremental: unknown[];
   containers: unknown[];
+  sst: unknown;
   overhead: unknown;
   caveats: string[];
 };
@@ -123,6 +141,7 @@ const emptyResults = (): Results => ({
   lambda: [],
   incremental: [],
   containers: [],
+  sst: null,
   overhead: null,
   caveats: []
 });
@@ -172,7 +191,9 @@ const summarize = (artifacts: Artifact[]) => {
   const distinct = new Map<string, Artifact>();
   for (const artifact of artifacts) if (!distinct.has(artifact.contentHash)) distinct.set(artifact.contentHash, artifact);
   return {
-    functionCount: functions.length,
+    // A tool that ships one package for the whole service contributes one artifact but many functions.
+    functionCount: functions.reduce((count, a) => count + (a.servesFunctionCount ?? 1), 0),
+    artifactCount: functions.length,
     layerCount: layers.length,
     functionUnzippedBytes: functions.reduce((s, a) => s + a.unzippedBytes, 0),
     functionZippedBytes: functions.reduce((s, a) => s + a.zippedBytes, 0),
@@ -191,7 +212,14 @@ const footprint = (artifacts: Artifact[]) => {
   const perFunction: Record<string, number> = {};
   for (const fn of artifacts.filter((a) => a.kind === 'function')) {
     const attached = layers.filter((l) => (l.attachedFunctions ?? []).includes(fn.name));
-    perFunction[fn.name] = fn.unzippedBytes + attached.reduce((s, l) => s + l.unzippedBytes, 0);
+    const bytes = fn.unzippedBytes + attached.reduce((s, l) => s + l.unzippedBytes, 0);
+    // One shared service package is loaded in full by every function it serves.
+    const serves = fn.servesFunctionCount ?? 1;
+    if (serves > 1) {
+      for (let i = 1; i <= serves; i += 1) perFunction[fn.name + '#' + i] = bytes;
+    } else {
+      perFunction[fn.name] = bytes;
+    }
   }
   const values = Object.values(perFunction);
   if (values.length === 0) return null;
@@ -214,7 +242,7 @@ const materializeZipArtifacts = (dir: string, artifacts: Artifact[]) =>
       toolZipBytes: artifact.toolZipBytes
     });
     removePaths([target]);
-    return measured;
+    return { ...measured, servesFunctionCount: artifact.servesFunctionCount };
   });
 
 const measureOne = ({
@@ -283,7 +311,8 @@ const measureOne = ({
       };
     }
     samples.push(result.wallMs);
-    const collected = adapter.collect(dir, config, prepared, result.stdout);
+    // Tools differ in which stream they print their progress to, so adapters see both.
+    const collected = adapter.collect(dir, config, prepared, `${result.stdout}\n${result.stderr}`);
     if (i === SAMPLES - 1) {
       lastArtifacts = materializeZipArtifacts(dir, collected.artifacts);
       toolReportedMs = collected.toolReportedMs;
@@ -309,15 +338,21 @@ const measureOne = ({
 
 const lambda = () => {
   const results = loadResults();
+  const tools = selectedTools();
   results.lambda = results.lambda.filter(
-    (m) => !selectedShapes().some((s) => s.id === m.shape)
+    (m) => !(selectedShapes().some((s) => s.id === m.shape) && tools.includes(m.tool as never))
   );
 
+  // A tool that runs now must not keep a stale "blocked" note from an earlier session.
+  results.blocked = results.blocked.filter((b) => !tools.includes(b.tool as never));
+
   for (const shape of selectedShapes()) {
-    for (const toolId of TOOLS) {
+    for (const toolId of tools) {
       const availability = adapters[toolId].availability();
       if (!availability.ok) {
-        if (!results.blocked.some((b) => b.tool === toolId)) {
+        const measuredElsewhere =
+          toolId === 'sst' && ((results.sst as Any)?.measurements?.length ?? 0) > 0;
+        if (!measuredElsewhere && !results.blocked.some((b) => b.tool === toolId)) {
           results.blocked.push({ tool: toolId, reason: availability.reason });
         }
         log(`skip ${shape.id}/${toolId}: ${availability.reason.slice(0, 90)}...`);
@@ -380,7 +415,7 @@ const incremental = () => {
   const shape = SHAPES.find((s) => s.id === 'n25')!;
   const config: ConfigName = 'likeforlike';
 
-  for (const toolId of TOOLS) {
+  for (const toolId of selectedTools()) {
     const adapter = adapters[toolId];
     if (!adapter.availability().ok) continue;
     const dir = projectDir(shape.id, toolId);
@@ -389,7 +424,7 @@ const incremental = () => {
     const packageOnce = () => {
       const prepared = adapter.prepare(dir, config);
       const result = runOnce(adapter.command(dir, config));
-      const collected = adapter.collect(dir, config, prepared, result.stdout);
+      const collected = adapter.collect(dir, config, prepared, `${result.stdout}\n${result.stderr}`);
       const artifacts = materializeZipArtifacts(dir, collected.artifacts);
       adapter.discardRunOutput(dir, config, prepared);
       return { ok: result.exitCode === 0, wallMs: Math.round(result.wallMs), artifacts };
@@ -473,26 +508,23 @@ const overhead = () => {
     saveResults(results);
     return;
   }
+  // One discarded launch: the binary is ~180 MB and the first launch pays a disk-cache cost.
+  runOnce({ command: ctx.stacktapeBinary, args: ['version'], cwd: repoRoot });
+
   const samples: number[] = [];
   for (let i = 0; i < Math.max(SAMPLES, 5); i += 1) {
-    const result = runOnce({
-      command: 'bun',
-      args: ['run', 'scripts/dev.ts', 'this-command-does-not-exist'],
-      cwd: join(ctx.stacktapeRepo, 'apps', 'cli'),
-      env: { SKIP_LOADING_ENV: '1' }
-    });
-    samples.push(result.wallMs);
+    samples.push(runOnce({ command: ctx.stacktapeBinary, args: ['version'], cwd: repoRoot }).wallMs);
   }
   results.overhead = {
     what:
-      'Wall clock of `bun run scripts/dev.ts <unknown command>` in apps/cli. The dev wrapper rebuilds the ' +
-      'whole CLI with Bun.build on every invocation and then rejects the command, so this is the fixed cost ' +
-      'of running Stacktape from source that a published binary does not pay. It excludes config loading, ' +
-      'the STS call and packaging itself.',
+      'Wall clock of `stacktape version`: the CLI binary starting up and printing its version. It is the ' +
+      'floor under every Stacktape measurement here, and it excludes configuration loading, the AWS identity ' +
+      'lookup and packaging itself.',
+    binary: ctx.stacktapeBinary,
     samples: samples.map((s) => Math.round(s)),
     medianMs: Math.round(median(samples))
   };
-  log(`stacktape source-CLI overhead: ${Math.round(median(samples))}ms median`);
+  log(`stacktape binary start-up: ${Math.round(median(samples))}ms median`);
   saveResults(results);
 };
 
@@ -509,6 +541,38 @@ const main = () => {
   if (command === 'lambda') return lambda();
   if (command === 'incremental') return incremental();
   if (command === 'overhead') return overhead();
+  if (command === 'sst') {
+    if (!ctx.allowSstAwsBootstrap) {
+      throw new Error(
+        'Refusing to run SST: it deploys real AWS resources. Set BENCH_ALLOW_SST_AWS_BOOTSTRAP=1 and read ' +
+          'fixtures/sst/README.md first.'
+      );
+    }
+    const results = loadResults();
+    const previous = (results.sst as Any) ?? { measurements: [], resourceLog: [] };
+    const outcome = runSstBenchmark({
+      generatedDir,
+      shapes: selectedShapes(),
+      ctx,
+      samples: SAMPLES,
+      tmpDir,
+      log
+    });
+    const rerunShapes = new Set(selectedShapes().map((s) => s.id));
+    results.sst = {
+      // Measurements for the shapes just run replace the old ones; other shapes are kept, so the
+      // seven shapes can be run in separate sessions. The resource log is append-only on purpose:
+      // it is the record of what was created in AWS, and nothing should quietly drop out of it.
+      measurements: [
+        ...((previous.measurements ?? []) as Any[]).filter((m) => !rerunShapes.has(m.shape)),
+        ...outcome.measurements
+      ],
+      resourceLog: [...(previous.resourceLog ?? []), ...outcome.resourceLog]
+    };
+    results.blocked = results.blocked.filter((b) => b.tool !== 'sst');
+    saveResults(results);
+    return;
+  }
   if (command === 'containers') {
     const results = loadResults();
     results.containers = runContainerBenchmark({ repoRoot, ctx, log });

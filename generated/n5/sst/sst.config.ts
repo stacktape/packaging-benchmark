@@ -4,12 +4,12 @@
 // BENCH_CONFIG=likeforlike -> nodejs.minify + nodejs.sourcemap:false + @aws-sdk/* external
 // BENCH_CONFIG=defaults    -> sst.aws.Function with only `handler`
 //
-// SST v4 has no command that packages functions without contacting and bootstrapping AWS.
-// See fixtures/sst/README.md: the benchmark records SST as blocked rather than bootstrapping an
-// account in order to measure it.
+// SST v4 has no command that packages functions without contacting and bootstrapping AWS, and on an
+// empty state its preview does not build bundles at all. Measuring it therefore needs a deployed
+// stage. See fixtures/sst/README.md.
 export default $config({
   app() {
-    return { name: 'packaging-benchmark', removal: 'remove', home: 'aws' };
+    return { name: 'pkgbench', removal: 'remove', home: 'aws' };
   },
   async run() {
     const mode = process.env.BENCH_CONFIG === 'defaults' ? 'defaults' : 'likeforlike';
@@ -31,7 +31,8 @@ export default $config({
             minify: true,
             sourcemap: false,
             install: [],
-            esbuild: { external: ['@aws-sdk/*'], format: 'esm', target: 'node24' }
+            format: 'esm',
+            esbuild: { external: ['@aws-sdk/*'], target: 'node24' }
           }
         });
       }

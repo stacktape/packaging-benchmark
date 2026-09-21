@@ -10,77 +10,102 @@ The numbers live in [`results/RESULTS.md`](results/RESULTS.md) and, in machine-r
 [`results/results.json`](results/results.json). This file explains what was measured, how, and what the numbers
 do not say.
 
-This benchmark is maintained by Stacktape, so treat it as an interested party's measurement and check it. Two of
-the four tools could not be measured on this run; why, and exactly what was tried, is written down rather than
-glossed over. The places where Stacktape comes off worse are in the headline section, not buried. Read
+This benchmark is maintained by Stacktape, so treat it as an interested party's measurement and check it. All
+four tools ran, but not on equal terms: SST has no packaging command at all, so its numbers come from a
+different operation and are marked as such everywhere they appear. The places where Stacktape comes off worse
+are in the headline section, not buried. Read
 [what this benchmark does not measure](#what-this-benchmark-does-not-measure) and the
 [caveats](#caveats) before quoting anything from it.
 
 ---
-
 ## Headline results
 
 Full tables, every sample and every artifact: [`results/RESULTS.md`](results/RESULTS.md). Machine, versions and
 commit are recorded there too.
 
-**Package time, like-for-like, cold, median of 5.** Only two of the four tools ran.
+### Package time, like-for-like, cold, median of 5
 
-| Functions | Stacktape | AWS CDK |
-| --- | --- | --- |
-| 1 | 4.50 s | 2.20 s |
-| 5 | 3.79 s | 2.95 s |
-| 10 | 3.79 s | 3.86 s |
-| 25 | 3.92 s | 6.69 s |
-| 50 | 4.03 s | 10.86 s |
+| Functions | Stacktape | AWS CDK | Serverless Framework | SST |
+| --- | --- | --- | --- | --- |
+| 1 | 2.31 s | 2.15 s | 3.74 s | 4.25 s* |
+| 5 | 2.37 s | 2.91 s | 3.76 s | 4.70 s* |
+| 10 | 2.39 s | 3.78 s | 3.95 s | 9.20 s* |
+| 25 | 2.46 s | 6.30 s | 4.36 s | 6.36 s* |
+| 50 | 2.60 s | 10.56 s | 5.09 s | 8.18 s* |
+
+\* **SST's number is not comparable with the others.** SST has no packaging command. The only way to make it
+build bundles is to deploy a stage first and then run `sst diff`, which rebuilds the bundles *and* runs a Pulumi
+preview against AWS. The other three columns are local work only. See
+[fixtures/sst/README.md](fixtures/sst/README.md).
 
 CDK's synth time grows roughly linearly with the number of functions, because it bundles each one separately.
-Stacktape's stays flat, because one Bun build with code splitting produces all of them. Stacktape's wall clock is
-dominated by a fixed cost that is an artefact of how these runs were done: the source-built CLI rebuilds itself
-on every invocation (3.75 s median, measured separately). The CLI's own reported packaging phase went from 0.31 s
-at one function to 0.48 s at fifty. See "Where the Stacktape wall clock goes" in the results, and the caveat
-below.
+Stacktape's stays nearly flat, because one Bun build with code splitting produces all of them. Starting the
+Stacktape binary and printing its version — before any config is read or any AWS call is made — already costs
+1.70 s, so 0.6–0.9 s of each Stacktape row is everything else it does.
 
-**Bytes a first deployment uploads, like-for-like.** Distinct artifacts, zipped, functions plus shared layers.
+### Bytes a first deployment uploads, like-for-like
 
-| Shape | Stacktape | AWS CDK |
-| --- | --- | --- |
-| 1 function | 65.7 KB | 121.9 KB |
-| 10 functions | 78.7 KB | 1219.0 KB |
-| 50 functions | 133.2 KB | 6095.0 KB |
-| 25 functions, no shared application code (S3) | 102.9 KB | 1721.7 KB |
-| pnpm monorepo, 10 functions (S4) | 78.7 KB | 1219.0 KB |
+Distinct artifacts, zipped: every function bundle plus every shared layer, counted once.
+
+| Shape | Stacktape | AWS CDK | Serverless | SST |
+| --- | --- | --- | --- | --- |
+| 1 function | 65.7 KB | 121.9 KB | 122.4 KB | 475.0 KB |
+| 10 functions | 78.7 KB | 1219.0 KB | 1219.5 KB | 4750.2 KB |
+| 50 functions | 133.2 KB | 6095.0 KB | 6096.0 KB | 23751.0 KB |
+| 25 functions, no shared application code (S3) | 103.0 KB | 1721.7 KB | 1722.4 KB | 6681.7 KB |
+| pnpm monorepo, 10 functions (S4) | 78.7 KB | 1219.0 KB | 1220.5 KB | 4751.9 KB |
 
 Stacktape promotes the shared code into one Lambda layer, so each function's own artifact is about 2.7 KB and the
-layer is uploaded once. CDK gives every function a complete 532 KB bundle.
+layer is uploaded once. CDK gives every function a complete 532 KB bundle. Serverless ships one package for the
+whole service, which comes out within a kilobyte of CDK's total. SST's packages carry a source map — see below.
 
-**Where Stacktape comes off worse.**
+### Cold-start footprint proxy, per function (S6)
+
+Unzipped bytes a function loads: its own artifact plus any layer attached to it.
+
+| Shape | Stacktape | AWS CDK | Serverless | SST |
+| --- | --- | --- | --- | --- |
+| 25 functions, like-for-like | 264.3 KB | 532.5 KB | 13312.5 KB | 2350.1 KB |
+| 50 functions, like-for-like | 264.3 KB | 532.5 KB | 26624.7 KB | 2350.1 KB |
+| 25 functions, defaults | 1089.1 KB | 937.1 KB | 66984.8 KB | 2125.8 KB |
+| 50 functions, defaults | 1089.1 KB | 937.1 KB | 133969.2 KB | 2125.8 KB |
+
+Serverless Framework's default is one package for the whole service, so every function loads every other
+function's bundle, and the figure grows linearly with function count. `package: individually: true` avoids that,
+at the cost of packaging each function separately; the benchmark measures the default.
+
+### Where Stacktape comes off worse
 
 - **With defaults rather than like-for-like settings, Stacktape's single-function artifact is larger than CDK's**:
-  1093.5 KB unzipped and 244.6 KB uploaded, against CDK's 937.1 KB and 155.4 KB. Stacktape's current default puts
-  source maps in the deployment package; CDK's default does not produce them. The same shows up in the cold-start
-  footprint proxy: 1094.5 KB per function against CDK's 937.1 KB.
+  1088.3 KB unzipped and 244.5 KB uploaded, against CDK's 937.1 KB and 155.4 KB. Stacktape's current default puts
+  source maps in the deployment package; CDK's default does not produce them. The same shows in the footprint
+  proxy: 1089.1 KB per function against CDK's 937.1 KB.
 - **A one-line change to shared code re-hashes every artifact.** Changing one file that all 25 handlers import
   re-hashed all 26 Stacktape artifacts — the layer and every function — because each function's entry file embeds
-  the content-hashed name of the shared chunk. A redeploy would re-upload 99.1 KB rather than just the layer. CDK
-  re-hashed all 25 of its artifacts in the same scenario, for 3047.7 KB, so Stacktape still moves ~30× fewer bytes,
-  but it does not get away with touching only the layer.
-- **At one function, Stacktape is twice CDK's wall clock** (4.50 s against 2.20 s) in these runs, entirely because
-  of the source-CLI self-build.
+  the content-hashed name of the shared chunk. A redeploy would re-upload 99.2 KB rather than just the layer. CDK
+  re-hashed 25 of 25 for 3047.7 KB and Serverless re-hashed its single package for 3048.5 KB, so Stacktape still
+  moves about 30× fewer bytes, but it does not get away with touching only the layer.
+- **At one function, Stacktape is slower than CDK** (2.31 s against 2.15 s). Most of Stacktape's time is binary
+  start-up plus an AWS identity lookup; CDK makes no AWS call at all.
+- **Stacktape's wall clock is not always steady.** A handful of measurements produced samples several seconds
+  above their own median. Serverless showed the same; CDK did not. The cause was not identified — see the caveat
+  below. Every sample is published.
 
-**Containers.** Same application as an HTTP service.
+### Containers
+
+Same application as a long-running HTTP service.
 
 | Variant | Runtime base | Image size | Cold build | Warm rebuild |
 | --- | --- | --- | --- | --- |
-| Stacktape image buildpack | Alpine Linux 3.24 | 61.8 MB | 6.03 s | 4.38 s |
-| Expert hand-written Dockerfile | Debian 12 (`node:24-slim`) | 77.4 MB | 7.39 s | 3.91 s |
-| Naive Dockerfile | Debian 12 (`node:24`) | 419.0 MB | 6.63 s | 6.70 s |
+| Stacktape image buildpack | Alpine Linux 3.24 | 61.8 MB | 4.54 s | 3.07 s |
+| Expert hand-written Dockerfile | Debian 12 (`node:24-slim`) | 77.4 MB | 7.57 s | 4.31 s |
+| Naive Dockerfile | Debian 12 (`node:24`) | 419.0 MB | 6.64 s | 7.23 s |
 
 Two things to read carefully. Stacktape's image is the smallest partly because its buildpack uses an Alpine base
 while the expert Dockerfile uses the `node:24-slim` base the brief specified — that is a base-image difference, not
 only a packaging one. And the naive build's *cold* build is faster than the expert's, because the expert build
 installs dependencies twice and bundles the application; it wins on image size and on warm rebuild instead.
 
----
 
 ## What is measured
 
@@ -89,8 +114,10 @@ installs dependencies twice and bundles the application; it wins on image size a
 - *Cold*: the tool's output and cache directories are deleted first (`.stacktape/`, `cdk.out/`, `.sst/`,
   `.serverless/`).
 - *Warm*: the same command again, immediately, with nothing changed.
-- Median of 3 samples, preceded by one discarded warm-up run. Every sample is kept in `results.json`.
+- Median of 5 samples, preceded by one discarded warm-up run. Every sample is kept in `results.json`.
 - Tools run sequentially, never in parallel.
+- SST is the exception: it has no packaging command, so it is measured against a deployed stage. See the
+  caveats.
 
 **Artifact size.** Per artifact: unzipped bytes and zipped bytes. Shared layers are counted once, separately from
 the functions that use them. "Upload on first deploy" is the sum of the distinct artifacts a first deployment has
@@ -169,22 +196,28 @@ Individual stages:
 ```sh
 node bench/run.ts lambda         # package time and size
 node bench/run.ts incremental    # S5
-node bench/run.ts overhead       # the source-built CLI's fixed self-build cost
+node bench/run.ts overhead       # Stacktape CLI start-up, the floor under its measurements
 node bench/run.ts containers     # the three container paths
+node bench/run.ts sst            # DEPLOYS TO AWS - read fixtures/sst/README.md first
 node bench/run.ts report         # rewrite results/RESULTS.md from results/results.json
 ```
+
+`node bench/run.ts all` runs everything except `sst`, which is opt-in because it creates real AWS resources.
 
 Environment variables:
 
 | Variable | Meaning |
 | --- | --- |
-| `STACKTAPE_REPO` | Path to a Stacktape monorepo checkout, if you are running the source-built CLI. Default `../stacktape`. |
+| `STACKTAPE_REPO` | Path to a Stacktape monorepo checkout. Default `../stacktape`. |
+| `STACKTAPE_BINARY` | The Stacktape CLI executable to measure. Default `<repo>/apps/cli/__dist/linux/stacktape`. |
 | `BENCH_AWS_PROFILE` | AWS profile for Stacktape's read-only identity lookup. Default `default`. |
 | `BENCH_AWS_REGION` | Default `eu-west-1`. |
 | `SERVERLESS_ACCESS_KEY` | Enables the Serverless Framework runs. |
-| `BENCH_ALLOW_SST_AWS_BOOTSTRAP` | Enables the SST runs. **This bootstraps an AWS account.** Read [fixtures/sst/README.md](fixtures/sst/README.md) first. |
-| `BENCH_SAMPLES` | Samples per measurement. Default 3. |
+| `BENCH_ALLOW_SST_AWS_BOOTSTRAP` | Required by `run.ts sst`. **It deploys stages and bootstraps the account.** Read [fixtures/sst/README.md](fixtures/sst/README.md) first. |
+| `BENCH_SST_COMMAND` | `diff` (default) or `deploy`: which command SST is timed on. |
+| `BENCH_SAMPLES` | Samples per measurement. Default 3; these results used 5. |
 | `BENCH_SHAPES` | Comma-separated shape ids, to run a subset. |
+| `BENCH_TOOLS` | Comma-separated tool ids, to run a subset. |
 
 `.github/workflows/benchmark.yml` runs the same runner on `ubuntu-latest`. It is there so the benchmark can be
 shown to still run end to end; a shared two-core hosted runner is not a machine to take timings from.
@@ -206,45 +239,57 @@ SHA-256 of each file's bytes.
 
 ## What this benchmark does not measure
 
-**Cold-start latency.** S6 is a size proxy and nothing more. Nothing here was deployed or invoked.
+**Cold-start latency.** S6 is a size proxy and nothing more. No function was invoked.
 
-**Deployment.** No stack was created. Package time is not deploy time, and upload bytes are not upload seconds.
+**Deployment time.** Package time is not deploy time, and upload bytes are not upload seconds. SST stages were
+deployed, but only so SST would build bundles at all; the deploy times in the SST section are context, not a
+comparison — no other tool was deployed.
 
 **Correctness of the packages.** The artifacts were measured, not invoked. Every fixture type-checks and every
 tool reported success, but no handler was run in Lambda.
 
-**Anything about SST's or Serverless Framework's speed or size.** Neither ran. See below.
+**SST on equal terms.** SST has no packaging command, so its numbers come from a different kind of operation.
+See the caveat below.
 
 ## Caveats
 
-### Two of the four tools did not run
+### SST's number measures something else
 
-**SST** has no command that packages functions without contacting AWS. Its only non-deploy path, `sst diff`,
-bootstraps the account — it creates two S3 buckets, an ECR repository and an SSM parameter — before it previews,
-and on an empty state the preview does not produce function bundles at all. Rather than bootstrap an account to
-get a number, this benchmark records SST as unmeasured. Full detail, including exactly what was tried and what
-was created, is in [fixtures/sst/README.md](fixtures/sst/README.md).
+SST v4 has no build, package or synth command. On a stage that has never been deployed, its preview does not
+build function bundles at all, and its only non-deploy path bootstraps the AWS account first. The only way to
+get numbers is to deploy a throwaway stage and then time `sst diff`, which rebuilds every bundle **and** runs a
+Pulumi preview against AWS.
 
-**Serverless Framework v4** refuses to run without a licence key. `serverless package` needs no AWS credentials
-and deploys nothing, but it does need `SERVERLESS_ACCESS_KEY`. The fixture and the runner path are complete;
-supply a key and it joins every table. See [fixtures/serverless/README.md](fixtures/serverless/README.md).
+So the SST column includes a network round trip and a state comparison that the other three columns do not.
+Treat it as "the closest thing SST has to packaging", not as a like-for-like time. Its size figures are
+comparable — they are the contents of the zip SST deploys — but its timings are not.
+[fixtures/sst/README.md](fixtures/sst/README.md) has the full detail, including what was tried and rejected.
 
-Nothing should be inferred about either tool from the other tools' numbers.
+### SST ships a source map when told not to
+
+With `nodejs.sourcemap: false`, SST's deployment zip contained `bundle.mjs.map` (1,838,351 bytes). With no
+`nodejs` block at all, it did not. That is the opposite of what the option name implies, and it is why SST has
+the largest like-for-like footprint in the S6 table. Observed on `sst 4.17.1`; no claim is made about the cause.
+
+### Serverless Framework ships one package for the whole service
+
+That is its default, not a choice this benchmark made. Every function in the stack is deployed from the same
+zip, so upload bytes stay competitive while the per-function cold-start footprint grows with the number of
+functions — 26.6 MB per function at 50 functions like-for-like, 134 MB with the framework's defaults.
+`package: individually: true` changes this. See
+[fixtures/serverless/README.md](fixtures/serverless/README.md).
 
 ### The Stacktape runs used a source build, not a release
 
 The public version of this repository pins a published `stacktape` version, written here as `<v4 prerelease>`.
-**The numbers in `results/RESULTS.md` were not produced with it.** They were produced with the source-built CLI
-from the Stacktape monorepo, at the commit and working-tree state recorded in the environment block of
-`results/RESULTS.md`, including uncommitted packaging changes.
+**The numbers in `results/RESULTS.md` were not produced with it.** They were produced with a release-style Linux
+binary built from the Stacktape monorepo, reporting version `4.0.0-bench`, at the commit and working-tree state
+recorded in the environment block of `results/RESULTS.md`, including uncommitted packaging changes. A source
+build is not a release build; a published CLI could be faster or slower.
 
-That matters in two ways:
-
-1. The monorepo's development wrapper **rebuilds the entire CLI with Bun on every invocation**. That is a fixed
-   cost of several seconds that a published binary does not pay. `results/RESULTS.md` reports the Stacktape
-   package times twice: raw wall clock, and with the measured self-build constant subtracted. The other tools'
-   numbers are not adjusted for anything — their own start-up cost is included, as it should be.
-2. A source build is not a release build. A published CLI could be faster or slower.
+An earlier revision of these results used the monorepo's development wrapper, which rebuilds the whole CLI with
+Bun on every invocation and added about 3.3 seconds to every Stacktape measurement. Those numbers are
+superseded and are not in `results/results.json`.
 
 ### Stacktape's cross-machine cache never engages here
 
@@ -287,11 +332,26 @@ timings from a CI runner or from macOS. Five samples catch gross outliers, not d
 is in `results.json` so you can see the spread yourself. Other processes were running on the machine during the
 measurements.
 
-The source-built Stacktape CLI in particular produces occasional wall-clock outliers of several seconds — a run
-that normally takes 3.8 s taking 7 or 11. They appear in the samples in `results.json`. They are in the CLI's
-self-build, not in packaging: the packaging phase the CLI reports stayed between 0.27 s and 0.77 s across every
-measurement, including the runs that produced an outlier. Five samples were used so that one or two outliers
-cannot move a median; an earlier three-sample run is what exposed the problem.
+**Sporadic multi-second outliers, in two of the four tools.** A handful of measurements produced samples several
+seconds above their own median — a Stacktape run that normally takes 2.4 s taking 9.3 s, a Serverless run that
+normally takes 3.8 s taking 23.5 s. They cluster: a measurement either has several of them or none.
+
+What is known about them:
+
+- They affect **Stacktape and Serverless Framework**. CDK, in the same sessions on the same machine, produced
+  nothing wider than ±0.3 s across every measurement.
+- They are **not in the packaging work**. Stacktape prints the duration of its own packaging phase, and that
+  stayed between 0.22 s and 0.52 s in every measurement, including the ones that produced a 9-second sample.
+- `stacktape version`, which starts the same binary and does nothing else, was stable across its samples
+  (1.68–1.75 s), so plain process start-up is not it either.
+- `sts:GetCallerIdentity` — the one AWS call `stacktape package` makes — was timed separately from the same
+  machine and came back at 1.01–1.09 s across twelve calls, so a slow STS response does not explain it either.
+
+**The cause was not identified.** Both affected tools ship a large self-contained runtime and make a network
+call during packaging; CDK does neither. That is a correlation, not a finding. The two measurements most
+affected (`noshare25` Stacktape like-for-like cold, `noshare25` Serverless defaults warm) were re-run with seven
+samples and the outliers recurred, so they are reported as measured rather than quietly re-rolled. Every sample
+is in `results.json`.
 
 ### The like-for-like configuration is a judgement call
 

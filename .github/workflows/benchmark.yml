@@ -15,12 +15,13 @@ name: benchmark
 #                                   names. It deploys nothing. Without it, the Stacktape rows are skipped.
 #   vars.AWS_REGION                 default eu-west-1.
 #
-# SST is not run here and cannot be: it has no packaging command that does not bootstrap an AWS account.
-# See fixtures/sst/README.md.
+# SST is deliberately not run here. It has no packaging command: measuring it means deploying a stage and
+# removing it again, which does not belong in an unattended workflow. See fixtures/sst/README.md.
 #
 # The Stacktape CLI: this repository pins a published `stacktape` version. The numbers in results/RESULTS.md
-# in this repository were produced with a source build of the Stacktape monorepo instead; set STACKTAPE_REPO
-# to a checkout of it to reproduce that, or install the published CLI and point the runner at it.
+# in this repository were produced with a release-style binary built from the Stacktape monorepo instead.
+# Set STACKTAPE_BINARY to the executable you want measured, or STACKTAPE_REPO to a monorepo checkout that
+# contains apps/cli/__dist/linux/stacktape.
 
 on:
   workflow_dispatch:

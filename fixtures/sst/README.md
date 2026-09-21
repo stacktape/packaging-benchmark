@@ -1,63 +1,83 @@
-# SST fixture — not measured
+# SST fixture
 
-**SST v4 is present in this repository as a complete, runnable fixture, but the benchmark records it as blocked
-rather than measuring it.** This file documents exactly why, so the finding can be checked rather than taken on
-trust.
+`sst 4.17.1`. SST is measured differently from every other tool here, and the difference matters when
+reading its numbers.
 
-## What was tried
+## SST has no packaging command
 
-`sst 4.17.1`. Its command list is:
+Its command list is:
 
 ```
 sst init | dev | deploy | diff | add | install | secret | shell | remove | unlock
     | version | upgrade | telemetry | refresh | state | cert | tunnel | diagnostic
 ```
 
-There is no build, package, synth or bundle command. `sst diff` is the only candidate that is not a deployment.
+There is no build, package, synth or bundle command. Two things follow:
 
-1. **`sst diff` with `home: "aws"`** fails before it bundles anything:
+1. **Every path contacts AWS.** `sst diff` with the default `home: "aws"` fails at an SSM `GetParameter`
+   before it builds anything — that is SST's bootstrap lookup. With valid credentials it does not fail; it
+   bootstraps the account.
+2. **On a stage that does not exist yet, nothing is built.** SST computes a function's code asset inside a
+   Pulumi output that depends on the bootstrap resources. A preview of a stack that has never been deployed
+   leaves those outputs unknown, so the bundling step never runs and `.sst/artifacts/` is never created.
 
-   ```
-   ✕ aws: operation error SSM: GetParameter ... UnrecognizedClientException
-   ```
+So SST can only be measured against a **deployed stage**.
 
-   That is SST's bootstrap lookup. With valid credentials it does not fail — it **bootstraps the account**.
+## How this benchmark measures it
 
-2. **`sst diff` with `home: "local"`** (state on the local machine) plus an explicit `providers: { aws: ... }`
-   entry gets further, and with valid credentials it completes a Pulumi preview. It still bootstraps AWS. On the
-   run that produced this note it created, in `eu-west-1`:
+`node bench/run.ts sst` does, per shape, one shape at a time:
 
-   - S3 bucket `sst-asset-<random>`
-   - S3 bucket `sst-state-<random>`
-   - ECR repository `sst-asset`
-   - SSM parameter `/sst/bootstrap`
-
-3. That preview **does not produce function bundles**. `.sst/artifacts/` is never created. SST computes the
-   function's code asset inside a Pulumi output that depends on the bootstrap resources, and a preview of a stack
-   that does not exist yet leaves those outputs unknown, so the bundling step never runs.
-
-So there is no way to make SST package the fixtures without both writing to an AWS account and deploying, and
-even the read-only-looking path does not produce the artifacts the benchmark needs to measure.
-
-## Consequence for the tables
-
-SST appears in the "tools that could not be measured" section and nowhere else. Its packaging speed and its
-artifact sizes are unknown to this benchmark. Nothing should be inferred about them from the other tools'
-numbers.
-
-## Running it anyway
-
-If you have a disposable AWS account of your own:
-
-```sh
-BENCH_ALLOW_SST_AWS_BOOTSTRAP=1 AWS_PROFILE=<disposable> node bench/run.ts lambda
+```
+sst deploy --stage bench-<random>     # like-for-like configuration
+sst diff   --stage bench-<random>     # discarded warm-up, then 5 timed samples
+sst deploy --stage bench-<random>     # defaults configuration
+sst diff   --stage bench-<random>     # discarded warm-up, then 5 timed samples
+sst remove --stage bench-<random>
 ```
 
-This will bootstrap that account. Do not point it at an account you care about. Even then, expect
-`.sst/artifacts` to be empty on a first run, for the reason above; measuring SST properly needs a deployed stage,
-which is outside what this benchmark does.
+It refuses to run unless `BENCH_ALLOW_SST_AWS_BOOTSTRAP=1` is set, because it creates real AWS resources.
 
-## Configuration the fixture would use
+**What the timed command includes.** `sst diff` rebuilds every function bundle and then runs a Pulumi
+preview against the deployed state. The preview talks to AWS. It is therefore **not** comparable with
+`cdk synth`, `stacktape package` or `serverless package`, which do local work only. It is reported because
+it is the closest analogue SST has, not because it measures the same thing. `sst deploy` on an unchanged
+stage is the alternative; it adds a no-op update on top of the same work, so it is further away still.
+`BENCH_SST_COMMAND=deploy` switches to it.
+
+## What SST writes, and what is measured
+
+Per function, SST produces two directories:
+
+```
+.sst/artifacts/<name>/code.zip     what it deploys
+.sst/artifacts/<name>-src/         bundle.mjs, bundle.mjs.map, resource.enc
+```
+
+Only `code.zip` reaches Lambda, so the benchmark unpacks it and measures its contents, exactly as it does
+for Serverless Framework. The `-src` file list is recorded in `results.json` as build output, not as an
+artifact.
+
+## A finding worth checking yourself
+
+The like-for-like configuration sets `nodejs.sourcemap: false`. Measured contents of `code.zip`:
+
+| Configuration | `bundle.mjs` | `bundle.mjs.map` in the zip | Unzipped total | SST's zip |
+| --- | --- | --- | --- | --- |
+| like-for-like (`sourcemap: false`) | 568,083 B | **yes, 1,838,351 B** | 2,406,452 B | 599,506 B |
+| defaults (no `nodejs` block) | 2,176,751 B | no | 2,176,769 B | 480,138 B |
+
+Setting `sourcemap: false` put a source map **into** the deployment package; leaving the option alone kept
+it out. That is the opposite of what the option name suggests. Both builds produced a map in `-src`; only
+the `sourcemap: false` build shipped it. SST also uploads source maps to its own asset bucket, keyed by log
+group, which is presumably the feature the flag is really about.
+
+This is what was observed on `sst 4.17.1`; no claim is made about the cause. It is the reason SST's
+like-for-like footprint is the largest in the S6 table.
+
+The like-for-like `bundle.mjs` at 568 KB against CDK's 532 KB is a useful cross-check that the two
+configurations really are equivalent: both externalise `@aws-sdk/*` and both minify.
+
+## Configuration
 
 ```ts
 new sst.aws.Function(name, {
@@ -67,12 +87,24 @@ new sst.aws.Function(name, {
     minify: true,
     sourcemap: false,
     install: [],
-    esbuild: { external: ['@aws-sdk/*'], format: 'esm', target: 'node24' }
+    format: 'esm',
+    esbuild: { external: ['@aws-sdk/*'], target: 'node24' }
   }
 });
 ```
 
-`minify` and `sourcemap` are SST's own like-for-like switches. `install: []` keeps SST from adding a separate
-`node_modules` beside the bundle. `esbuild.external` is set explicitly even though SST already externalises the
-AWS SDK, so the fixture states the intent rather than relying on a default. The defaults configuration is
+`install: []` keeps SST from adding a separate `node_modules` beside the bundle. `esbuild.external` is set
+explicitly rather than relying on SST's default. The defaults configuration is
 `new sst.aws.Function(name, { handler })`.
+
+App name `pkgbench`, `home: 'aws'`, stage `bench-<6 random lowercase hex characters>`.
+
+## AWS resources
+
+A run creates, per shape: one Lambda function per function in the shape, each with an IAM role and a log
+group; plus, the first time, the SST bootstrap (two S3 buckets, an ECR repository and an SSM parameter).
+Each stage is removed before the next shape is deployed.
+
+`sst remove` does **not** remove everything. It leaves an SSM parameter per stage at
+`/sst/passphrase/<app>/<stage>`, and it never removes the bootstrap. Both have to be cleaned up by hand.
+`results.json` records every stage created and removed under `sst.resourceLog`.

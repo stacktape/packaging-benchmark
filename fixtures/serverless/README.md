@@ -1,26 +1,19 @@
-# Serverless Framework fixture — pending a licence key
+# Serverless Framework fixture
 
 `serverless 4.42.0`, using the framework's built-in esbuild.
 
-## Status
+## Licence key
 
-The fixture and the runner path are complete. The runs are **pending**, because Serverless Framework v4 refuses
-to do anything without a licence:
+Serverless Framework v4 refuses to run without one:
 
 ```
 $ serverless package
 ✖ Error: You must sign in or use a license key with Serverless Framework V.4 and later versions.
-  Please use "serverless login".
 ```
 
-`serverless package` does not deploy and does not need AWS credentials, but it does need
-`SERVERLESS_ACCESS_KEY`. Set it and the tool joins every table:
-
-```sh
-SERVERLESS_ACCESS_KEY=<key> node bench/run.ts lambda
-```
-
-Without it the runner records Serverless under "tools that could not be measured" and carries on.
+`serverless package` does not deploy and needs no AWS credentials, but it does need
+`SERVERLESS_ACCESS_KEY`. With the variable set the runner includes Serverless in every table; without it
+the runner records it as blocked and carries on.
 
 ## Configuration
 
@@ -43,27 +36,56 @@ functions:
     handler: src/handlers/handler-01.handler
 ```
 
-`serverless.defaults.yml` is the same file with the whole `build` block removed, so the framework's own esbuild
-defaults apply.
+`serverless.defaults.yml` is the same file with the whole `build` block removed, so the framework's own
+esbuild defaults apply.
 
 ## Command
 
 ```sh
-node_modules/.bin/serverless package --config serverless.yml
-node_modules/.bin/serverless package --config serverless.defaults.yml
+node_modules/.bin/serverless package --config serverless.yml --stage dev --region eu-west-1
 ```
 
 Cold deletes `.serverless/` and `.esbuild/`; warm runs again immediately.
 
-## Artifacts
+## One package for the whole service
 
-Serverless writes one zip per function into `.serverless/`. It is the only tool here that hands over finished
-zips, so the runner unpacks each one into `tmp/` before measuring, and the reported zipped size is computed the
-same way as for every other tool. The zip Serverless itself produced is recorded separately as `toolZipBytes`.
+This is the single most important thing about Serverless Framework's output here, and it is its default
+behaviour, not a setting this benchmark chose.
+
+`serverless package` produces **one zip for the entire service**, not one per function:
+
+```
+.serverless/packaging-benchmark.zip
+  package.json
+  package-lock.json
+  src/handlers/handler-01.js
+  src/handlers/handler-02.js
+  ...
+```
+
+Every Lambda function in the stack is created from that same zip, with a different handler path. Two
+consequences:
+
+- **Upload bytes are competitive.** One package, sent once. At 25 functions it is within a kilobyte of what
+  CDK uploads across 25 separate assets.
+- **The cold-start footprint is not.** Each function loads the whole service package, so the footprint per
+  function is the sum of every function's bundle. At 50 functions, like-for-like, that is 26.6 MB per
+  function; with the framework's defaults it is 134 MB. The other three tools stay flat as functions are
+  added.
+
+`package: individually: true` changes this, at the cost of bundling each function separately. The benchmark
+measures the default, because that is what a project gets without deciding otherwise. The size tables
+therefore show Serverless with `Functions: 25` but `Code artifacts: 1`.
 
 ## Incremental behaviour
 
-Serverless Framework re-uploads every function artifact on every deployment: it has no per-artifact content hash
-that lets it skip an unchanged function, the way CDK does with asset hashes, SST with Pulumi asset hashes and
-Stacktape with its own digest. The S5 table reports the re-hash counts for each tool; for Serverless the
-practical number of re-uploaded artifacts is all of them regardless of what the table shows.
+Because there is one artifact, any change re-hashes it. The S5 table shows a one-line change to a single
+handler re-hashing the whole 3 MB service package, against 1.4 KB for Stacktape and 122 KB for CDK.
+Serverless Framework also re-uploads every function artifact on every deployment regardless of content, so
+even an unchanged redeploy sends the whole package.
+
+## Artifacts
+
+The runner unpacks `.serverless/*.zip` into `tmp/` before measuring, so unzipped bytes, the deterministic
+zip size and the content hash are computed the same way as for every other tool. The zip Serverless itself
+produced is recorded separately as `toolZipBytes`.

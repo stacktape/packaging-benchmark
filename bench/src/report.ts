@@ -17,6 +17,12 @@ const gb = (bytes: number | null | undefined) =>
 const secs = (ms: number | null | undefined) =>
   ms === null || ms === undefined ? '-' : `${(ms / 1000).toFixed(2)} s`;
 
+const median = (values: number[]) => {
+  const sorted = [...values].sort((a, b) => a - b);
+  const mid = Math.floor(sorted.length / 2);
+  return sorted.length % 2 === 0 ? (sorted[mid - 1] + sorted[mid]) / 2 : sorted[mid];
+};
+
 const table = (headers: string[], rows: (string | number)[][]) =>
   [
     `| ${headers.join(' | ')} |`,
@@ -119,25 +125,24 @@ export const writeReport = (results: Any, path: string) => {
   if (overheadMs && selfReported.length > 0) {
     lines.push('## Where the Stacktape wall clock goes', '');
     lines.push(
-      'These runs used the source-built CLI from the Stacktape monorepo. Its development wrapper rebuilds the ' +
-        `whole CLI with Bun on every invocation before it does anything else, which costs ${secs(overheadMs)} ` +
-        '(median, measured separately; samples below). A published Stacktape binary does not pay that - it ' +
-        'pays ordinary process start-up instead, which this benchmark did not measure.',
+      `Starting the CLI binary and printing its version takes ${secs(overheadMs)} (median, measured ` +
+        'separately; samples below). That is the floor under every Stacktape row in the tables above: it is ' +
+        'process start-up only, before any configuration is read, any AWS call is made or any packaging ' +
+        'happens.',
       ''
     );
     lines.push(
       'The CLI also prints the duration of its own packaging phase. That figure excludes process start-up, ' +
         'configuration loading and the AWS identity lookup, so it is not comparable with any other tool here ' +
-        '- no other tool prints an equivalent - but it does separate the packaging work from the harness ' +
-        'around it. The self-build constant dominates, and only the packaging phase grows with the number ' +
-        'of functions.',
+        '- no other tool prints an equivalent - but it does separate the packaging work from everything ' +
+        'around it. Only the packaging phase grows with the number of functions.',
       ''
     );
     lines.push(
-      'The last two columns do not add up exactly to the first. The constant was measured in its own set of ' +
-        'runs, and the run-to-run spread on this machine is a few hundred milliseconds. For the same reason ' +
-        'no adjusted package time is offered: subtracting the constant would leave a residual smaller than ' +
-        'the noise, presented as if it were a measurement.',
+      'The last two columns do not add up to the first. The gap is configuration loading and the AWS ' +
+        'identity lookup, which no column isolates, plus a run-to-run spread of a few hundred milliseconds ' +
+        'on this machine. No adjusted package time is offered: every tool here pays its own start-up, and ' +
+        'subtracting only Stacktape\'s would not make the comparison fairer.',
       ''
     );
     const rows: (string | number)[][] = [];
@@ -162,7 +167,7 @@ export const writeReport = (results: Any, path: string) => {
           'Shape',
           'Configuration',
           'Measured wall clock (cold, median)',
-          'Source-CLI self-build (constant)',
+          'CLI start-up (constant)',
           'Packaging phase as the CLI reports it'
         ],
         rows
@@ -185,8 +190,9 @@ export const writeReport = (results: Any, path: string) => {
       'Shape',
       'Tool',
       'Functions',
+      'Code artifacts',
       'Layers',
-      'Functions unzipped',
+      'Function code unzipped',
       'Layers unzipped',
       'Upload on first deploy (zipped)'
     ];
@@ -201,6 +207,7 @@ export const writeReport = (results: Any, path: string) => {
           shapeLabel[shape] ?? shape,
           tool,
           m.totals.functionCount,
+          m.totals.artifactCount ?? m.totals.functionCount,
           m.totals.layerCount,
           kb(m.totals.functionUnzippedBytes),
           kb(m.totals.layerUnzippedBytes),
@@ -300,7 +307,7 @@ export const writeReport = (results: Any, path: string) => {
 
   // --- overhead ------------------------------------------------------------
   if (results.overhead?.medianMs) {
-    lines.push('## Stacktape source-CLI overhead', '');
+    lines.push('## Stacktape CLI start-up', '');
     lines.push(results.overhead.what, '');
     lines.push(
       table(
@@ -312,6 +319,98 @@ export const writeReport = (results: Any, path: string) => {
       ),
       ''
     );
+  }
+
+  // --- SST -----------------------------------------------------------------
+  const sst = results.sst as Any | null;
+  if (sst?.measurements?.length) {
+    lines.push('## SST, measured through a deployed stage', '');
+    lines.push(
+      'SST cannot be measured like the other tools. It has no packaging command, and on a stage that does ' +
+        'not exist yet its preview never builds the bundles. The only way to get numbers is to deploy a ' +
+        'stage first. Each shape was deployed into its own throwaway stage of app `pkgbench`, measured, and ' +
+        'removed before the next shape started.',
+      ''
+    );
+    lines.push(
+      '**What the timed command includes.** `sst diff --stage <stage>` rebuilds every function bundle and ' +
+        'then runs a Pulumi preview against the deployed state. The preview contacts AWS. This is therefore ' +
+        'not a pure package step, and the number is not comparable with `cdk synth`, `stacktape package` or ' +
+        '`serverless package`, all of which do local work only. It is reported because it is the closest ' +
+        'analogue SST has, not because it measures the same thing.',
+      ''
+    );
+    const sstRows = (sst.measurements as Any[]).map((m) => {
+      const artifacts = (m.artifacts ?? []) as Any[];
+      const unzipped = artifacts.reduce((s, a) => s + a.unzippedBytes, 0);
+      const distinct = new Map(artifacts.map((a) => [a.contentHash, a]));
+      const upload = [...distinct.values()].reduce((s, a) => s + a.zippedBytes, 0);
+      const perFunction = artifacts.map((a) => a.unzippedBytes);
+      return [
+        shapeLabel[m.shape] ?? m.shape,
+        m.config,
+        m.ok ? secs(m.medianMs) : 'failed',
+        secs(m.deployMs),
+        m.artifactsFound ?? artifacts.length,
+        artifacts.length ? kb(unzipped) : '-',
+        artifacts.length ? kb(upload) : '-',
+        perFunction.length ? kb(median(perFunction)) : '-'
+      ];
+    });
+    lines.push(
+      table(
+        [
+          'Shape',
+          'Configuration',
+          '`sst diff` (median)',
+          'First deploy of the stage',
+          'Artifacts found',
+          'Functions unzipped',
+          'Upload on first deploy (zipped)',
+          'Footprint per function'
+        ],
+        sstRows
+      ),
+      ''
+    );
+  }
+
+  // --- AWS resources -------------------------------------------------------
+  if (sst?.resourceLog?.length) {
+    lines.push('## AWS resources this benchmark created and removed', '');
+    lines.push(
+      'Only the SST measurements touch AWS with anything other than a read. Every stage below was removed ' +
+        'before the next shape was deployed.',
+      ''
+    );
+    lines.push(
+      table(
+        ['Action', 'What', 'Detail'],
+        (sst.resourceLog as Any[]).map((entry) => [
+          entry.action,
+          entry.what,
+          String(entry.detail ?? '').slice(0, 160).replace(/\n/g, ' ')
+        ])
+      ),
+      ''
+    );
+
+    const footprint = sst.accountFootprint as Any | undefined;
+    if (footprint) {
+      lines.push(`### Outside the per-stage lifecycle (account ${footprint.account}, ${footprint.region})`, '');
+      lines.push(footprint.note, '');
+      lines.push('**Created**', '');
+      for (const item of footprint.created as Any[]) {
+        lines.push(`- ${item.resource} — ${item.by}, ${item.at}`);
+      }
+      lines.push('', '**Removed by hand after the last shape**', '');
+      for (const item of footprint.removed as Any[]) lines.push(`- ${item.resource} — ${item.how}`);
+      lines.push('', '**Deliberately left alone**', '');
+      for (const item of footprint.leftAlone as string[]) lines.push(`- ${item}`);
+      lines.push('', '**Verified absent afterwards**', '');
+      for (const item of footprint.verifiedAfterCleanup as string[]) lines.push(`- ${item}`);
+      lines.push('');
+    }
   }
 
   // --- containers ----------------------------------------------------------

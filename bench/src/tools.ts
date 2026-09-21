@@ -40,6 +40,8 @@ export type ToolAdapter = {
 
 export type ToolContext = {
   stacktapeRepo: string;
+  /** Path to the Stacktape CLI executable the measurements run. */
+  stacktapeBinary: string;
   awsProfile: string;
   awsRegion: string;
   projectName: string;
@@ -52,30 +54,26 @@ export type ToolContext = {
 // Stacktape
 // ---------------------------------------------------------------------------
 
-const stacktapeStateDir = (ctx: ToolContext) => join(ctx.stacktapeRepo, 'apps', 'cli', '.stacktape');
+/** `package` leaves its artifacts in `.stacktape/<invocation>/build` inside the project directory. */
+const stacktapeStateDir = (dir: string) => join(dir, '.stacktape');
 
-const listInvocations = (ctx: ToolContext) => {
-  const dir = stacktapeStateDir(ctx);
-  if (!exists(dir)) return [];
-  return readdirSync(dir).filter((name) => statSync(join(dir, name)).isDirectory());
+const listInvocations = (dir: string) => {
+  const stateDir = stacktapeStateDir(dir);
+  if (!exists(stateDir)) return [];
+  return readdirSync(stateDir).filter((name) => statSync(join(stateDir, name)).isDirectory());
 };
 
 const createStacktapeAdapter = (ctx: ToolContext): ToolAdapter => ({
   id: 'stacktape',
   label: 'Stacktape',
-  availability: () => {
-    const devScript = join(ctx.stacktapeRepo, 'apps', 'cli', 'scripts', 'dev.ts');
-    if (!existsSync(devScript)) {
-      return { ok: false, reason: `source-built CLI not found at ${devScript}` };
-    }
-    return { ok: true };
-  },
-  prepare: () => ({ before: listInvocations(ctx) }),
+  availability: () =>
+    existsSync(ctx.stacktapeBinary)
+      ? { ok: true }
+      : { ok: false, reason: `Stacktape CLI not found at ${ctx.stacktapeBinary}` },
+  prepare: (dir) => ({ before: listInvocations(dir) }),
   command: (dir, config) => ({
-    command: 'bun',
+    command: ctx.stacktapeBinary,
     args: [
-      'run',
-      'scripts/dev.ts',
       'package',
       '--configPath',
       join(dir, config === 'defaults' ? 'stacktape.defaults.yml' : 'stacktape.yml'),
@@ -88,15 +86,12 @@ const createStacktapeAdapter = (ctx: ToolContext): ToolAdapter => ({
       '--profile',
       ctx.awsProfile
     ],
-    // The source-built CLI resolves every internal path from its own working directory, so it has to
-    // run from apps/cli. Its build output therefore lands in apps/cli/.stacktape, not in the fixture.
-    cwd: join(ctx.stacktapeRepo, 'apps', 'cli'),
-    env: { SKIP_LOADING_ENV: '1', STACKTAPE_TELEMETRY_DISABLED: '1' }
+    cwd: dir
   }),
-  collect: (_dir, _config, prepared, stdout) => {
-    const invocation = newestInvocation(ctx, prepared.before as string[]);
+  collect: (dir, _config, prepared, stdout) => {
+    const invocation = newestInvocation(dir, prepared.before as string[]);
     if (!invocation) return { artifacts: [], toolReportedMs: null, notes: ['no invocation directory produced'] };
-    const buildDir = join(stacktapeStateDir(ctx), invocation, 'build');
+    const buildDir = join(stacktapeStateDir(dir), invocation, 'build');
     const artifacts: Artifact[] = [];
     const notes: string[] = [];
 
@@ -148,19 +143,17 @@ const createStacktapeAdapter = (ctx: ToolContext): ToolAdapter => ({
       notes
     };
   },
-  discardRunOutput: (_dir, _config, prepared) => {
-    const invocation = newestInvocation(ctx, prepared.before as string[]);
-    if (invocation) removePaths([join(stacktapeStateDir(ctx), invocation)]);
+  discardRunOutput: (dir, _config, prepared) => {
+    const invocation = newestInvocation(dir, prepared.before as string[]);
+    if (invocation) removePaths([join(stacktapeStateDir(dir), invocation)]);
   },
   cleanCaches: (dir) => {
-    // `package` writes into the CLI's own working directory; the fixture only ever holds a stray
-    // `.stacktape` if someone ran a released binary here.
     removePaths([join(dir, '.stacktape'), join(dir, '.stacktape-stack-info')]);
   }
 });
 
-const newestInvocation = (ctx: ToolContext, before: string[]) => {
-  const added = listInvocations(ctx).filter((name) => !before.includes(name));
+const newestInvocation = (dir: string, before: string[]) => {
+  const added = listInvocations(dir).filter((name) => !before.includes(name));
   return added.sort().at(-1) ?? null;
 };
 
@@ -315,19 +308,37 @@ const createServerlessAdapter = (ctx: ToolContext): ToolAdapter => ({
   prepare: () => ({}),
   command: (dir, config) => ({
     command: join(dir, 'node_modules', '.bin', 'serverless'),
-    args: ['package', '--config', config === 'defaults' ? 'serverless.defaults.yml' : 'serverless.yml'],
+    args: [
+      'package',
+      '--config',
+      config === 'defaults' ? 'serverless.defaults.yml' : 'serverless.yml',
+      '--stage',
+      ctx.stage,
+      '--region',
+      ctx.awsRegion
+    ],
     cwd: dir,
     env: {
-      SERVERLESS_ACCESS_KEY: ctx.serverlessAccessKey ?? '',
+      ...(ctx.serverlessAccessKey ? { SERVERLESS_ACCESS_KEY: ctx.serverlessAccessKey } : {}),
       AWS_PROFILE: ctx.awsProfile,
       AWS_REGION: ctx.awsRegion,
       SLS_TELEMETRY_DISABLED: '1'
     }
   }),
-  collect: (dir) => {
+  collect: (dir, config, _prepared, stdout) => {
     const out = join(dir, '.serverless');
     const artifacts: Artifact[] = [];
+    const notes: string[] = [];
     if (!exists(out)) return { artifacts, toolReportedMs: null, notes: ['.serverless was not produced'] };
+
+    // Serverless Framework's default is one package for the whole service: every function in the stack
+    // is deployed from the same zip and therefore loads all of it. Count the functions the package
+    // serves, so the size and footprint tables say what a function actually carries.
+    const configFile = join(dir, config === 'defaults' ? 'serverless.defaults.yml' : 'serverless.yml');
+    const servesFunctionCount = exists(configFile)
+      ? (readFileSync(configFile, 'utf8').match(/^ {4}handler:/gm) ?? []).length
+      : 1;
+
     for (const entry of readdirSync(out, { withFileTypes: true })) {
       if (!entry.isFile() || !entry.name.endsWith('.zip')) continue;
       // Serverless hands over zips only; the runner unpacks them into tmp/ before measuring.
@@ -338,10 +349,21 @@ const createServerlessAdapter = (ctx: ToolContext): ToolAdapter => ({
         zippedBytes: 0,
         toolZipBytes: statSync(join(out, entry.name)).size,
         contentHash: '',
-        fileCount: 0
+        fileCount: 0,
+        servesFunctionCount
       });
     }
-    return { artifacts, toolReportedMs: null, notes: [] };
+    if (artifacts.length === 1 && servesFunctionCount > 1) {
+      notes.push(
+        `one service package deployed to all ${servesFunctionCount} functions (Serverless Framework's default)`
+      );
+    }
+    const reported = stdout.replace(/\[[0-9;]*m/g, '').match(/Service packaged \(([0-9.]+)\s*(ms|s)\)/);
+    return {
+      artifacts,
+      toolReportedMs: reported ? Math.round(Number(reported[1]) * (reported[2] === 'ms' ? 1 : 1000)) : null,
+      notes
+    };
   },
   discardRunOutput: () => {},
   cleanCaches: (dir) => {

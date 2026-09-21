@@ -64,23 +64,23 @@ stacktape package --configPath stacktape.yml --projectName pkgbench --stage dev 
 `package` resolves AWS identity with an STS call, because the account and region take part in stable resource
 names. It does not deploy and it changes nothing in AWS.
 
-These runs did not use a published binary. They used the source-built CLI from the Stacktape monorepo:
+These runs did not use a published release. They used a release-style Linux binary built from the Stacktape
+monorepo, which reports version `4.0.0-bench`, standing in for the published v4 prerelease. It was built from
+the commit and working-tree state recorded in the environment block of `results/RESULTS.md`, including
+uncommitted packaging changes.
 
-```sh
-cd <monorepo>/apps/cli
-SKIP_LOADING_ENV=1 bun run scripts/dev.ts package --configPath <fixture>/stacktape.yml \
-  --projectName pkgbench --stage dev --region eu-west-1 --profile <profile>
-```
+The binary runs with the fixture directory as its working directory, so `package` leaves its artifacts in
+`<fixture>/.stacktape/<invocation>/build/`. The runner snapshots that directory before each run, reads the
+artifacts the run produced, and deletes the invocation directory afterwards. Point the runner at a different
+executable with `STACKTAPE_BINARY=/path/to/stacktape`.
 
-Two consequences, both recorded in the results:
+`node bench/run.ts overhead` measures `stacktape version`, the binary starting up and printing its version.
+That is the floor under every Stacktape measurement in the tables.
 
-1. **The development wrapper rebuilds the whole CLI with Bun on every invocation.** That is a fixed cost a
-   published binary does not pay. `node bench/run.ts overhead` measures it and `results/RESULTS.md` reports the
-   Stacktape package times both raw and with that constant subtracted.
-2. **The artifacts land in `<monorepo>/apps/cli/.stacktape/<invocation>/build/`, not in the fixture.** Every path
-   inside the development CLI is resolved from its own working directory, and the wrapper only works when that
-   directory is `apps/cli`. The runner snapshots the state directory before each run, reads the artifacts the run
-   produced, and deletes that invocation directory afterwards.
+An earlier version of these results used the monorepo development wrapper (`bun run scripts/dev.ts`) instead.
+That wrapper rebuilds the whole CLI with Bun on every invocation, which added about 3.3 seconds to every
+measurement, and it writes its artifacts into `apps/cli/.stacktape` rather than into the fixture. Those
+numbers are superseded by the binary runs.
 
 ## Artifact layout
 

@@ -125,13 +125,10 @@ export const runContainerBenchmark = ({
 
   // --- Stacktape image buildpack -------------------------------------------
   const stacktapeDir = join(base, 'stacktape');
-  if (exists(stacktapeDir) && exists(join(ctx.stacktapeRepo, 'apps', 'cli', 'scripts', 'dev.ts'))) {
-    const cliDir = join(ctx.stacktapeRepo, 'apps', 'cli');
+  if (exists(stacktapeDir) && exists(ctx.stacktapeBinary)) {
     const command = {
-      command: 'bun',
+      command: ctx.stacktapeBinary,
       args: [
-        'run',
-        'scripts/dev.ts',
         'package',
         '--configPath',
         join(stacktapeDir, 'stacktape.yml'),
@@ -144,8 +141,7 @@ export const runContainerBenchmark = ({
         '--profile',
         ctx.awsProfile
       ],
-      cwd: cliDir,
-      env: { SKIP_LOADING_ENV: '1' },
+      cwd: stacktapeDir,
       timeoutMs: 1800000
     };
 
