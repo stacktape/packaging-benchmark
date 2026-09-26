@@ -1,0 +1,32 @@
+{
+  "title": "Next.js with Drizzle and PostgreSQL",
+  "starter": "fullstack-nextjs-drizzle",
+  "about": "A server-rendered Next.js 15 application (App Router, a server action) that lists and creates posts in PostgreSQL through Drizzle ORM. Every tool builds it with `next build` and deploys it the OpenNext way: a server function, static assets, an image optimizer and a CDN in front.",
+  "tools": [
+    "stacktape",
+    "cdk",
+    "sst"
+  ],
+  "packageManager": "npm",
+  "edit": {
+    "file": "src/app/page.tsx",
+    "from": "marginBottom: '2rem' }}>Posts</h1>",
+    "to": "marginBottom: '2rem' }}>All posts</h1>"
+  },
+  "changesFromStarter": [
+    "`next` is 15.5.26 instead of the starter's 15.4.6. The OpenNext releases SST and the CDK construct build with refuse 15.4.6: their supported ranges start at 15.4.11 (SST's OpenNext 3.9.14) and 15.5.15 (OpenNext 3.10.4).",
+    "Every other direct dependency is pinned to an exact version, the newest within the starter's own range."
+  ],
+  "configFiles": {
+    "stacktape": [
+      "stacktape.yml"
+    ],
+    "cdk": [
+      "lib/fullstack-nextjs-drizzle-stack.ts"
+    ],
+    "sst": [
+      "sst.config.ts"
+    ]
+  },
+  "notes": {}
+}

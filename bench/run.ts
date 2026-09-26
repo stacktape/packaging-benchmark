@@ -7,6 +7,9 @@
  *   node bench/run.ts overhead      Stacktape CLI start-up, the floor under every Stacktape measurement
  *   node bench/run.ts containers    image size, cold build and warm rebuild for the three container paths
  *   node bench/run.ts sst           DEPLOYS TO AWS. See fixtures/sst/README.md before running it.
+ *   node bench/run.ts apps-install  install every real-application fixture (after `node fixtures/apps.ts`)
+ *   node bench/run.ts apps          cold package, package after a one-line change and upload bytes, per
+ *                                   real-application fixture and local tool (Stacktape, CDK, Serverless)
  *   node bench/run.ts report        rewrite results/RESULTS.md from results/results.json
  *   node bench/run.ts all           everything except `sst`, in order
  *
@@ -23,11 +26,13 @@
  *   BENCH_TOOLS                    comma-separated tool ids to restrict the run to
  *   BENCH_CONTAINER_VARIANTS       comma-separated container variants to restrict `containers` to
  *   STACKTAPE_BINARY_COMMIT        the Stacktape commit the binary was built from, recorded in the report
+ *   BENCH_APPS                     comma-separated real-application fixture ids to restrict `apps` to
+ *   BENCH_MAX_LOAD                 wait before each measurement while the one-minute load is above this (default 2)
  */
 
 import { appendFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { loadavg } from 'node:os';
-import { dirname, join } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { CONTAINER_VARIANTS, SHAPES, TOOLS, handlerFileName } from '../fixtures/generate.ts';
 import { captureEnvironment } from './src/env.ts';
@@ -45,6 +50,8 @@ import { type ConfigName, createAdapters, type ToolContext } from './src/tools.t
 import { writeReport } from './src/report.ts';
 import { runContainerBenchmark } from './src/containers.ts';
 import { runSstBenchmark } from './src/sst.ts';
+import { loadAppFixtures, appsOutRoot } from '../fixtures/apps.ts';
+import { type AppMeasurement, measureApp } from './src/apps.ts';
 
 const repoRoot = dirname(dirname(fileURLToPath(import.meta.url)));
 const generatedDir = join(repoRoot, 'generated');
@@ -81,6 +88,23 @@ const log = (message: string) => {
 
 /** The one-minute load average, recorded with every measurement: the machine must be quiet for a fair run. */
 const load1m = () => Math.round(loadavg()[0] * 100) / 100;
+
+const MAX_LOAD = Number(process.env.BENCH_MAX_LOAD ?? 2);
+const sleepSync = (ms: number) => Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
+
+/** Waits while the one-minute load is above BENCH_MAX_LOAD, at most 15 minutes; returns how long it waited. */
+const waitForQuiet = () => {
+  const started = performance.now();
+  while (load1m() > MAX_LOAD) {
+    if (performance.now() - started > 15 * 60 * 1000) {
+      log(`load still ${load1m()} after 15 minutes; measuring anyway`);
+      break;
+    }
+    log(`waiting: one-minute load ${load1m()} is above ${MAX_LOAD}`);
+    sleepSync(30000);
+  }
+  return Math.round(performance.now() - started);
+};
 
 const selectedShapes = () => {
   const only = process.env.BENCH_SHAPES?.split(',').map((s) => s.trim()).filter(Boolean);
@@ -141,6 +165,9 @@ type Any = Record<string, any>;
 type Results = {
   environment: unknown;
   blocked: { tool: string; reason: string }[];
+  apps: AppMeasurement[];
+  appsSst: unknown;
+  appContainers: unknown[];
   lambda: Measurement[];
   incremental: unknown[];
   containers: unknown[];
@@ -152,6 +179,9 @@ type Results = {
 const emptyResults = (): Results => ({
   environment: null,
   blocked: [],
+  apps: [],
+  appsSst: null,
+  appContainers: [],
   lambda: [],
   incremental: [],
   containers: [],
@@ -566,10 +596,63 @@ const overhead = () => {
 // entry point
 // ---------------------------------------------------------------------------
 
-const main = () => {
+// ---------------------------------------------------------------------------
+// real-application fixtures
+// ---------------------------------------------------------------------------
+
+const selectedApps = async () => {
+  const only = process.env.BENCH_APPS?.split(',').map((s) => s.trim()).filter(Boolean);
+  const fixtures = await loadAppFixtures();
+  return only?.length ? fixtures.filter((f) => only.includes(f.id)) : fixtures;
+};
+
+const appsInstall = async () => {
+  for (const fixture of await selectedApps()) {
+    for (const tool of fixture.tools) {
+      if (!selectedTools().includes(tool)) continue;
+      const dir = join(appsOutRoot, fixture.id, tool);
+      const result = runOnce({ ...installCommand(dir, fixture.packageManager === 'pnpm'), timeoutMs: 20 * 60 * 1000 });
+      log(`install apps/${fixture.id}/${tool}: exit ${result.exitCode} in ${Math.round(result.wallMs)}ms`);
+      if (result.exitCode !== 0) log((result.stderr || result.stdout).slice(-3000));
+    }
+  }
+};
+
+const apps = async () => {
+  const results = loadResults();
+  const tools = selectedTools().filter((tool) => tool !== 'sst');
+  for (const fixture of await selectedApps()) {
+    for (const tool of fixture.tools.filter((t) => tools.includes(t))) {
+      log(`apps ${fixture.id}/${tool}: one-minute load ${load1m()}`);
+      const measurement = measureApp({
+        fixture,
+        dir: join(appsOutRoot, fixture.id, tool),
+        adapter: adapters[tool],
+        samples: SAMPLES,
+        load1m,
+        waitForQuiet,
+        materialize: materializeZipArtifacts
+      });
+      results.apps = [...results.apps.filter((m) => !(m.fixture === fixture.id && m.tool === tool)), measurement];
+      saveResults(results);
+      log(
+        `apps ${fixture.id}/${tool}: ` +
+          (measurement.ok
+            ? `cold ${measurement.cold?.medianMs}ms, one-line change ${measurement.edit?.medianMs}ms, upload ` +
+              `${measurement.totals?.firstDeployUploadZippedBytes} bytes`
+            : `FAILED - ${measurement.error?.slice(0, 600)}`)
+      );
+    }
+  }
+};
+
+const main = async (): Promise<void> => {
   const command = process.argv[2] ?? 'all';
   mkdirSync(tmpDir, { recursive: true });
   mkdirSync(resultsDir, { recursive: true });
+
+  if (command === 'apps-install') return appsInstall();
+  if (command === 'apps') return apps();
 
   if (command === 'install') return install();
   if (command === 'lambda') return lambda();
@@ -639,7 +722,7 @@ const main = () => {
     results.containers = runContainerBenchmark({ repoRoot, ctx, log, variants: selectedContainerVariants(), load1m });
     saveResults(results);
     process.argv[2] = 'report';
-    return main();
+    return await main();
   }
   throw new Error(`unknown command: ${command}`);
 };
@@ -652,4 +735,5 @@ const readToolVersions = (): Record<string, string | null> => {
   return versions;
 };
 
-main();
+// Only when run as a script: importing this module must never start a benchmark.
+if (process.argv[1] && fileURLToPath(import.meta.url) === resolve(process.argv[1])) await main();

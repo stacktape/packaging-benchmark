@@ -1,0 +1,35 @@
+{
+  "title": "Multi-step workflow",
+  "starter": "multi-step-workflow",
+  "about": "A Step Functions state machine that validates input, processes it with retries and generates a report, each step a Lambda function, plus a Hono API function that starts executions and reports their status. Four functions, one of them with dependencies.",
+  "tools": [
+    "stacktape",
+    "cdk",
+    "serverless",
+    "sst"
+  ],
+  "packageManager": "npm",
+  "edit": {
+    "file": "src/start-workflow.ts",
+    "from": "message: 'Workflow started',",
+    "to": "message: 'Workflow started, edited',"
+  },
+  "changesFromStarter": [
+    "Every direct dependency is pinned to an exact version, the newest within the starter's own range."
+  ],
+  "configFiles": {
+    "stacktape": [
+      "stacktape.yml"
+    ],
+    "cdk": [
+      "lib/multi-step-workflow-stack.ts"
+    ],
+    "serverless": [
+      "serverless.yml"
+    ],
+    "sst": [
+      "sst.config.ts"
+    ]
+  },
+  "notes": {}
+}

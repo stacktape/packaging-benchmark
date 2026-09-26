@@ -1,0 +1,10 @@
+{
+  "name": "stacktape-project",
+  "private": true,
+  "version": "0.1.0",
+  "devDependencies": {
+    "@types/aws-lambda": "8.10.163",
+    "@types/node": "24.9.2",
+    "typescript": "5.9.3"
+  }
+}

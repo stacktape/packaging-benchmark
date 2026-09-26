@@ -1,0 +1,16 @@
+{
+  "scripts": {
+    "cdk": "cdk"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "2.270.0",
+    "constructs": "10.8.1",
+    "cdk-nextjs-standalone": "4.3.3"
+  },
+  "devDependencies": {
+    "aws-cdk": "2.1142.0",
+    "esbuild": "0.28.2",
+    "tsx": "4.23.15",
+    "typescript": "5.9.3"
+  }
+}

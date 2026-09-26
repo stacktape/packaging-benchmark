@@ -1,0 +1,35 @@
+{
+  "title": "Hono API",
+  "starter": "hono-api",
+  "about": "A small REST API written with Hono, one Lambda function behind an HTTP API: a greeting at `/`, a list of posts at `GET /posts`, and `POST /posts`. Its only dependency is `hono`, which makes it the smallest application here and the closest to what a first Lambda API looks like.",
+  "tools": [
+    "stacktape",
+    "cdk",
+    "serverless",
+    "sst"
+  ],
+  "packageManager": "npm",
+  "edit": {
+    "file": "src/index.ts",
+    "from": "'Hello from Hono on AWS Lambda!'",
+    "to": "'Hello from Hono on AWS Lambda, edited!'"
+  },
+  "changesFromStarter": [
+    "Every direct dependency is pinned to an exact version, the newest within the starter's own range."
+  ],
+  "configFiles": {
+    "stacktape": [
+      "stacktape.yml"
+    ],
+    "cdk": [
+      "lib/hono-api-stack.ts"
+    ],
+    "serverless": [
+      "serverless.yml"
+    ],
+    "sst": [
+      "sst.config.ts"
+    ]
+  },
+  "notes": {}
+}

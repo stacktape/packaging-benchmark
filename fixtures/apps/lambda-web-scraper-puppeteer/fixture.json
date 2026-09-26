@@ -1,0 +1,35 @@
+{
+  "title": "Web scraper with Puppeteer",
+  "starter": "lambda-web-scraper-puppeteer",
+  "about": "A Lambda function behind an HTTP API that opens a page in headless Chromium through `puppeteer-core` and returns every link on it. Chromium comes from `@sparticuz/chromium`, a brotli-compressed browser build for Lambda, so the deployment package is well over 50 MB and holds native files no bundler can inline.",
+  "tools": [
+    "stacktape",
+    "cdk",
+    "serverless",
+    "sst"
+  ],
+  "packageManager": "npm",
+  "edit": {
+    "file": "src/scrape-links.ts",
+    "from": "await page.goto(`http://${url}`);",
+    "to": "await page.goto(`https://${url}`);"
+  },
+  "changesFromStarter": [
+    "Every direct dependency is pinned to an exact version, the newest within the starter's own range."
+  ],
+  "configFiles": {
+    "stacktape": [
+      "stacktape.yml"
+    ],
+    "cdk": [
+      "lib/lambda-web-scraper-puppeteer-stack.ts"
+    ],
+    "serverless": [
+      "serverless.yml"
+    ],
+    "sst": [
+      "sst.config.ts"
+    ]
+  },
+  "notes": {}
+}

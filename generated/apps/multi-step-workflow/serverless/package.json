@@ -1,0 +1,13 @@
+{
+  "name": "multi-step-workflow",
+  "private": true,
+  "dependencies": {
+    "@aws-sdk/client-sfn": "3.1141.0",
+    "hono": "4.13.9"
+  },
+  "devDependencies": {
+    "serverless": "4.42.0",
+    "serverless-step-functions": "3.31.2",
+    "typescript": "5.9.3"
+  }
+}

@@ -23,7 +23,8 @@ export type FileEntry = { path: string; bytes: number; sha256: string };
 
 export type Artifact = {
   name: string;
-  kind: 'function' | 'layer';
+  /** `asset`: anything else a first deployment uploads, such as static files served from a bucket. */
+  kind: 'function' | 'layer' | 'asset';
   /** Sum of the bytes of every file in the artifact. */
   unzippedBytes: number;
   /** Deterministic zip size computed by this benchmark (see README, "How size is measured"). */
@@ -99,7 +100,7 @@ export const measureDirectory = ({
 }: {
   root: string;
   name: string;
-  kind: 'function' | 'layer';
+  kind: Artifact['kind'];
   toolZipBytes?: number | null;
   /** Relative paths to leave out, for tools that drop their own zip beside the bundle it holds. */
   exclude?: string[];
@@ -130,11 +131,22 @@ export type Command = {
   timeoutMs?: number;
 };
 
+/**
+ * Variables that tell a tool an AI coding agent runs it (the list the AWS CDK CLI checks, plus the agent's own session
+ * variables). The tools run as in a developer's terminal, without them.
+ */
+const AGENT_VARIABLES = /^(AI_AGENT|AGENT|CLAUDECODE|CLAUDE_.*|CODEX_.*|CURSOR_AGENT|VSCODE_AGENT|CLINE_ACTIVE|GEMINI_CLI|OPENCODE|COPILOT_CLI|AUGMENT_AGENT|QWEN_CODE)$/;
+
+export const toolEnvironment = (extra: Record<string, string> = {}) => ({
+  ...Object.fromEntries(Object.entries(process.env).filter(([name]) => !AGENT_VARIABLES.test(name))),
+  ...extra
+});
+
 export const runOnce = (cmd: Command): Sample & { stdout: string; stderr: string } => {
   const startedAt = performance.now();
   const result = spawnSync(cmd.command, cmd.args, {
     cwd: cmd.cwd,
-    env: { ...process.env, ...(cmd.env ?? {}) },
+    env: toolEnvironment(cmd.env),
     encoding: 'utf8',
     maxBuffer: 256 * 1024 * 1024,
     timeout: cmd.timeoutMs ?? 30 * 60 * 1000

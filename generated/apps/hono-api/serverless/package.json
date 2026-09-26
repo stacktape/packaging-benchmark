@@ -1,0 +1,11 @@
+{
+  "name": "hono-api",
+  "private": true,
+  "dependencies": {
+    "hono": "4.13.9"
+  },
+  "devDependencies": {
+    "serverless": "4.42.0",
+    "typescript": "5.9.3"
+  }
+}

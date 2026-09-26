@@ -1,0 +1,22 @@
+service: lambda-web-scraper-puppeteer
+
+provider:
+  name: aws
+  runtime: nodejs24.x
+  region: eu-west-1
+
+build:
+  esbuild:
+    # @sparticuz/chromium must stay external; the framework installs it into the package.
+    external:
+      - '@sparticuz/chromium'
+
+functions:
+  scrapeLinks:
+    handler: src/scrape-links.default
+    memorySize: 1600
+    timeout: 30
+    events:
+      - httpApi:
+          path: /scrape-links/{url}
+          method: GET

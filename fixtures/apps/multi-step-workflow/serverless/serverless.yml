@@ -1,0 +1,86 @@
+service: multi-step-workflow
+
+plugins:
+  - serverless-step-functions
+
+provider:
+  name: aws
+  runtime: nodejs24.x
+  region: eu-west-1
+  httpApi:
+    cors: true
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action: states:StartExecution
+          Resource: !Ref Workflow
+        - Effect: Allow
+          Action: states:DescribeExecution
+          Resource: '*'
+
+functions:
+  validateInput:
+    handler: src/validate-input.default
+  processData:
+    handler: src/process-data.default
+  generateReport:
+    handler: src/generate-report.default
+  startWorkflow:
+    handler: src/start-workflow.default
+    memorySize: 512
+    environment:
+      STP_WORKFLOW_ARN: !Ref Workflow
+    events:
+      - httpApi:
+          path: /start
+          method: POST
+      - httpApi:
+          path: /status/{executionArn+}
+          method: GET
+
+stepFunctions:
+  stateMachines:
+    workflow:
+      id: Workflow
+      definition:
+        Comment: Multi-step data processing workflow
+        StartAt: ValidateInput
+        States:
+          ValidateInput:
+            Type: Task
+            Resource: !GetAtt validateInput.Arn
+            Next: IsValid
+            Catch:
+              - ErrorEquals: [States.ALL]
+                Next: Failed
+          IsValid:
+            Type: Choice
+            Choices:
+              - Variable: $.valid
+                BooleanEquals: true
+                Next: ProcessData
+            Default: Failed
+          ProcessData:
+            Type: Task
+            Resource: !GetAtt processData.Arn
+            Next: GenerateReport
+            Retry:
+              - ErrorEquals: [States.TaskFailed]
+                IntervalSeconds: 2
+                MaxAttempts: 2
+                BackoffRate: 2
+            Catch:
+              - ErrorEquals: [States.ALL]
+                Next: Failed
+          GenerateReport:
+            Type: Task
+            Resource: !GetAtt generateReport.Arn
+            End: true
+            Catch:
+              - ErrorEquals: [States.ALL]
+                Next: Failed
+          Failed:
+            Type: Fail
+            Error: WorkflowFailed
+            Cause: One or more steps failed

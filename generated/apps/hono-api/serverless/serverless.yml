@@ -1,0 +1,15 @@
+service: hono-api
+
+provider:
+  name: aws
+  runtime: nodejs24.x
+  region: eu-west-1
+  memorySize: 512
+  httpApi:
+    cors: true
+
+functions:
+  api:
+    handler: src/index.handler
+    events:
+      - httpApi: '*'

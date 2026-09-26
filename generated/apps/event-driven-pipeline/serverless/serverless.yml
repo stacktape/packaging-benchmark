@@ -1,0 +1,67 @@
+service: event-driven-pipeline
+
+provider:
+  name: aws
+  runtime: nodejs24.x
+  region: eu-west-1
+  memorySize: 512
+  httpApi:
+    cors: true
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action: sqs:SendMessage
+          Resource: !GetAtt OrderQueue.Arn
+        - Effect: Allow
+          Action: events:PutEvents
+          Resource: !GetAtt EventBus.Arn
+
+functions:
+  submitOrder:
+    handler: src/submit-order.default
+    environment:
+      STP_ORDER_QUEUE_URL: !Ref OrderQueue
+    events:
+      - httpApi:
+          path: /orders
+          method: POST
+  processOrder:
+    handler: src/process-order.default
+    timeout: 30
+    environment:
+      STP_EVENT_BUS_ARN: !GetAtt EventBus.Arn
+    events:
+      - sqs:
+          arn: !GetAtt OrderQueue.Arn
+          batchSize: 1
+          functionResponseType: ReportBatchItemFailures
+  onOrderProcessed:
+    handler: src/on-order-processed.default
+    events:
+      - eventBridge:
+          eventBus: !GetAtt EventBus.Arn
+          pattern:
+            source:
+              - orders
+            detail-type:
+              - OrderProcessed
+
+resources:
+  Resources:
+    OrderDlq:
+      Type: AWS::SQS::Queue
+      Properties:
+        FifoQueue: true
+    OrderQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        FifoQueue: true
+        VisibilityTimeout: 30
+        RedrivePolicy:
+          deadLetterTargetArn: !GetAtt OrderDlq.Arn
+          maxReceiveCount: 3
+    EventBus:
+      Type: AWS::Events::EventBus
+      Properties:
+        Name: ${self:service}-${sls:stage}

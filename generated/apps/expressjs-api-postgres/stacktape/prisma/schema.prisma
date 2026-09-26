@@ -1,0 +1,19 @@
+generator client {
+  provider      = "prisma-client-js"
+  // AWS Lambda's Node.js runtimes run on Amazon Linux 2023, which needs the rhel-openssl-3.0.x query engine.
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("STP_MAIN_DATABASE_CONNECTION_STRING")
+}
+
+model Post {
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  title       String   @unique
+  content     String
+  authorEmail String
+}

@@ -1,0 +1,37 @@
+{
+  "title": "Express API with PostgreSQL",
+  "starter": "expressjs-api-postgres",
+  "about": "The REST API most Stacktape users start with: Express 5 with Prisma ORM over PostgreSQL, `GET /posts` and `POST /posts`, in one Lambda function behind an HTTP API, with the database next to it. Prisma brings a real dependency tree: a generated client and a native query engine that has to reach Lambda for the right Linux.",
+  "tools": [
+    "stacktape",
+    "cdk",
+    "serverless",
+    "sst"
+  ],
+  "packageManager": "npm",
+  "edit": {
+    "file": "src/index.ts",
+    "from": "res.send({ message: 'success', data: posts });",
+    "to": "res.send({ message: 'success', count: posts.length, data: posts });"
+  },
+  "changesFromStarter": [
+    "The starter runs Express in a container (`web-service`). Here the same Express app runs in a Lambda function through `serverless-http`, the adapter most Express-on-Lambda projects use, instead of `app.listen`.",
+    "The Prisma schema asks for the `rhel-openssl-3.0.x` query engine (Lambda's Amazon Linux 2023) instead of the Alpine one the container needs.",
+    "Every direct dependency is pinned to an exact version, the newest within the starter's own range."
+  ],
+  "configFiles": {
+    "stacktape": [
+      "stacktape.yml"
+    ],
+    "cdk": [
+      "lib/expressjs-api-postgres-stack.ts"
+    ],
+    "serverless": [
+      "serverless.yml"
+    ],
+    "sst": [
+      "sst.config.ts"
+    ]
+  },
+  "notes": {}
+}

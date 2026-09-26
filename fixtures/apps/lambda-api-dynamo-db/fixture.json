@@ -1,0 +1,35 @@
+{
+  "title": "Lambda API with DynamoDB",
+  "starter": "lambda-api-dynamo-db",
+  "about": "A Hono REST API in one Lambda function that stores posts in a DynamoDB table through the AWS SDK v3 document client. The SDK is imported by the application, so this fixture shows whether each tool leaves the SDK to the Lambda runtime or bundles it.",
+  "tools": [
+    "stacktape",
+    "cdk",
+    "serverless",
+    "sst"
+  ],
+  "packageManager": "npm",
+  "edit": {
+    "file": "src/index.ts",
+    "from": "message: 'Lambda API with DynamoDB',",
+    "to": "message: 'Lambda API with DynamoDB, edited',"
+  },
+  "changesFromStarter": [
+    "Every direct dependency is pinned to an exact version, the newest within the starter's own range."
+  ],
+  "configFiles": {
+    "stacktape": [
+      "stacktape.yml"
+    ],
+    "cdk": [
+      "lib/lambda-api-dynamo-db-stack.ts"
+    ],
+    "serverless": [
+      "serverless.yml"
+    ],
+    "sst": [
+      "sst.config.ts"
+    ]
+  },
+  "notes": {}
+}

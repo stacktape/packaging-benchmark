@@ -1,0 +1,53 @@
+scripts:
+  generatePrismaClient:
+    type: local-script
+    properties:
+      executeCommand: npx prisma generate
+  migrateDb:
+    type: local-script
+    properties:
+      executeCommand: npx prisma db push --skip-generate
+      connectTo:
+        - mainDatabase
+
+hooks:
+  beforeDeploy:
+    - scriptName: generatePrismaClient
+  afterDeploy:
+    - scriptName: migrateDb
+
+resources:
+  apiGateway:
+    type: http-api-gateway
+    properties:
+      cors:
+        enabled: true
+
+  api:
+    type: function
+    properties:
+      packaging:
+        type: stacktape-lambda-buildpack
+        properties:
+          entryfilePath: ./src/index.ts
+      memory: 512
+      connectTo:
+        - mainDatabase
+      events:
+        - type: http-api-gateway
+          properties:
+            httpApiGatewayName: apiGateway
+            path: /{proxy+}
+            method: '*'
+
+  mainDatabase:
+    type: relational-database
+    properties:
+      credentials:
+        masterUserPassword: $Secret('mainDatabase.password')
+      engine:
+        type: postgres
+        properties:
+          version: '18.1'
+          primaryInstance:
+            instanceSize: db.t3.micro

@@ -1,0 +1,12 @@
+packages:
+  - "packages/lambda"
+  - "packages/server"
+  - "packages/utils"
+# pnpm 11: allow the install scripts the tools need, and install the pinned versions without a day's wait.
+minimumReleaseAge: 0
+allowBuilds:
+  esbuild: true
+  sst: true
+  serverless: true
+  protobufjs: true
+  "@parcel/watcher": true

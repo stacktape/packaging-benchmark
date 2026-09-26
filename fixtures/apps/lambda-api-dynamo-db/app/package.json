@@ -1,0 +1,12 @@
+{
+  "name": "lambda-api-dynamo-db",
+  "private": true,
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "3.1141.0",
+    "@aws-sdk/lib-dynamodb": "3.1141.0",
+    "hono": "4.13.9"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3"
+  }
+}

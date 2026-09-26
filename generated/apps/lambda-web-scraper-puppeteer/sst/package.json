@@ -1,0 +1,15 @@
+{
+  "name": "lambda-web-scraper-puppeteer",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@sparticuz/chromium": "133.0.0",
+    "puppeteer-core": "24.43.1"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "8.10.163",
+    "puppeteer": "24.43.1",
+    "sst": "4.17.1",
+    "typescript": "5.9.3"
+  }
+}

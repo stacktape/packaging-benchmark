@@ -1,0 +1,35 @@
+{
+  "title": "Event-driven pipeline",
+  "starter": "event-driven-pipeline",
+  "about": "An order pipeline of three Lambda functions: `POST /orders` puts an order on an SQS FIFO queue with a dead-letter queue, a consumer processes it one message at a time and publishes an `OrderProcessed` event to an EventBridge bus, and a third function is triggered by that event. Each function imports a different AWS SDK client or none.",
+  "tools": [
+    "stacktape",
+    "cdk",
+    "serverless",
+    "sst"
+  ],
+  "packageManager": "npm",
+  "edit": {
+    "file": "src/submit-order.ts",
+    "from": "message: 'Order submitted'",
+    "to": "message: 'Order submitted, edited'"
+  },
+  "changesFromStarter": [
+    "Every direct dependency is pinned to an exact version, the newest within the starter's own range."
+  ],
+  "configFiles": {
+    "stacktape": [
+      "stacktape.yml"
+    ],
+    "cdk": [
+      "lib/event-driven-pipeline-stack.ts"
+    ],
+    "serverless": [
+      "serverless.yml"
+    ],
+    "sst": [
+      "sst.config.ts"
+    ]
+  },
+  "notes": {}
+}

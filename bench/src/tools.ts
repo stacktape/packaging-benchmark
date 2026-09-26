@@ -1,16 +1,19 @@
 /** One adapter per packaging tool: how to run it, where its artifacts land, and how to clean up. */
 
-import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
+import { existsSync, mkdtempSync, readdirSync, readFileSync, statSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import {
   type Artifact,
   type Command,
   exists,
   measureDirectory,
-  removePaths
+  removePaths,
+  runOnce
 } from './measure.ts';
 
-export type ConfigName = 'likeforlike' | 'defaults';
+/** `app`: a real-application fixture, which has one configuration: the one its README shows. */
+export type ConfigName = 'likeforlike' | 'defaults' | 'app';
 
 export type Availability = { ok: true } | { ok: false; reason: string };
 
@@ -209,33 +212,53 @@ const createCdkAdapter = (): ToolAdapter => ({
     const notes: string[] = [];
     if (!exists(out)) return { artifacts, toolReportedMs: null, notes: ['no cdk.out produced'] };
 
-    // Map each asset directory back to the function that uses it, through the synthesized template.
-    const assetToFunction = new Map<string, string>();
-    const templatePath = join(out, 'PackagingBenchmark.template.json');
-    if (exists(templatePath)) {
-      const template = JSON.parse(readFileSync(templatePath, 'utf8')) as {
+    // Every file a deployment uploads is listed in the stacks' `*.assets.json` manifests. The synthesized templates say
+    // which function or layer uses each one; the rest (static files, custom-resource code) are other assets. The
+    // templates themselves are uploaded too, and are left out here as they are for every tool.
+    const usage = new Map<string, { name: string; kind: Artifact['kind'] }>();
+    for (const file of readdirSync(out).filter((name) => name.endsWith('.template.json'))) {
+      const template = JSON.parse(readFileSync(join(out, file), 'utf8')) as {
         Resources?: Record<string, { Type?: string; Metadata?: Record<string, string> }>;
       };
       for (const [logicalId, resource] of Object.entries(template.Resources ?? {})) {
-        if (resource.Type !== 'AWS::Lambda::Function') continue;
         const assetPath = resource.Metadata?.['aws:asset:path'];
-        if (assetPath) assetToFunction.set(assetPath, logicalId);
+        if (!assetPath) continue;
+        const kind = resource.Type === 'AWS::Lambda::Function' ? 'function' : resource.Type === 'AWS::Lambda::LayerVersion' ? 'layer' : 'asset';
+        if (!usage.has(assetPath) || kind === 'function') usage.set(assetPath, { name: logicalId, kind });
       }
     }
-
-    for (const entry of readdirSync(out, { withFileTypes: true })) {
-      if (!entry.isDirectory() || !entry.name.startsWith('asset.')) continue;
-      const functionName = assetToFunction.get(entry.name);
-      if (!functionName) {
-        // An asset directory the current template no longer references: CDK names assets by content
-        // hash and leaves the previous one behind, so a warm run after a source change keeps both.
-        // Only what this synth actually produced is measured.
-        notes.push(`ignored stale asset directory ${entry.name}`);
-        continue;
+    const seen = new Set<string>();
+    for (const file of readdirSync(out).filter((name) => name.endsWith('.assets.json'))) {
+      const manifest = JSON.parse(readFileSync(join(out, file), 'utf8')) as {
+        files?: Record<string, { source?: { path?: string; packaging?: string } }>;
+        dockerImages?: Record<string, unknown>;
+      };
+      if (Object.keys(manifest.dockerImages ?? {}).length) notes.push(`${file} lists Docker image assets, not measured`);
+      for (const [hash, entry] of Object.entries(manifest.files ?? {})) {
+        const path = entry.source?.path;
+        if (!path || path.endsWith('.template.json') || seen.has(path)) continue;
+        seen.add(path);
+        const { name, kind } = usage.get(path) ?? { name: `asset ${hash.slice(0, 12)}`, kind: 'asset' as const };
+        const full = join(out, path);
+        if (entry.source?.packaging === 'file') {
+          if (path.endsWith('.zip')) {
+            const target = mkdtempSync(join(tmpdir(), 'cdk-file-asset-'));
+            try {
+              runOnce({ command: 'unzip', args: ['-q', '-o', full, '-d', target], cwd: out });
+              artifacts.push({ ...measureDirectory({ root: target, name, kind, toolZipBytes: statSync(full).size }) });
+            } finally {
+              removePaths([target]);
+            }
+          } else {
+            const bytes = statSync(full).size;
+            artifacts.push({ name, kind, unzippedBytes: bytes, zippedBytes: bytes, toolZipBytes: null, contentHash: hash, fileCount: 1 });
+          }
+        } else {
+          artifacts.push(measureDirectory({ root: full, name, kind }));
+        }
       }
-      artifacts.push(measureDirectory({ root: join(out, entry.name), name: functionName, kind: 'function' }));
     }
-    if (artifacts.length === 0) notes.push('cdk.out contained no asset directories');
+    if (artifacts.length === 0) notes.push('cdk.out listed no file assets');
     return { artifacts, toolReportedMs: null, notes };
   },
   discardRunOutput: () => {
