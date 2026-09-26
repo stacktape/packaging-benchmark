@@ -1,8 +1,10 @@
 /** Captures the machine and tool versions the numbers were produced on. */
 
 import { execSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { cpus, totalmem, release, type as osType } from 'node:os';
-import { readFileSync } from 'node:fs';
+import { readFileSync, statSync } from 'node:fs';
+import { dirname, join } from 'node:path';
 
 const tryExec = (cmd: string, cwd?: string) => {
   try {
@@ -23,11 +25,24 @@ const readFirstMatch = (path: string, pattern: RegExp) => {
 
 export type Environment = ReturnType<typeof captureEnvironment>;
 
+/** The measured executable itself: its SHA-256, size and the version its release data reports. */
+const describeBinary = (path: string) => ({
+  path,
+  sha256: createHash('sha256').update(readFileSync(path)).digest('hex'),
+  bytes: statSync(path).size,
+  version: readFirstMatch(join(dirname(path), 'release-data.json'), /"version"\s*:\s*"([^"]+)"/)
+});
+
 export const captureEnvironment = ({
   stacktapeRepo,
+  stacktapeBinary,
+  stacktapeBinaryCommit,
   toolVersions
 }: {
   stacktapeRepo: string | null;
+  stacktapeBinary: string | null;
+  /** The commit the binary was built from, as the person building it recorded it. */
+  stacktapeBinaryCommit: string | null;
   toolVersions: Record<string, string | null>;
 }) => ({
   capturedAt: new Date().toISOString(),
@@ -54,10 +69,14 @@ export const captureEnvironment = ({
   toolVersions,
   stacktape: stacktapeRepo
     ? {
-        source: 'source-built CLI from the Stacktape monorepo',
+        source: 'Linux release build from the Stacktape monorepo, made by its production release functions',
         repoPath: stacktapeRepo,
-        commit: tryExec('git rev-parse HEAD', stacktapeRepo),
-        dirtyFiles: Number(tryExec('git status --porcelain | wc -l', stacktapeRepo) ?? '0') || 0
+        builtFromCommit: stacktapeBinaryCommit,
+        repoHeadWhenReported: tryExec('git rev-parse HEAD', stacktapeRepo),
+        // The private Console submodule is not part of the CLI build.
+        dirtyFiles:
+          Number(tryExec('git status --porcelain --ignore-submodules=all | wc -l', stacktapeRepo) ?? '0') || 0,
+        binary: stacktapeBinary ? describeBinary(stacktapeBinary) : null
       }
     : null
 });

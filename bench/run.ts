@@ -21,12 +21,15 @@
  *   BENCH_SAMPLES                  samples per measurement (default: 3)
  *   BENCH_SHAPES                   comma-separated shape ids to restrict the run to
  *   BENCH_TOOLS                    comma-separated tool ids to restrict the run to
+ *   BENCH_CONTAINER_VARIANTS       comma-separated container variants to restrict `containers` to
+ *   STACKTAPE_BINARY_COMMIT        the Stacktape commit the binary was built from, recorded in the report
  */
 
 import { appendFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { loadavg } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { SHAPES, TOOLS, handlerFileName } from '../fixtures/generate.ts';
+import { CONTAINER_VARIANTS, SHAPES, TOOLS, handlerFileName } from '../fixtures/generate.ts';
 import { captureEnvironment } from './src/env.ts';
 import {
   type Artifact,
@@ -76,6 +79,9 @@ const log = (message: string) => {
   appendFileSync(logFile, `${line}\n`);
 };
 
+/** The one-minute load average, recorded with every measurement: the machine must be quiet for a fair run. */
+const load1m = () => Math.round(loadavg()[0] * 100) / 100;
+
 const selectedShapes = () => {
   const only = process.env.BENCH_SHAPES?.split(',').map((s) => s.trim()).filter(Boolean);
   return only?.length ? SHAPES.filter((s) => only.includes(s.id)) : SHAPES;
@@ -87,6 +93,11 @@ const selectedTools = () => {
 };
 
 const projectDir = (shapeId: string, toolId: string) => join(generatedDir, shapeId, toolId);
+
+const selectedContainerVariants = (): string[] => {
+  const only = process.env.BENCH_CONTAINER_VARIANTS?.split(',').map((s) => s.trim()).filter(Boolean);
+  return only?.length ? CONTAINER_VARIANTS.filter((v) => only.includes(v)) : [...CONTAINER_VARIANTS];
+};
 
 // ---------------------------------------------------------------------------
 // results.json
@@ -120,6 +131,9 @@ type Measurement = {
   } | null;
   footprint: { perFunction: Record<string, number>; maxBytes: number; medianBytes: number } | null;
   notes: string[];
+  measuredAt: string;
+  /** One-minute load average when the measurement started and when it ended. */
+  load1m: { before: number; after: number | null };
 };
 
 type Any = Record<string, any>;
@@ -173,7 +187,7 @@ const install = () => {
       if (result.exitCode !== 0) log(result.stderr.slice(-2000));
     }
   }
-  for (const variant of ['stacktape', 'expert', 'naive']) {
+  for (const variant of CONTAINER_VARIANTS) {
     const dir = join(generatedDir, 'container', variant);
     if (!exists(dir)) continue;
     const result = runOnce(installCommand(dir, false));
@@ -276,7 +290,9 @@ const measureOne = ({
     artifacts: [],
     totals: null,
     footprint: null,
-    notes: []
+    notes: [],
+    measuredAt: new Date().toISOString(),
+    load1m: { before: load1m(), after: null }
   };
 
   const availability = adapter.availability();
@@ -332,7 +348,8 @@ const measureOne = ({
     artifacts: lastArtifacts,
     totals: summarize(lastArtifacts),
     footprint: footprint(lastArtifacts),
-    notes
+    notes,
+    load1m: { before: base.load1m.before, after: load1m() }
   };
 };
 
@@ -348,6 +365,7 @@ const lambda = () => {
 
   for (const shape of selectedShapes()) {
     for (const toolId of tools) {
+      log(`block ${shape.id}/${toolId}: one-minute load ${load1m()}`);
       const availability = adapters[toolId].availability();
       if (!availability.ok) {
         const measuredElsewhere =
@@ -411,15 +429,27 @@ const INCREMENTAL_REPEATS = Number(process.env.BENCH_INCREMENTAL_REPEATS ?? 3);
 
 const incremental = () => {
   const results = loadResults();
-  results.incremental = [];
+  // Tools run now replace their own entries only, so the tools can be measured in separate sessions.
+  results.incremental = (results.incremental as Any[]).filter((entry) => !selectedTools().includes(entry.tool));
   const shape = SHAPES.find((s) => s.id === 'n25')!;
   const config: ConfigName = 'likeforlike';
 
   for (const toolId of selectedTools()) {
     const adapter = adapters[toolId];
-    if (!adapter.availability().ok) continue;
+    const availability = adapter.availability();
     const dir = projectDir(shape.id, toolId);
-    if (!exists(join(dir, 'node_modules'))) continue;
+    if (!availability.ok || !exists(join(dir, 'node_modules'))) {
+      results.incremental.push({
+        tool: toolId,
+        shape: shape.id,
+        config,
+        ok: false,
+        notMeasured: availability.ok ? 'fixture is not installed' : availability.reason
+      });
+      saveResults(results);
+      continue;
+    }
+    log(`incremental ${toolId}: one-minute load ${load1m()}`);
 
     const packageOnce = () => {
       const prepared = adapter.prepare(dir, config);
@@ -476,7 +506,9 @@ const incremental = () => {
         samples: { first, afterOneLineChange: changed, unchanged },
         changedByOneLineChange: lastDiffs?.byChange,
         changedByNoChange: lastDiffs?.byNoChange,
-        ok
+        ok,
+        measuredAt: new Date().toISOString(),
+        load1mAfter: load1m()
       });
       log(`incremental ${toolId} / ${scenario.id}: done`);
       saveResults(results);
@@ -522,7 +554,9 @@ const overhead = () => {
       'lookup and packaging itself.',
     binary: ctx.stacktapeBinary,
     samples: samples.map((s) => Math.round(s)),
-    medianMs: Math.round(median(samples))
+    medianMs: Math.round(median(samples)),
+    measuredAt: new Date().toISOString(),
+    load1mAfter: load1m()
   };
   log(`stacktape binary start-up: ${Math.round(median(samples))}ms median`);
   saveResults(results);
@@ -575,7 +609,11 @@ const main = () => {
   }
   if (command === 'containers') {
     const results = loadResults();
-    results.containers = runContainerBenchmark({ repoRoot, ctx, log });
+    const variants = selectedContainerVariants();
+    results.containers = [
+      ...(results.containers as Any[]).filter((entry) => !variants.includes(entry.variant)),
+      ...runContainerBenchmark({ repoRoot, ctx, log, variants, load1m })
+    ];
     saveResults(results);
     return;
   }
@@ -583,6 +621,8 @@ const main = () => {
     const results = loadResults();
     results.environment = captureEnvironment({
       stacktapeRepo: exists(ctx.stacktapeRepo) ? ctx.stacktapeRepo : null,
+      stacktapeBinary: exists(ctx.stacktapeBinary) ? ctx.stacktapeBinary : null,
+      stacktapeBinaryCommit: process.env.STACKTAPE_BINARY_COMMIT ?? null,
       toolVersions: readToolVersions()
     });
     saveResults(results);
@@ -596,7 +636,7 @@ const main = () => {
     lambda();
     incremental();
     const results = loadResults();
-    results.containers = runContainerBenchmark({ repoRoot, ctx, log });
+    results.containers = runContainerBenchmark({ repoRoot, ctx, log, variants: selectedContainerVariants(), load1m });
     saveResults(results);
     process.argv[2] = 'report';
     return main();

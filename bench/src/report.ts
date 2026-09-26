@@ -75,10 +75,27 @@ export const writeReport = (results: Any, path: string) => {
           ...Object.entries(env.toolVersions ?? {}).map(([k, v]) => [k, String(v)]),
           [
             'Stacktape CLI',
-            env.stacktape
-              ? `source build at ${String(env.stacktape.commit).slice(0, 12)} (+${env.stacktape.dirtyFiles} uncommitted files)`
-              : 'not available'
-          ]
+            env.stacktape?.binary
+              ? `Linux release build of commit ${String(env.stacktape.builtFromCommit ?? env.stacktape.commit).slice(0, 12)}, ` +
+                `version ${env.stacktape.binary.version}, ${mb(env.stacktape.binary.bytes)}, SHA-256 ` +
+                `${String(env.stacktape.binary.sha256).slice(0, 16)}...`
+              : env.stacktape
+                ? `source build at ${String(env.stacktape.commit).slice(0, 12)} (+${env.stacktape.dirtyFiles} uncommitted files)`
+                : 'not available'
+          ],
+          ...(results.stacktapeTools?.tools?.length
+            ? [
+                [
+                  'Stacktape external tools',
+                  (results.stacktapeTools.tools as Any[])
+                    .map((t) => `${t.tool} ${t.pinnedVersion} (downloaded once in ${secs(t.resolveMs)})`)
+                    .join(', ') + ', before any timed run'
+                ]
+              ]
+            : []),
+          ...(results.sst?.notRerun
+            ? [['SST', `not rerun; its numbers are from ${results.sst.notRerun.measuredOn}`]]
+            : [])
         ]
       ),
       ''
@@ -99,8 +116,9 @@ export const writeReport = (results: Any, path: string) => {
     lines.push(`## Package time - ${heading} configuration`, '');
     lines.push(
       'Wall clock of the tool\'s package/synth command, median of the recorded samples. ' +
-        '"Cold" deletes the tool\'s output and cache directories first; "warm" runs again immediately ' +
-        'with no change.',
+        '"Cold" deletes the tool\'s build output and build cache directories first; it keeps what a machine ' +
+        'keeps outside the project between builds, which for Stacktape is its cached AWS identity and its ' +
+        'downloaded tools. "Warm" runs again immediately with no change.',
       ''
     );
     const headers = ['Shape', 'Functions', ...tools.flatMap((t) => [`${t} cold`, `${t} warm`])];
@@ -139,10 +157,24 @@ export const writeReport = (results: Any, path: string) => {
       ''
     );
     lines.push(
-      'The last two columns do not add up to the first. The gap is configuration loading and the AWS ' +
-        'identity lookup, which no column isolates, plus a run-to-run spread of a few hundred milliseconds ' +
-        'on this machine. No adjusted package time is offered: every tool here pays its own start-up, and ' +
-        'subtracting only Stacktape\'s would not make the comparison fairer.',
+      'The AWS identity lookup, once the only AWS call `stacktape package` made, is read from a local cache: ' +
+        'the CLI keeps the caller identity STS returned for each access key for 24 hours. The first run on a ' +
+        'machine pays one STS round trip; the measured runs follow a discarded warm-up run and pay none, cold ' +
+        'or warm, because the cache lives in the user\'s home directory, not in the project.',
+      ''
+    );
+    const telemetry = (results.telemetryProbe as Any | undefined)?.telemetryReportMs;
+    lines.push(
+      'The last two columns do not add up to the first. The gap is configuration loading, the cached identity ' +
+        'read, the telemetry report the CLI sends and waits for before it exits' +
+        (telemetry
+          ? ` (${telemetry.min}-${telemetry.max} ms, median ${telemetry.median} ms, across ` +
+            `${results.telemetryProbe.runs} separate runs of the one-function fixture)`
+          : '') +
+        ', and process exit. No adjusted package time is offered: every tool here pays its own start-up, and ' +
+        'subtracting only Stacktape\'s would not make the comparison fairer. Serverless Framework runs with its ' +
+        'telemetry disabled (`SLS_TELEMETRY_DISABLED=1`, as the fixture has always set it); the other tools run ' +
+        'with their defaults.',
       ''
     );
     const rows: (string | number)[][] = [];
@@ -247,7 +279,7 @@ export const writeReport = (results: Any, path: string) => {
   lines.push(table(['Shape', 'Tool', 'Configuration', 'Median per function', 'Largest'], footprintRows), '');
 
   // --- incremental ---------------------------------------------------------
-  lines.push('## S5 - incremental packaging (25 functions, like-for-like)', '');
+  lines.push('## Repackage after one edit (S5, 25 functions, like-for-like)', '');
   lines.push(
     'Package once, append one statement, package again, then package a third time with nothing further ' +
       'changed. Two scenarios: a change to one handler, and a change to a file in `lib/` that every handler ' +
@@ -261,7 +293,9 @@ export const writeReport = (results: Any, path: string) => {
       'every deployment regardless of whether it changed.',
     ''
   );
-  const incRows = ((results.incremental ?? []) as Any[]).map((row) => [
+  const measuredIncremental = ((results.incremental ?? []) as Any[]).filter((row) => row.runs);
+  const unmeasuredIncremental = ((results.incremental ?? []) as Any[]).filter((row) => !row.runs);
+  const incRows = measuredIncremental.map((row) => [
     row.tool,
     row.scenarioLabel ?? row.scenario ?? '-',
     secs(row.runs.first),
@@ -287,7 +321,10 @@ export const writeReport = (results: Any, path: string) => {
     ),
     ''
   );
-  for (const row of (results.incremental ?? []) as Any[]) {
+  for (const row of unmeasuredIncremental) {
+    lines.push(`- ${row.tool}: not measured - ${String(row.notMeasured).slice(0, 160)}`);
+  }
+  for (const row of measuredIncremental) {
     const names = row.changedByOneLineChange.changedNames as string[];
     if (names.length > 0 && names.length <= 6) {
       lines.push(`- ${row.tool}, ${row.scenario}: re-hashed ${names.join(', ')}.`);
@@ -325,6 +362,14 @@ export const writeReport = (results: Any, path: string) => {
   const sst = results.sst as Any | null;
   if (sst?.measurements?.length) {
     lines.push('## SST, measured through a deployed stage', '');
+    if (sst.notRerun) {
+      lines.push(
+        `**Not rerun.** These SST numbers are from ${sst.notRerun.measuredOn} ` +
+          `(\`${sst.notRerun.source}\`), with the same SST version the rest of this run pins. Every other ` +
+          'tool in this report was measured again.',
+        ''
+      );
+    }
     lines.push(
       'SST cannot be measured like the other tools. It has no packaging command, and on a stage that does ' +
         'not exist yet its preview never builds the bundles. The only way to get numbers is to deploy a ' +
@@ -416,36 +461,67 @@ export const writeReport = (results: Any, path: string) => {
   // --- containers ----------------------------------------------------------
   lines.push('## Containers', '');
   lines.push(
-    'The same application as a long-running HTTP service. Image size is `docker image inspect ' +
-      "--format '{{.Size}}'`, the uncompressed image size. (On Docker 29 with the containerd image store, " +
-      '`docker image ls` prints a different, larger figure for the same image - it is not the number used ' +
-      'here.) Cold build prunes the build cache and passes `--no-cache`; warm rebuild changes one line of ' +
-      '`src/server.ts` and builds again with the cache on. Base images were pulled before any timing.',
+    'The same application as a long-running HTTP service. Both image sizes come from `docker save`: ' +
+      '"compressed" is what a push sends for every layer (gzip; a layer pack stored uncompressed is gzipped at the ' +
+      'default level, as a push would), "uncompressed" is the sum of the unpacked layers. The 21 September report ' +
+      "used `docker image inspect --format '{{.Size}}'` and called it the uncompressed size; on Docker 29 with the " +
+      'containerd image store it is the size of the stored blobs, which is the compressed size for images built ' +
+      'with BuildKit. A cold build clears every build cache the variant could use: the BuildKit cache ' +
+      '(`docker builder prune -af`), its previous image, Stacktape\'s build output in the project and ' +
+      'pack\'s cache volumes; Dockerfiles also build with `--no-cache`. The source edit appends one statement ' +
+      'to `src/server.ts`; the dependency change then moves one dependency to another patch release in ' +
+      '`package.json` and the lockfile. Both rebuild with the cache on. Every base image, builder and run ' +
+      'image was pulled before any timing.',
     ''
   );
-  const containerRows = ((results.containers ?? []) as Any[])
-    .filter((row) => row.variant)
-    .map((row) => [
-      row.label ?? row.variant,
-      row.baseImage ?? '-',
-      row.imageSizeBytes ? mb(row.imageSizeBytes) : '-',
-      secs(row.coldBuildMs),
-      secs(row.warmRebuildMs),
-      row.ok ? 'ok' : `failed: ${String(row.error ?? '').slice(0, 120)}`
-    ]);
+  lines.push(
+    'Registry bytes are what a push sends: the compressed size of every layer whose digest the registry does ' +
+      'not already hold. The first push sends every layer; a rebuild sends the layers whose digest changed ' +
+      'from the image before it. Read from `docker save`.',
+    ''
+  );
+  const containers = ((results.containers ?? []) as Any[]).filter((row) => row.variant);
+  const pushed = (delta: Any | null | undefined) =>
+    delta ? `${mb(delta.bytes)} (${delta.changedLayers} of ${delta.totalLayers} layers)` : '-';
   lines.push(
     table(
-      ['Variant', 'Runtime base', 'Image size', 'Cold build (no cache)', 'Warm rebuild (one line changed)', 'Status'],
-      containerRows
+      [
+        'Variant',
+        'Runtime base',
+        'Image, compressed',
+        'Image, uncompressed',
+        'Cold build',
+        'Rebuild, source edit',
+        'Rebuild, dependency change',
+        'First push',
+        'Push after source edit',
+        'Push after dependency change'
+      ],
+      containers.map((row) => [
+        row.label ?? row.variant,
+        row.baseImage ?? '-',
+        row.imageCompressedBytes ? mb(row.imageCompressedBytes) : '-',
+        row.imageUncompressedBytes ? mb(row.imageUncompressedBytes) : '-',
+        secs(row.coldBuildMs),
+        secs(row.sourceEditRebuildMs),
+        secs(row.dependencyChangeRebuildMs),
+        mb(row.registryBytes?.firstPush),
+        pushed(row.registryBytes?.sourceEdit),
+        pushed(row.registryBytes?.dependencyChange)
+      ])
     ),
     ''
   );
+  for (const row of containers.filter((c) => !c.ok)) {
+    lines.push(`- ${row.variant} failed: ${String(row.error ?? '').slice(0, 300)}`);
+  }
+  if (containers.some((c) => !c.ok)) lines.push('');
 
   // --- raw samples ---------------------------------------------------------
   lines.push('## Every sample', '');
   lines.push(
     table(
-      ['Shape', 'Tool', 'Configuration', 'Mode', 'Samples (ms)', 'Median', 'Tool-reported'],
+      ['Shape', 'Tool', 'Configuration', 'Mode', 'Samples (ms)', 'Median', 'Tool-reported', 'One-minute load'],
       lambda
         .filter((m) => m.ok)
         .map((m) => [
@@ -455,7 +531,8 @@ export const writeReport = (results: Any, path: string) => {
           m.mode,
           m.samples.join(', '),
           secs(m.medianMs),
-          m.toolReportedMs ? secs(m.toolReportedMs) : '-'
+          m.toolReportedMs ? secs(m.toolReportedMs) : '-',
+          m.load1m ? `${m.load1m.before} -> ${m.load1m.after ?? '-'}` : '-'
         ])
     ),
     ''

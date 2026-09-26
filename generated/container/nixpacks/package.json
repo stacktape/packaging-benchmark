@@ -1,10 +1,14 @@
 {
-  "name": "packaging-benchmark-container-naive",
+  "name": "packaging-benchmark-container-nixpacks",
   "version": "1.0.0",
   "private": true,
   "type": "module",
   "scripts": {
+    "build": "node build.mjs",
     "start": "node dist/server.js"
+  },
+  "engines": {
+    "node": "22.x"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "3.1136.0",

@@ -61,13 +61,13 @@ The published CLI is a standalone binary:
 stacktape package --configPath stacktape.yml --projectName pkgbench --stage dev --region eu-west-1 --profile <profile>
 ```
 
-`package` resolves AWS identity with an STS call, because the account and region take part in stable resource
-names. It does not deploy and it changes nothing in AWS.
+`package` needs the AWS account, because the account and region take part in stable resource names. It asks STS
+once per access key and keeps the answer for 24 hours in the user's home directory, so repeated runs make no AWS
+call. It does not deploy and it changes nothing in AWS.
 
-These runs did not use a published release. They used a release-style Linux binary built from the Stacktape
-monorepo, which reports version `4.0.0-bench`, standing in for the published v4 prerelease. It was built from
-the commit and working-tree state recorded in the environment block of `results/RESULTS.md`, including
-uncommitted packaging changes.
+These runs did not use a published release. They used a Linux release build of the Stacktape monorepo at commit
+`9db960e3`, made by the production release function and reporting version `4.0.0-bench`, standing in for the
+published v4 prerelease. Its SHA-256 is in the environment block of `results/RESULTS.md`.
 
 The binary runs with the fixture directory as its working directory, so `package` leaves its artifacts in
 `<fixture>/.stacktape/<invocation>/build/`. The runner snapshots that directory before each run, reads the

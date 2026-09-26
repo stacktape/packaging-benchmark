@@ -1,5 +1,5 @@
 {
-  "name": "packaging-benchmark-container-stacktape",
+  "name": "packaging-benchmark-container-typical",
   "version": "1.0.0",
   "private": true,
   "type": "module",

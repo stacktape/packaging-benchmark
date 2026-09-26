@@ -1,11 +1,14 @@
 {
-  "name": "packaging-benchmark-container-stacktape",
+  "name": "packaging-benchmark-container-paketo",
   "version": "1.0.0",
   "private": true,
   "type": "module",
   "scripts": {
     "build": "node build.mjs",
     "start": "node dist/server.js"
+  },
+  "engines": {
+    "node": "24.x"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "3.1136.0",
