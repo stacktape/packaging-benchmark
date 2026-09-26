@@ -40,6 +40,2326 @@
     }
   },
   "blocked": [],
+  "apps": [
+    {
+      "fixture": "hono-api",
+      "tool": "stacktape",
+      "ok": true,
+      "error": null,
+      "command": "~/projects/stacktape-packaging-benchmark/tmp/stacktape-cli/linux/stacktape package --configPath ~/projects/stacktape-packaging-benchmark/generated/apps/hono-api/stacktape/stacktape.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
+      "cold": {
+        "samples": [
+          276,
+          276,
+          272,
+          271,
+          259
+        ],
+        "medianMs": 272
+      },
+      "edit": {
+        "samples": [
+          251,
+          257,
+          258,
+          255,
+          256
+        ],
+        "medianMs": 256,
+        "changes": [
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 21963,
+            "changedNames": [
+              "api"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 21952,
+            "changedNames": [
+              "api"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 21963,
+            "changedNames": [
+              "api"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 21952,
+            "changedNames": [
+              "api"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 21963,
+            "changedNames": [
+              "api"
+            ]
+          }
+        ]
+      },
+      "artifacts": [
+        {
+          "name": "api",
+          "kind": "function",
+          "unzippedBytes": 74856,
+          "zippedBytes": 21952,
+          "toolZipBytes": 26724,
+          "contentHash": "d6eb8f902ecf038f1e430f527a453fc4feac60ad35c3d33363e194ce0ba4cf39",
+          "fileCount": 3
+        }
+      ],
+      "totals": {
+        "functionArtifacts": 1,
+        "layerArtifacts": 0,
+        "otherAssets": 0,
+        "functionZippedBytes": 21952,
+        "functionUnzippedBytes": 74856,
+        "layerZippedBytes": 0,
+        "otherAssetZippedBytes": 0,
+        "largestFunctionUnzippedBytes": 74856,
+        "firstDeployUploadZippedBytes": 21952,
+        "toolPlumbingZippedBytes": 0
+      },
+      "toolReportedMs": 32,
+      "notes": [],
+      "load1m": {
+        "before": 0.53,
+        "after": 0.48,
+        "waitedMs": 0
+      },
+      "measuredAt": "2026-09-26T23:24:41.236Z"
+    },
+    {
+      "fixture": "hono-api",
+      "tool": "cdk",
+      "ok": true,
+      "error": null,
+      "command": "BENCH_CONFIG=app JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 ~/projects/stacktape-packaging-benchmark/generated/apps/hono-api/cdk/node_modules/.bin/cdk synth --output ~/projects/stacktape-packaging-benchmark/generated/apps/hono-api/cdk/cdk.out.app --quiet",
+      "cold": {
+        "samples": [
+          2385,
+          2440,
+          2129,
+          2284,
+          2429
+        ],
+        "medianMs": 2385
+      },
+      "edit": {
+        "samples": [
+          2348,
+          2335,
+          2438,
+          2589,
+          2347
+        ],
+        "medianMs": 2348,
+        "changes": [
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 17974,
+            "changedNames": [
+              "ApiF70053CD"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 17968,
+            "changedNames": [
+              "ApiF70053CD"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 17974,
+            "changedNames": [
+              "ApiF70053CD"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 17968,
+            "changedNames": [
+              "ApiF70053CD"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 17974,
+            "changedNames": [
+              "ApiF70053CD"
+            ]
+          }
+        ]
+      },
+      "artifacts": [
+        {
+          "name": "ApiF70053CD",
+          "kind": "function",
+          "unzippedBytes": 72305,
+          "zippedBytes": 17968,
+          "toolZipBytes": null,
+          "contentHash": "c3cde58b8d6350ed6475ff77ed80b6b79d1f7b631bd12254c4a850ab21f58c58",
+          "fileCount": 1,
+          "toolPlumbing": false
+        }
+      ],
+      "totals": {
+        "functionArtifacts": 1,
+        "layerArtifacts": 0,
+        "otherAssets": 0,
+        "functionZippedBytes": 17968,
+        "functionUnzippedBytes": 72305,
+        "layerZippedBytes": 0,
+        "otherAssetZippedBytes": 0,
+        "largestFunctionUnzippedBytes": 72305,
+        "firstDeployUploadZippedBytes": 17968,
+        "toolPlumbingZippedBytes": 0
+      },
+      "toolReportedMs": null,
+      "notes": [],
+      "load1m": {
+        "before": 0.48,
+        "after": 1.17,
+        "waitedMs": 0
+      },
+      "measuredAt": "2026-09-26T23:24:42.897Z"
+    },
+    {
+      "fixture": "hono-api",
+      "tool": "serverless",
+      "ok": true,
+      "error": null,
+      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 ~/projects/stacktape-packaging-benchmark/generated/apps/hono-api/serverless/node_modules/.bin/serverless package --config serverless.yml --stage dev --region eu-west-1",
+      "cold": {
+        "samples": [
+          3485,
+          3571,
+          3617,
+          3697,
+          3838
+        ],
+        "medianMs": 3617
+      },
+      "edit": {
+        "samples": [
+          3748,
+          3462,
+          3847,
+          3679,
+          3713
+        ],
+        "medianMs": 3713,
+        "changes": [
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 48700,
+            "changedNames": [
+              "hono-api"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 48685,
+            "changedNames": [
+              "hono-api"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 48700,
+            "changedNames": [
+              "hono-api"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 48685,
+            "changedNames": [
+              "hono-api"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 48700,
+            "changedNames": [
+              "hono-api"
+            ]
+          }
+        ]
+      },
+      "artifacts": [
+        {
+          "name": "hono-api",
+          "kind": "function",
+          "unzippedBytes": 204320,
+          "zippedBytes": 48685,
+          "toolZipBytes": 59521,
+          "contentHash": "60723c6fa35ced48e4afa282e3e2059338513c4049a5589ffcdf864f9d8b777f",
+          "fileCount": 4,
+          "servesFunctionCount": 1
+        }
+      ],
+      "totals": {
+        "functionArtifacts": 1,
+        "layerArtifacts": 0,
+        "otherAssets": 0,
+        "functionZippedBytes": 48685,
+        "functionUnzippedBytes": 204320,
+        "layerZippedBytes": 0,
+        "otherAssetZippedBytes": 0,
+        "largestFunctionUnzippedBytes": 204320,
+        "firstDeployUploadZippedBytes": 48685,
+        "toolPlumbingZippedBytes": 0
+      },
+      "toolReportedMs": 0,
+      "notes": [],
+      "load1m": {
+        "before": 1.17,
+        "after": 0.73,
+        "waitedMs": 0
+      },
+      "measuredAt": "2026-09-26T23:25:11.576Z"
+    },
+    {
+      "fixture": "lambda-api-dynamo-db",
+      "tool": "stacktape",
+      "ok": true,
+      "error": null,
+      "command": "~/projects/stacktape-packaging-benchmark/tmp/stacktape-cli/linux/stacktape package --configPath ~/projects/stacktape-packaging-benchmark/generated/apps/lambda-api-dynamo-db/stacktape/stacktape.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
+      "cold": {
+        "samples": [
+          280,
+          282,
+          285,
+          280,
+          283
+        ],
+        "medianMs": 282
+      },
+      "edit": {
+        "samples": [
+          282,
+          275,
+          280,
+          259,
+          265
+        ],
+        "medianMs": 275,
+        "changes": [
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 22228,
+            "changedNames": [
+              "api"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 22221,
+            "changedNames": [
+              "api"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 22228,
+            "changedNames": [
+              "api"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 22221,
+            "changedNames": [
+              "api"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 22228,
+            "changedNames": [
+              "api"
+            ]
+          }
+        ]
+      },
+      "artifacts": [
+        {
+          "name": "api",
+          "kind": "function",
+          "unzippedBytes": 75692,
+          "zippedBytes": 22221,
+          "toolZipBytes": 27041,
+          "contentHash": "53a394e3ff6d3a3fdce88566dee35f9a707cfaea346cfcf2b9c56a97a1c75f9e",
+          "fileCount": 3
+        }
+      ],
+      "totals": {
+        "functionArtifacts": 1,
+        "layerArtifacts": 0,
+        "otherAssets": 0,
+        "functionZippedBytes": 22221,
+        "functionUnzippedBytes": 75692,
+        "layerZippedBytes": 0,
+        "otherAssetZippedBytes": 0,
+        "largestFunctionUnzippedBytes": 75692,
+        "firstDeployUploadZippedBytes": 22221,
+        "toolPlumbingZippedBytes": 0
+      },
+      "toolReportedMs": 35,
+      "notes": [],
+      "load1m": {
+        "before": 0.73,
+        "after": 0.73,
+        "waitedMs": 0
+      },
+      "measuredAt": "2026-09-26T23:25:54.431Z"
+    },
+    {
+      "fixture": "lambda-api-dynamo-db",
+      "tool": "cdk",
+      "ok": true,
+      "error": null,
+      "command": "BENCH_CONFIG=app JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 ~/projects/stacktape-packaging-benchmark/generated/apps/lambda-api-dynamo-db/cdk/node_modules/.bin/cdk synth --output ~/projects/stacktape-packaging-benchmark/generated/apps/lambda-api-dynamo-db/cdk/cdk.out.app --quiet",
+      "cold": {
+        "samples": [
+          2492,
+          2462,
+          2283,
+          2558,
+          2272
+        ],
+        "medianMs": 2462
+      },
+      "edit": {
+        "samples": [
+          2288,
+          2456,
+          2477,
+          2325,
+          2420
+        ],
+        "medianMs": 2420,
+        "changes": [
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 18175,
+            "changedNames": [
+              "ApiF70053CD"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 18170,
+            "changedNames": [
+              "ApiF70053CD"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 18175,
+            "changedNames": [
+              "ApiF70053CD"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 18170,
+            "changedNames": [
+              "ApiF70053CD"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 18175,
+            "changedNames": [
+              "ApiF70053CD"
+            ]
+          }
+        ]
+      },
+      "artifacts": [
+        {
+          "name": "ApiF70053CD",
+          "kind": "function",
+          "unzippedBytes": 72962,
+          "zippedBytes": 18170,
+          "toolZipBytes": null,
+          "contentHash": "40926af34c1d4eb224ea832e92c482bb92a9c8a426f1b43847423af5b108e804",
+          "fileCount": 1,
+          "toolPlumbing": false
+        }
+      ],
+      "totals": {
+        "functionArtifacts": 1,
+        "layerArtifacts": 0,
+        "otherAssets": 0,
+        "functionZippedBytes": 18170,
+        "functionUnzippedBytes": 72962,
+        "layerZippedBytes": 0,
+        "otherAssetZippedBytes": 0,
+        "largestFunctionUnzippedBytes": 72962,
+        "firstDeployUploadZippedBytes": 18170,
+        "toolPlumbingZippedBytes": 0
+      },
+      "toolReportedMs": null,
+      "notes": [],
+      "load1m": {
+        "before": 0.73,
+        "after": 0.84,
+        "waitedMs": 0
+      },
+      "measuredAt": "2026-09-26T23:25:57.810Z"
+    },
+    {
+      "fixture": "lambda-api-dynamo-db",
+      "tool": "serverless",
+      "ok": true,
+      "error": null,
+      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 ~/projects/stacktape-packaging-benchmark/generated/apps/lambda-api-dynamo-db/serverless/node_modules/.bin/serverless package --config serverless.yml --stage dev --region eu-west-1",
+      "cold": {
+        "samples": [
+          3514,
+          3838,
+          3544,
+          3768,
+          11766
+        ],
+        "medianMs": 3768
+      },
+      "edit": {
+        "samples": [
+          8090,
+          5696,
+          3512,
+          3897,
+          4056
+        ],
+        "medianMs": 4056,
+        "changes": [
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 49258,
+            "changedNames": [
+              "lambda-api-dynamo-db"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 49242,
+            "changedNames": [
+              "lambda-api-dynamo-db"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 49258,
+            "changedNames": [
+              "lambda-api-dynamo-db"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 49242,
+            "changedNames": [
+              "lambda-api-dynamo-db"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 49258,
+            "changedNames": [
+              "lambda-api-dynamo-db"
+            ]
+          }
+        ]
+      },
+      "artifacts": [
+        {
+          "name": "lambda-api-dynamo-db",
+          "kind": "function",
+          "unzippedBytes": 206029,
+          "zippedBytes": 49242,
+          "toolZipBytes": 60106,
+          "contentHash": "d902f154e162dfea9d8a9538d0e23adeb7babb2b82d6c50a0a2ee5e4f4be9393",
+          "fileCount": 4,
+          "servesFunctionCount": 1
+        }
+      ],
+      "totals": {
+        "functionArtifacts": 1,
+        "layerArtifacts": 0,
+        "otherAssets": 0,
+        "functionZippedBytes": 49242,
+        "functionUnzippedBytes": 206029,
+        "layerZippedBytes": 0,
+        "otherAssetZippedBytes": 0,
+        "largestFunctionUnzippedBytes": 206029,
+        "firstDeployUploadZippedBytes": 49242,
+        "toolPlumbingZippedBytes": 0
+      },
+      "toolReportedMs": 8000,
+      "notes": [],
+      "load1m": {
+        "before": 0.84,
+        "after": 0.56,
+        "waitedMs": 0
+      },
+      "measuredAt": "2026-09-26T23:26:25.555Z"
+    },
+    {
+      "fixture": "event-driven-pipeline",
+      "tool": "stacktape",
+      "ok": true,
+      "error": null,
+      "command": "~/projects/stacktape-packaging-benchmark/tmp/stacktape-cli/linux/stacktape package --configPath ~/projects/stacktape-packaging-benchmark/generated/apps/event-driven-pipeline/stacktape/stacktape.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
+      "cold": {
+        "samples": [
+          267,
+          262,
+          261,
+          271,
+          266
+        ],
+        "medianMs": 266
+      },
+      "edit": {
+        "samples": [
+          271,
+          284,
+          286,
+          279,
+          283
+        ],
+        "medianMs": 283,
+        "changes": [
+          {
+            "changedCount": 1,
+            "totalCount": 3,
+            "changedZippedBytes": 1173,
+            "changedNames": [
+              "submitOrder"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 3,
+            "changedZippedBytes": 1167,
+            "changedNames": [
+              "submitOrder"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 3,
+            "changedZippedBytes": 1173,
+            "changedNames": [
+              "submitOrder"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 3,
+            "changedZippedBytes": 1167,
+            "changedNames": [
+              "submitOrder"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 3,
+            "changedZippedBytes": 1173,
+            "changedNames": [
+              "submitOrder"
+            ]
+          }
+        ]
+      },
+      "artifacts": [
+        {
+          "name": "onOrderProcessed",
+          "kind": "function",
+          "unzippedBytes": 1091,
+          "zippedBytes": 931,
+          "toolZipBytes": 1231,
+          "contentHash": "fcdd346436f5d63cc713740b56bb1e1954cf904b3245684e64ba3d95ead73ca7",
+          "fileCount": 3
+        },
+        {
+          "name": "processOrder",
+          "kind": "function",
+          "unzippedBytes": 2209,
+          "zippedBytes": 1435,
+          "toolZipBytes": 1768,
+          "contentHash": "12866f2d0a888fa8b262c824bf701f2b58bc81d8485ade40054d4e7397db5486",
+          "fileCount": 3
+        },
+        {
+          "name": "submitOrder",
+          "kind": "function",
+          "unzippedBytes": 1566,
+          "zippedBytes": 1167,
+          "toolZipBytes": 1479,
+          "contentHash": "18908409438c2ddd11e63693dd3f6b5861353dd4480c2dbf97a038bdccf3f478",
+          "fileCount": 3
+        }
+      ],
+      "totals": {
+        "functionArtifacts": 3,
+        "layerArtifacts": 0,
+        "otherAssets": 0,
+        "functionZippedBytes": 3533,
+        "functionUnzippedBytes": 4866,
+        "layerZippedBytes": 0,
+        "otherAssetZippedBytes": 0,
+        "largestFunctionUnzippedBytes": 2209,
+        "firstDeployUploadZippedBytes": 3533,
+        "toolPlumbingZippedBytes": 0
+      },
+      "toolReportedMs": 26,
+      "notes": [],
+      "load1m": {
+        "before": 0.52,
+        "after": 0.56,
+        "waitedMs": 0
+      },
+      "measuredAt": "2026-09-26T23:27:27.359Z"
+    },
+    {
+      "fixture": "event-driven-pipeline",
+      "tool": "cdk",
+      "ok": true,
+      "error": null,
+      "command": "BENCH_CONFIG=app JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 ~/projects/stacktape-packaging-benchmark/generated/apps/event-driven-pipeline/cdk/node_modules/.bin/cdk synth --output ~/projects/stacktape-packaging-benchmark/generated/apps/event-driven-pipeline/cdk/cdk.out.app --quiet",
+      "cold": {
+        "samples": [
+          2721,
+          2719,
+          2852,
+          2856,
+          2882
+        ],
+        "medianMs": 2852
+      },
+      "edit": {
+        "samples": [
+          2689,
+          2555,
+          2992,
+          2789,
+          2887
+        ],
+        "medianMs": 2789,
+        "changes": [
+          {
+            "changedCount": 1,
+            "totalCount": 3,
+            "changedZippedBytes": 881,
+            "changedNames": [
+              "SubmitOrderD25DDE1C"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 3,
+            "changedZippedBytes": 876,
+            "changedNames": [
+              "SubmitOrderD25DDE1C"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 3,
+            "changedZippedBytes": 881,
+            "changedNames": [
+              "SubmitOrderD25DDE1C"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 3,
+            "changedZippedBytes": 876,
+            "changedNames": [
+              "SubmitOrderD25DDE1C"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 3,
+            "changedZippedBytes": 881,
+            "changedNames": [
+              "SubmitOrderD25DDE1C"
+            ]
+          }
+        ]
+      },
+      "artifacts": [
+        {
+          "name": "SubmitOrderD25DDE1C",
+          "kind": "function",
+          "unzippedBytes": 1678,
+          "zippedBytes": 876,
+          "toolZipBytes": null,
+          "contentHash": "c7ac5dfc0bd749f8fbc0b8cd6ac3e529f5440ab92e24d3f43798683794dbc4da",
+          "fileCount": 1,
+          "toolPlumbing": false
+        },
+        {
+          "name": "ProcessOrder10906E0C",
+          "kind": "function",
+          "unzippedBytes": 2293,
+          "zippedBytes": 1082,
+          "toolZipBytes": null,
+          "contentHash": "d35b3b3a3610d0aaad984ffa069d9c0712dfd44aba842d9823b18ed2bc2d9f7c",
+          "fileCount": 1,
+          "toolPlumbing": false
+        },
+        {
+          "name": "OnOrderProcessed13F779DD",
+          "kind": "function",
+          "unzippedBytes": 1320,
+          "zippedBytes": 685,
+          "toolZipBytes": null,
+          "contentHash": "bc5cb97d6a654677c920fe0af326da5c27f72ae9d1d19c24daf297c9fd23fa71",
+          "fileCount": 1,
+          "toolPlumbing": false
+        }
+      ],
+      "totals": {
+        "functionArtifacts": 3,
+        "layerArtifacts": 0,
+        "otherAssets": 0,
+        "functionZippedBytes": 2643,
+        "functionUnzippedBytes": 5291,
+        "layerZippedBytes": 0,
+        "otherAssetZippedBytes": 0,
+        "largestFunctionUnzippedBytes": 2293,
+        "firstDeployUploadZippedBytes": 2643,
+        "toolPlumbingZippedBytes": 0
+      },
+      "toolReportedMs": null,
+      "notes": [],
+      "load1m": {
+        "before": 0.56,
+        "after": 0.74,
+        "waitedMs": 0
+      },
+      "measuredAt": "2026-09-26T23:27:30.646Z"
+    },
+    {
+      "fixture": "event-driven-pipeline",
+      "tool": "serverless",
+      "ok": true,
+      "error": null,
+      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 ~/projects/stacktape-packaging-benchmark/generated/apps/event-driven-pipeline/serverless/node_modules/.bin/serverless package --config serverless.yml --stage dev --region eu-west-1",
+      "cold": {
+        "samples": [
+          3586,
+          3686,
+          3658,
+          3794,
+          3478
+        ],
+        "medianMs": 3658
+      },
+      "edit": {
+        "samples": [
+          3667,
+          3751,
+          3847,
+          3774,
+          11770
+        ],
+        "medianMs": 3774,
+        "changes": [
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 5730,
+            "changedNames": [
+              "event-driven-pipeline"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 5717,
+            "changedNames": [
+              "event-driven-pipeline"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 5730,
+            "changedNames": [
+              "event-driven-pipeline"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 5717,
+            "changedNames": [
+              "event-driven-pipeline"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 5730,
+            "changedNames": [
+              "event-driven-pipeline"
+            ]
+          }
+        ]
+      },
+      "artifacts": [
+        {
+          "name": "event-driven-pipeline",
+          "kind": "function",
+          "unzippedBytes": 10210,
+          "zippedBytes": 5717,
+          "toolZipBytes": 6025,
+          "contentHash": "e4f260c9d92a134672f30a28b1b2cb57fe9a432c2486f7797772f4f2b675a9b9",
+          "fileCount": 8,
+          "servesFunctionCount": 3
+        }
+      ],
+      "totals": {
+        "functionArtifacts": 1,
+        "layerArtifacts": 0,
+        "otherAssets": 0,
+        "functionZippedBytes": 5717,
+        "functionUnzippedBytes": 10210,
+        "layerZippedBytes": 0,
+        "otherAssetZippedBytes": 0,
+        "largestFunctionUnzippedBytes": 10210,
+        "firstDeployUploadZippedBytes": 5717,
+        "toolPlumbingZippedBytes": 0
+      },
+      "toolReportedMs": 0,
+      "notes": [
+        "one service package deployed to all 3 functions (Serverless Framework's default)"
+      ],
+      "load1m": {
+        "before": 0.74,
+        "after": 0.75,
+        "waitedMs": 0
+      },
+      "measuredAt": "2026-09-26T23:28:02.761Z"
+    },
+    {
+      "fixture": "monorepo-typescript-pnpm",
+      "tool": "stacktape",
+      "ok": true,
+      "error": null,
+      "command": "~/projects/stacktape-packaging-benchmark/tmp/stacktape-cli/linux/stacktape package --configPath ~/projects/stacktape-packaging-benchmark/generated/apps/monorepo-typescript-pnpm/stacktape/stacktape.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
+      "cold": {
+        "samples": [
+          271,
+          267,
+          251,
+          251,
+          255
+        ],
+        "medianMs": 255
+      },
+      "edit": {
+        "samples": [
+          251,
+          253,
+          252,
+          255,
+          257
+        ],
+        "medianMs": 253,
+        "changes": [
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 946,
+            "changedNames": [
+              "myLambda"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 937,
+            "changedNames": [
+              "myLambda"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 946,
+            "changedNames": [
+              "myLambda"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 937,
+            "changedNames": [
+              "myLambda"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 946,
+            "changedNames": [
+              "myLambda"
+            ]
+          }
+        ]
+      },
+      "artifacts": [
+        {
+          "name": "myLambda",
+          "kind": "function",
+          "unzippedBytes": 1085,
+          "zippedBytes": 937,
+          "toolZipBytes": 1573,
+          "contentHash": "737359750244714d041ba1cec91fed6c487b1d78340b538114def36c2d5c604f",
+          "fileCount": 3
+        }
+      ],
+      "totals": {
+        "functionArtifacts": 1,
+        "layerArtifacts": 0,
+        "otherAssets": 0,
+        "functionZippedBytes": 937,
+        "functionUnzippedBytes": 1085,
+        "layerZippedBytes": 0,
+        "otherAssetZippedBytes": 0,
+        "largestFunctionUnzippedBytes": 1085,
+        "firstDeployUploadZippedBytes": 937,
+        "toolPlumbingZippedBytes": 0
+      },
+      "toolReportedMs": 24,
+      "notes": [],
+      "load1m": {
+        "before": 0.75,
+        "after": 0.75,
+        "waitedMs": 0
+      },
+      "measuredAt": "2026-09-26T23:28:56.092Z"
+    },
+    {
+      "fixture": "monorepo-typescript-pnpm",
+      "tool": "serverless",
+      "ok": true,
+      "error": null,
+      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 ~/projects/stacktape-packaging-benchmark/generated/apps/monorepo-typescript-pnpm/serverless/node_modules/.bin/serverless package --config serverless.yml --stage dev --region eu-west-1",
+      "cold": {
+        "samples": [
+          4276,
+          16692,
+          4951,
+          3718,
+          4017
+        ],
+        "medianMs": 4276
+      },
+      "edit": {
+        "samples": [
+          3870,
+          3920,
+          9191,
+          5137,
+          3838
+        ],
+        "medianMs": 3920,
+        "changes": [
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 2677,
+            "changedNames": [
+              "monorepo-typescript-pnpm"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 2656,
+            "changedNames": [
+              "monorepo-typescript-pnpm"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 2676,
+            "changedNames": [
+              "monorepo-typescript-pnpm"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 2655,
+            "changedNames": [
+              "monorepo-typescript-pnpm"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 2677,
+            "changedNames": [
+              "monorepo-typescript-pnpm"
+            ]
+          }
+        ]
+      },
+      "artifacts": [
+        {
+          "name": "monorepo-typescript-pnpm",
+          "kind": "function",
+          "unzippedBytes": 3799,
+          "zippedBytes": 2656,
+          "toolZipBytes": 2805,
+          "contentHash": "2895296c78f103d251ee3bd9325d86be405be74f0da22c9e6cf2ae7cbee9541f",
+          "fileCount": 6,
+          "servesFunctionCount": 1
+        }
+      ],
+      "totals": {
+        "functionArtifacts": 1,
+        "layerArtifacts": 0,
+        "otherAssets": 0,
+        "functionZippedBytes": 2656,
+        "functionUnzippedBytes": 3799,
+        "layerZippedBytes": 0,
+        "otherAssetZippedBytes": 0,
+        "largestFunctionUnzippedBytes": 3799,
+        "firstDeployUploadZippedBytes": 2656,
+        "toolPlumbingZippedBytes": 0
+      },
+      "toolReportedMs": 1000,
+      "notes": [],
+      "load1m": {
+        "before": 0.77,
+        "after": 0.49,
+        "waitedMs": 0
+      },
+      "measuredAt": "2026-09-26T23:29:00.647Z"
+    },
+    {
+      "fixture": "multi-step-workflow",
+      "tool": "stacktape",
+      "ok": true,
+      "error": null,
+      "command": "~/projects/stacktape-packaging-benchmark/tmp/stacktape-cli/linux/stacktape package --configPath ~/projects/stacktape-packaging-benchmark/generated/apps/multi-step-workflow/stacktape/stacktape.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
+      "cold": {
+        "samples": [
+          270,
+          277,
+          270,
+          273,
+          271
+        ],
+        "medianMs": 271
+      },
+      "edit": {
+        "samples": [
+          296,
+          288,
+          294,
+          290,
+          296
+        ],
+        "medianMs": 294,
+        "changes": [
+          {
+            "changedCount": 1,
+            "totalCount": 4,
+            "changedZippedBytes": 22198,
+            "changedNames": [
+              "startWorkflow"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 4,
+            "changedZippedBytes": 22190,
+            "changedNames": [
+              "startWorkflow"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 4,
+            "changedZippedBytes": 22198,
+            "changedNames": [
+              "startWorkflow"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 4,
+            "changedZippedBytes": 22190,
+            "changedNames": [
+              "startWorkflow"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 4,
+            "changedZippedBytes": 22198,
+            "changedNames": [
+              "startWorkflow"
+            ]
+          }
+        ]
+      },
+      "artifacts": [
+        {
+          "name": "generateReport",
+          "kind": "function",
+          "unzippedBytes": 1272,
+          "zippedBytes": 998,
+          "toolZipBytes": 1296,
+          "contentHash": "b0953cd910d06dc5a281c0494c96fd737cdba59a970c8267591804156cc544d9",
+          "fileCount": 3
+        },
+        {
+          "name": "processData",
+          "kind": "function",
+          "unzippedBytes": 1095,
+          "zippedBytes": 939,
+          "toolZipBytes": 1237,
+          "contentHash": "816740b1977f088c58151fad01db92598430244ed7e1ba322c63e8325952278b",
+          "fileCount": 3
+        },
+        {
+          "name": "startWorkflow",
+          "kind": "function",
+          "unzippedBytes": 75722,
+          "zippedBytes": 22190,
+          "toolZipBytes": 27021,
+          "contentHash": "adb476d3f1f961f29542f1e567fa8e8d9333d51a7168942464de5d6efae6767a",
+          "fileCount": 3
+        },
+        {
+          "name": "validateInput",
+          "kind": "function",
+          "unzippedBytes": 1045,
+          "zippedBytes": 916,
+          "toolZipBytes": 1224,
+          "contentHash": "0a9072de2f2aaaf087e8da3aade8ec740c0169d3b5e96dc30ca87c9b446ee387",
+          "fileCount": 3
+        }
+      ],
+      "totals": {
+        "functionArtifacts": 4,
+        "layerArtifacts": 0,
+        "otherAssets": 0,
+        "functionZippedBytes": 25043,
+        "functionUnzippedBytes": 79134,
+        "layerZippedBytes": 0,
+        "otherAssetZippedBytes": 0,
+        "largestFunctionUnzippedBytes": 75722,
+        "firstDeployUploadZippedBytes": 25043,
+        "toolPlumbingZippedBytes": 0
+      },
+      "toolReportedMs": 32,
+      "notes": [],
+      "load1m": {
+        "before": 0.49,
+        "after": 0.53,
+        "waitedMs": 0
+      },
+      "measuredAt": "2026-09-26T23:30:03.638Z"
+    },
+    {
+      "fixture": "multi-step-workflow",
+      "tool": "cdk",
+      "ok": true,
+      "error": null,
+      "command": "BENCH_CONFIG=app JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 ~/projects/stacktape-packaging-benchmark/generated/apps/multi-step-workflow/cdk/node_modules/.bin/cdk synth --output ~/projects/stacktape-packaging-benchmark/generated/apps/multi-step-workflow/cdk/cdk.out.app --quiet",
+      "cold": {
+        "samples": [
+          2811,
+          3177,
+          3131,
+          2594,
+          3254
+        ],
+        "medianMs": 3131
+      },
+      "edit": {
+        "samples": [
+          2749,
+          3195,
+          2986,
+          2915,
+          2979
+        ],
+        "medianMs": 2979,
+        "changes": [
+          {
+            "changedCount": 1,
+            "totalCount": 4,
+            "changedZippedBytes": 18103,
+            "changedNames": [
+              "StartWorkflow376654C8"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 4,
+            "changedZippedBytes": 18097,
+            "changedNames": [
+              "StartWorkflow376654C8"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 4,
+            "changedZippedBytes": 18103,
+            "changedNames": [
+              "StartWorkflow376654C8"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 4,
+            "changedZippedBytes": 18097,
+            "changedNames": [
+              "StartWorkflow376654C8"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 4,
+            "changedZippedBytes": 18103,
+            "changedNames": [
+              "StartWorkflow376654C8"
+            ]
+          }
+        ]
+      },
+      "artifacts": [
+        {
+          "name": "ValidateInput259E93BE",
+          "kind": "function",
+          "unzippedBytes": 1286,
+          "zippedBytes": 697,
+          "toolZipBytes": null,
+          "contentHash": "b02c4a3eb20f4a47b6f0fd833a471c38ba3b92375b905b26813885764be0f0df",
+          "fileCount": 1,
+          "toolPlumbing": false
+        },
+        {
+          "name": "ProcessData976A546B",
+          "kind": "function",
+          "unzippedBytes": 1314,
+          "zippedBytes": 711,
+          "toolZipBytes": null,
+          "contentHash": "b47340cf0ed568786f24d5cda35cb6dc7ab4ba6e95d4f9924bd5c627cb2ef721",
+          "fileCount": 1,
+          "toolPlumbing": false
+        },
+        {
+          "name": "GenerateReport8D4A346E",
+          "kind": "function",
+          "unzippedBytes": 1490,
+          "zippedBytes": 751,
+          "toolZipBytes": null,
+          "contentHash": "b66919db2ea205f2c80a6be1e0f60fa7465d2e386259b5abdc395788a9a21670",
+          "fileCount": 1,
+          "toolPlumbing": false
+        },
+        {
+          "name": "StartWorkflow376654C8",
+          "kind": "function",
+          "unzippedBytes": 72828,
+          "zippedBytes": 18097,
+          "toolZipBytes": null,
+          "contentHash": "2410ed5c8b2a4b080f10cfac01d43cff4c1149e3a8af16794f22b0f9639fa898",
+          "fileCount": 1,
+          "toolPlumbing": false
+        }
+      ],
+      "totals": {
+        "functionArtifacts": 4,
+        "layerArtifacts": 0,
+        "otherAssets": 0,
+        "functionZippedBytes": 20256,
+        "functionUnzippedBytes": 76918,
+        "layerZippedBytes": 0,
+        "otherAssetZippedBytes": 0,
+        "largestFunctionUnzippedBytes": 72828,
+        "firstDeployUploadZippedBytes": 20256,
+        "toolPlumbingZippedBytes": 0
+      },
+      "toolReportedMs": null,
+      "notes": [],
+      "load1m": {
+        "before": 0.53,
+        "after": 1.19,
+        "waitedMs": 0
+      },
+      "measuredAt": "2026-09-26T23:30:07.089Z"
+    },
+    {
+      "fixture": "multi-step-workflow",
+      "tool": "serverless",
+      "ok": true,
+      "error": null,
+      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 ~/projects/stacktape-packaging-benchmark/generated/apps/multi-step-workflow/serverless/node_modules/.bin/serverless package --config serverless.yml --stage dev --region eu-west-1",
+      "cold": {
+        "samples": [
+          3903,
+          3806,
+          3934,
+          3853,
+          3941
+        ],
+        "medianMs": 3903
+      },
+      "edit": {
+        "samples": [
+          11322,
+          3839,
+          3670,
+          3976,
+          18852
+        ],
+        "medianMs": 3976,
+        "changes": [
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 53045,
+            "changedNames": [
+              "multi-step-workflow"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 53033,
+            "changedNames": [
+              "multi-step-workflow"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 53045,
+            "changedNames": [
+              "multi-step-workflow"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 53033,
+            "changedNames": [
+              "multi-step-workflow"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 53045,
+            "changedNames": [
+              "multi-step-workflow"
+            ]
+          }
+        ]
+      },
+      "artifacts": [
+        {
+          "name": "multi-step-workflow",
+          "kind": "function",
+          "unzippedBytes": 212594,
+          "zippedBytes": 53033,
+          "toolZipBytes": 64110,
+          "contentHash": "1e3705d3d49f1480791cf9c64eac861a9de596a250de30967277b94c73a8834f",
+          "fileCount": 10,
+          "servesFunctionCount": 4
+        }
+      ],
+      "totals": {
+        "functionArtifacts": 1,
+        "layerArtifacts": 0,
+        "otherAssets": 0,
+        "functionZippedBytes": 53033,
+        "functionUnzippedBytes": 212594,
+        "layerZippedBytes": 0,
+        "otherAssetZippedBytes": 0,
+        "largestFunctionUnzippedBytes": 212594,
+        "firstDeployUploadZippedBytes": 53033,
+        "toolPlumbingZippedBytes": 0
+      },
+      "toolReportedMs": 1000,
+      "notes": [
+        "one service package deployed to all 4 functions (Serverless Framework's default)"
+      ],
+      "load1m": {
+        "before": 1.19,
+        "after": 1.12,
+        "waitedMs": 0
+      },
+      "measuredAt": "2026-09-26T23:30:41.183Z"
+    },
+    {
+      "fixture": "monorepo-typescript-pnpm",
+      "tool": "cdk",
+      "ok": true,
+      "error": null,
+      "command": "BENCH_CONFIG=app JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 ~/projects/stacktape-packaging-benchmark/generated/apps/monorepo-typescript-pnpm/cdk/node_modules/.bin/cdk synth --output ~/projects/stacktape-packaging-benchmark/generated/apps/monorepo-typescript-pnpm/cdk/cdk.out.app --quiet",
+      "cold": {
+        "samples": [
+          3338,
+          3159,
+          3256,
+          3233,
+          3107
+        ],
+        "medianMs": 3233
+      },
+      "edit": {
+        "samples": [
+          3300,
+          3284,
+          3220,
+          3445,
+          3532
+        ],
+        "medianMs": 3300,
+        "changes": [
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 702,
+            "changedNames": [
+              "MyLambdaCCE802FB"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 694,
+            "changedNames": [
+              "MyLambdaCCE802FB"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 702,
+            "changedNames": [
+              "MyLambdaCCE802FB"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 694,
+            "changedNames": [
+              "MyLambdaCCE802FB"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 702,
+            "changedNames": [
+              "MyLambdaCCE802FB"
+            ]
+          }
+        ]
+      },
+      "artifacts": [
+        {
+          "name": "MyLambdaCCE802FB",
+          "kind": "function",
+          "unzippedBytes": 1299,
+          "zippedBytes": 694,
+          "toolZipBytes": null,
+          "contentHash": "71310d7f1fcf7f38de80b05a0cb9769c409b7eb4ccb4b6bdc44068ca67788270",
+          "fileCount": 1,
+          "toolPlumbing": false
+        }
+      ],
+      "totals": {
+        "functionArtifacts": 1,
+        "layerArtifacts": 0,
+        "otherAssets": 0,
+        "functionZippedBytes": 694,
+        "functionUnzippedBytes": 1299,
+        "layerZippedBytes": 0,
+        "otherAssetZippedBytes": 0,
+        "largestFunctionUnzippedBytes": 1299,
+        "firstDeployUploadZippedBytes": 694,
+        "toolPlumbingZippedBytes": 0
+      },
+      "toolReportedMs": null,
+      "notes": [],
+      "load1m": {
+        "before": 0.87,
+        "after": 1.27,
+        "waitedMs": 0
+      },
+      "measuredAt": "2026-09-26T23:32:04.445Z"
+    },
+    {
+      "fixture": "expressjs-api-postgres",
+      "tool": "stacktape",
+      "ok": true,
+      "error": null,
+      "command": "~/projects/stacktape-packaging-benchmark/tmp/stacktape-cli/linux/stacktape package --configPath ~/projects/stacktape-packaging-benchmark/generated/apps/expressjs-api-postgres/stacktape/stacktape.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
+      "cold": {
+        "samples": [
+          595,
+          576,
+          576,
+          545,
+          542
+        ],
+        "medianMs": 576
+      },
+      "edit": {
+        "samples": [
+          591,
+          588,
+          597,
+          553,
+          564
+        ],
+        "medianMs": 588,
+        "changes": [
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 8345253,
+            "changedNames": [
+              "api"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 8345230,
+            "changedNames": [
+              "api"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 8345253,
+            "changedNames": [
+              "api"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 8345230,
+            "changedNames": [
+              "api"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 8345253,
+            "changedNames": [
+              "api"
+            ]
+          }
+        ]
+      },
+      "artifacts": [
+        {
+          "name": "api",
+          "kind": "function",
+          "unzippedBytes": 18908115,
+          "zippedBytes": 8345230,
+          "toolZipBytes": 8934255,
+          "contentHash": "0a86a9933fb5b09f879d48accc3986007b51f9481efbfe8c06733ff216d0cd25",
+          "fileCount": 5
+        }
+      ],
+      "totals": {
+        "functionArtifacts": 1,
+        "layerArtifacts": 0,
+        "otherAssets": 0,
+        "functionZippedBytes": 8345230,
+        "functionUnzippedBytes": 18908115,
+        "layerZippedBytes": 0,
+        "otherAssetZippedBytes": 0,
+        "largestFunctionUnzippedBytes": 18908115,
+        "firstDeployUploadZippedBytes": 8345230,
+        "toolPlumbingZippedBytes": 0
+      },
+      "toolReportedMs": 305,
+      "notes": [],
+      "load1m": {
+        "before": 1.41,
+        "after": 1.22,
+        "waitedMs": 0
+      },
+      "measuredAt": "2026-09-26T23:32:47.762Z"
+    },
+    {
+      "fixture": "expressjs-api-postgres",
+      "tool": "cdk",
+      "ok": true,
+      "error": null,
+      "command": "BENCH_CONFIG=app JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 ~/projects/stacktape-packaging-benchmark/generated/apps/expressjs-api-postgres/cdk/node_modules/.bin/cdk synth --output ~/projects/stacktape-packaging-benchmark/generated/apps/expressjs-api-postgres/cdk/cdk.out.app --quiet",
+      "cold": {
+        "samples": [
+          7068,
+          7642,
+          7064,
+          7014,
+          7025
+        ],
+        "medianMs": 7064
+      },
+      "edit": {
+        "samples": [
+          7045,
+          7470,
+          6992,
+          7649,
+          7193
+        ],
+        "medianMs": 7193,
+        "changes": [
+          {
+            "changedCount": 1,
+            "totalCount": 2,
+            "changedZippedBytes": 86011003,
+            "changedNames": [
+              "ApiF70053CD"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 2,
+            "changedZippedBytes": 86010991,
+            "changedNames": [
+              "ApiF70053CD"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 2,
+            "changedZippedBytes": 86011003,
+            "changedNames": [
+              "ApiF70053CD"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 2,
+            "changedZippedBytes": 86010991,
+            "changedNames": [
+              "ApiF70053CD"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 2,
+            "changedZippedBytes": 86011003,
+            "changedNames": [
+              "ApiF70053CD"
+            ]
+          }
+        ]
+      },
+      "artifacts": [
+        {
+          "name": "CustomVpcRestrictDefaultSGCustomResourceProviderHandlerDC833E5E",
+          "kind": "function",
+          "unzippedBytes": 6237,
+          "zippedBytes": 2722,
+          "toolZipBytes": null,
+          "contentHash": "1c3cca3fd5ba6937d24ffff29c474a4423a8303911777d1cdd5b0aa68ee49b24",
+          "fileCount": 2,
+          "toolPlumbing": true
+        },
+        {
+          "name": "ApiF70053CD",
+          "kind": "function",
+          "unzippedBytes": 237874935,
+          "zippedBytes": 86010991,
+          "toolZipBytes": null,
+          "contentHash": "a452688c6a3e4b5e7ccb3d25450b5286249d90feab0afb8dfed2ad189eb75518",
+          "fileCount": 4454,
+          "toolPlumbing": false
+        }
+      ],
+      "totals": {
+        "functionArtifacts": 1,
+        "layerArtifacts": 0,
+        "otherAssets": 0,
+        "functionZippedBytes": 86010991,
+        "functionUnzippedBytes": 237874935,
+        "layerZippedBytes": 0,
+        "otherAssetZippedBytes": 0,
+        "largestFunctionUnzippedBytes": 237874935,
+        "firstDeployUploadZippedBytes": 86010991,
+        "toolPlumbingZippedBytes": 2722
+      },
+      "toolReportedMs": null,
+      "notes": [],
+      "load1m": {
+        "before": 1.22,
+        "after": 1.23,
+        "waitedMs": 0
+      },
+      "measuredAt": "2026-09-26T23:33:02.807Z"
+    },
+    {
+      "fixture": "expressjs-api-postgres",
+      "tool": "serverless",
+      "ok": false,
+      "error": "exit 1: Packaging \"expressjs-api-postgres\" for stage \"dev\" (eu-west-1)\n(node:31484) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.\n(Use `node --trace-deprecation ...` to show where the warning was created)\n\n✖ Error: Failed to install dependencies with the \"npm\" packager.\n\nError: Could not find Prisma Schema that is required for this command.\nYou can either provide it with `--schema` argument,\nset it in your Prisma Config file (e.g., `prisma.config.ts`),\nset it as `prisma.schema` in your package.json,\nor put it into the default location (`./prisma/schema.prisma`, or `./schema.prisma`.\nChecked following paths:\n\nschema.prisma: file not found\nprisma/schema.prisma: file not found\n\nSee also https://pris.ly/d/prisma-schema-location\nnpm error code 1\nnpm error path ~/projects/stacktape-packaging-benchmark/generated/apps/expressjs-api-postgres/serverless/.serverless/build\nnpm error command failed\nnpm error command sh -c prisma generate\nnpm error A complete log of this run can be found in: ~/.npm/_logs/2026-09-26T23_36_03_642Z-debug-0.log\n\n\n\n> expressjs-api-postgres@1.0.0 postinstall\n> prisma generate\n\n\n    at ChildProcess.<anonymous> (file://~/.serverless/releases/4.43.0/package/dist/sf-core.js:4138:20)\n    at ChildProcess.emit (node:events:521:24)\n    at ChildProcess.emit (node:domain:489:12)\n    at maybeClose (node:internal/child_process:1124:16)\n    at ChildProcess._handle.onexit (node:internal/child_process:306:5)\n\nFor help, try the following:\n  • Run the command again with the \"--debug\" option\n  • Review the docs: https://www.serverless.com/framework/docs/\n\n",
+      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 ~/projects/stacktape-packaging-benchmark/generated/apps/expressjs-api-postgres/serverless/node_modules/.bin/serverless package --config serverless.yml --stage dev --region eu-west-1",
+      "cold": null,
+      "edit": null,
+      "artifacts": [],
+      "totals": null,
+      "toolReportedMs": null,
+      "notes": [],
+      "load1m": {
+        "before": 1.23,
+        "after": null,
+        "waitedMs": 0
+      },
+      "measuredAt": "2026-09-26T23:35:54.816Z"
+    },
+    {
+      "fixture": "lambda-web-scraper-puppeteer",
+      "tool": "stacktape",
+      "ok": true,
+      "error": null,
+      "command": "~/projects/stacktape-packaging-benchmark/tmp/stacktape-cli/linux/stacktape package --configPath ~/projects/stacktape-packaging-benchmark/generated/apps/lambda-web-scraper-puppeteer/stacktape/stacktape.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
+      "cold": {
+        "samples": [
+          2087,
+          2138,
+          1947,
+          2101,
+          2010
+        ],
+        "medianMs": 2087
+      },
+      "edit": {
+        "samples": [
+          2100,
+          1964,
+          2095,
+          2130,
+          2042
+        ],
+        "medianMs": 2095,
+        "changes": [
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 68868412,
+            "changedNames": [
+              "scrapeLinks"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 68868415,
+            "changedNames": [
+              "scrapeLinks"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 68868412,
+            "changedNames": [
+              "scrapeLinks"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 68868415,
+            "changedNames": [
+              "scrapeLinks"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 68868412,
+            "changedNames": [
+              "scrapeLinks"
+            ]
+          }
+        ]
+      },
+      "artifacts": [
+        {
+          "name": "scrapeLinks",
+          "kind": "function",
+          "unzippedBytes": 74452649,
+          "zippedBytes": 68868415,
+          "toolZipBytes": 69017272,
+          "contentHash": "ebf1b48749e7d60201719a513ae682b27fe8608fb2f61b40818e76b497df113e",
+          "fileCount": 205
+        }
+      ],
+      "totals": {
+        "functionArtifacts": 1,
+        "layerArtifacts": 0,
+        "otherAssets": 0,
+        "functionZippedBytes": 68868415,
+        "functionUnzippedBytes": 74452649,
+        "layerZippedBytes": 0,
+        "otherAssetZippedBytes": 0,
+        "largestFunctionUnzippedBytes": 74452649,
+        "firstDeployUploadZippedBytes": 68868415,
+        "toolPlumbingZippedBytes": 0
+      },
+      "toolReportedMs": 1800,
+      "notes": [],
+      "load1m": {
+        "before": 1.03,
+        "after": 1.25,
+        "waitedMs": 0
+      },
+      "measuredAt": "2026-09-26T23:36:10.212Z"
+    },
+    {
+      "fixture": "lambda-web-scraper-puppeteer",
+      "tool": "cdk",
+      "ok": true,
+      "error": null,
+      "command": "BENCH_CONFIG=app JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 ~/projects/stacktape-packaging-benchmark/generated/apps/lambda-web-scraper-puppeteer/cdk/node_modules/.bin/cdk synth --output ~/projects/stacktape-packaging-benchmark/generated/apps/lambda-web-scraper-puppeteer/cdk/cdk.out.app --quiet",
+      "cold": {
+        "samples": [
+          2941,
+          3907,
+          2788,
+          3104,
+          3595
+        ],
+        "medianMs": 3104
+      },
+      "edit": {
+        "samples": [
+          2700,
+          3172,
+          3261,
+          3057,
+          2930
+        ],
+        "medianMs": 3057,
+        "changes": [
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 69133148,
+            "changedNames": [
+              "ScrapeLinksEAFCFB82"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 69133151,
+            "changedNames": [
+              "ScrapeLinksEAFCFB82"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 69133148,
+            "changedNames": [
+              "ScrapeLinksEAFCFB82"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 69133151,
+            "changedNames": [
+              "ScrapeLinksEAFCFB82"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 69133148,
+            "changedNames": [
+              "ScrapeLinksEAFCFB82"
+            ]
+          }
+        ]
+      },
+      "artifacts": [
+        {
+          "name": "ScrapeLinksEAFCFB82",
+          "kind": "function",
+          "unzippedBytes": 76243510,
+          "zippedBytes": 69133151,
+          "toolZipBytes": null,
+          "contentHash": "c72fe212abc7c978fb4ddd9456bbbb0fc9acc137fca29a2dbb10f280fe713bee",
+          "fileCount": 206,
+          "toolPlumbing": false
+        }
+      ],
+      "totals": {
+        "functionArtifacts": 1,
+        "layerArtifacts": 0,
+        "otherAssets": 0,
+        "functionZippedBytes": 69133151,
+        "functionUnzippedBytes": 76243510,
+        "layerZippedBytes": 0,
+        "otherAssetZippedBytes": 0,
+        "largestFunctionUnzippedBytes": 76243510,
+        "firstDeployUploadZippedBytes": 69133151,
+        "toolPlumbingZippedBytes": 0
+      },
+      "toolReportedMs": null,
+      "notes": [],
+      "load1m": {
+        "before": 1.15,
+        "after": 1.51,
+        "waitedMs": 0
+      },
+      "measuredAt": "2026-09-26T23:36:57.969Z"
+    },
+    {
+      "fixture": "lambda-web-scraper-puppeteer",
+      "tool": "serverless",
+      "ok": true,
+      "error": null,
+      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 ~/projects/stacktape-packaging-benchmark/generated/apps/lambda-web-scraper-puppeteer/serverless/node_modules/.bin/serverless package --config serverless.yml --stage dev --region eu-west-1",
+      "cold": {
+        "samples": [
+          5474,
+          11596,
+          6032,
+          25279,
+          12641
+        ],
+        "medianMs": 11596
+      },
+      "edit": {
+        "samples": [
+          6134,
+          13717,
+          13976,
+          5721,
+          20517
+        ],
+        "medianMs": 13717,
+        "changes": [
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 70433518,
+            "changedNames": [
+              "lambda-web-scraper-puppeteer"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 70433519,
+            "changedNames": [
+              "lambda-web-scraper-puppeteer"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 70433518,
+            "changedNames": [
+              "lambda-web-scraper-puppeteer"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 70433519,
+            "changedNames": [
+              "lambda-web-scraper-puppeteer"
+            ]
+          },
+          {
+            "changedCount": 1,
+            "totalCount": 1,
+            "changedZippedBytes": 70433518,
+            "changedNames": [
+              "lambda-web-scraper-puppeteer"
+            ]
+          }
+        ]
+      },
+      "artifacts": [
+        {
+          "name": "lambda-web-scraper-puppeteer",
+          "kind": "function",
+          "unzippedBytes": 81894790,
+          "zippedBytes": 70433519,
+          "toolZipBytes": 71065045,
+          "contentHash": "5c62f9e4260c9e98d101aaadf8165b934571a00c7317a4a2de72787dff1e10d5",
+          "fileCount": 207,
+          "servesFunctionCount": 1
+        }
+      ],
+      "totals": {
+        "functionArtifacts": 1,
+        "layerArtifacts": 0,
+        "otherAssets": 0,
+        "functionZippedBytes": 70433519,
+        "functionUnzippedBytes": 81894790,
+        "layerZippedBytes": 0,
+        "otherAssetZippedBytes": 0,
+        "largestFunctionUnzippedBytes": 81894790,
+        "firstDeployUploadZippedBytes": 70433519,
+        "toolPlumbingZippedBytes": 0
+      },
+      "toolReportedMs": 3000,
+      "notes": [],
+      "load1m": {
+        "before": 1.51,
+        "after": 0.9,
+        "waitedMs": 0
+      },
+      "measuredAt": "2026-09-26T23:37:49.956Z"
+    },
+    {
+      "fixture": "fullstack-nextjs-drizzle",
+      "tool": "stacktape",
+      "ok": true,
+      "error": null,
+      "command": "~/projects/stacktape-packaging-benchmark/tmp/stacktape-cli/linux/stacktape package --configPath ~/projects/stacktape-packaging-benchmark/generated/apps/fullstack-nextjs-drizzle/stacktape/stacktape.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
+      "cold": {
+        "samples": [
+          19978,
+          19805,
+          19911,
+          19674,
+          19720
+        ],
+        "medianMs": 19805
+      },
+      "edit": {
+        "samples": [
+          20031,
+          19995,
+          19772,
+          19754,
+          19997
+        ],
+        "medianMs": 19995,
+        "changes": [
+          {
+            "changedCount": 5,
+            "totalCount": 5,
+            "changedZippedBytes": 17689159,
+            "changedNames": [
+              "web/bucket-content",
+              "web/imageFunction",
+              "web/revalidationFunction",
+              "web/revalidationInsertFunction",
+              "web/serverFunction"
+            ]
+          },
+          {
+            "changedCount": 5,
+            "totalCount": 5,
+            "changedZippedBytes": 17689148,
+            "changedNames": [
+              "web/bucket-content",
+              "web/imageFunction",
+              "web/revalidationFunction",
+              "web/revalidationInsertFunction",
+              "web/serverFunction"
+            ]
+          },
+          {
+            "changedCount": 5,
+            "totalCount": 5,
+            "changedZippedBytes": 17689166,
+            "changedNames": [
+              "web/bucket-content",
+              "web/imageFunction",
+              "web/revalidationFunction",
+              "web/revalidationInsertFunction",
+              "web/serverFunction"
+            ]
+          },
+          {
+            "changedCount": 5,
+            "totalCount": 5,
+            "changedZippedBytes": 17689162,
+            "changedNames": [
+              "web/bucket-content",
+              "web/imageFunction",
+              "web/revalidationFunction",
+              "web/revalidationInsertFunction",
+              "web/serverFunction"
+            ]
+          },
+          {
+            "changedCount": 5,
+            "totalCount": 5,
+            "changedZippedBytes": 17689162,
+            "changedNames": [
+              "web/bucket-content",
+              "web/imageFunction",
+              "web/revalidationFunction",
+              "web/revalidationInsertFunction",
+              "web/serverFunction"
+            ]
+          }
+        ]
+      },
+      "artifacts": [
+        {
+          "name": "web/bucket-content",
+          "kind": "asset",
+          "unzippedBytes": 746752,
+          "zippedBytes": 231979,
+          "toolZipBytes": null,
+          "contentHash": "1af66b8141f5f94d46ee388551931c6450ffa21f20fc7620b596761c945b838e",
+          "fileCount": 18
+        },
+        {
+          "name": "web/imageFunction",
+          "kind": "function",
+          "unzippedBytes": 31814493,
+          "zippedBytes": 12235529,
+          "toolZipBytes": 12869873,
+          "contentHash": "cddbbfb2df39ff92b15faa2830650281eef23d4d63a9611ab230a57102e725a7",
+          "fileCount": 1218
+        },
+        {
+          "name": "web/revalidationFunction",
+          "kind": "function",
+          "unzippedBytes": 4831,
+          "zippedBytes": 2668,
+          "toolZipBytes": 2900,
+          "contentHash": "3139800b23ca5e0cecf3e5ff84c4f04b088b95cad16855df064d40bc98dbfd75",
+          "fileCount": 3
+        },
+        {
+          "name": "web/revalidationInsertFunction",
+          "kind": "function",
+          "unzippedBytes": 9585,
+          "zippedBytes": 4103,
+          "toolZipBytes": 4490,
+          "contentHash": "9f39927d4d5d5947a733709330f31ed2858fa43a652e7a2e87c4984570345b69",
+          "fileCount": 4
+        },
+        {
+          "name": "web/serverFunction",
+          "kind": "function",
+          "unzippedBytes": 22177687,
+          "zippedBytes": 5214878,
+          "toolZipBytes": 6386928,
+          "contentHash": "bb64e426e5c1cdb70111f8b56b82811448ce7082f95decd6c67ea7bf366368f2",
+          "fileCount": 1302
+        }
+      ],
+      "totals": {
+        "functionArtifacts": 4,
+        "layerArtifacts": 0,
+        "otherAssets": 1,
+        "functionZippedBytes": 17457178,
+        "functionUnzippedBytes": 54006596,
+        "layerZippedBytes": 0,
+        "otherAssetZippedBytes": 231979,
+        "largestFunctionUnzippedBytes": 31814493,
+        "firstDeployUploadZippedBytes": 17689157,
+        "toolPlumbingZippedBytes": 0
+      },
+      "toolReportedMs": 17900,
+      "notes": [],
+      "load1m": {
+        "before": 0.83,
+        "after": 1.44,
+        "waitedMs": 0
+      },
+      "measuredAt": "2026-09-26T23:40:26.144Z"
+    },
+    {
+      "fixture": "fullstack-nextjs-drizzle",
+      "tool": "cdk",
+      "ok": false,
+      "error": "exit 1: led to collect page data for /] { type: 'Error' }\nnode:internal/errors:985\n  const err = new Error(message);\n              ^\n\nError: Command failed: npm run build\n    at genericNodeError (node:internal/errors:985:15)\n    at wrappedFn (node:internal/errors:539:14)\n    at checkExecSyncError (node:child_process:925:11)\n    at Object.execSync (node:child_process:997:15)\n    at buildNextjsApp (file://~/.npm/_npx/04b4a266c702e060/node_modules/@opennextjs/aws/dist/build/buildNextApp.js:15:8)\n    at build (file://~/.npm/_npx/04b4a266c702e060/node_modules/@opennextjs/aws/dist/build.js:36:5)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file://~/.npm/_npx/04b4a266c702e060/node_modules/@opennextjs/aws/dist/index.js:9:1 {\n  status: 1,\n  signal: null,\n  output: [ null, null, null ],\n  pid: 45209,\n  stdout: null,\n  stderr: null\n}\n\nNode.js v24.15.0\nnode:internal/errors:985\n  const err = new Error(message);\n              ^\n\nError: Command failed: npx @opennextjs/aws@^3 build\n    at genericNodeError (node:internal/errors:985:15)\n    at wrappedFn (node:internal/errors:539:14)\n    at checkExecSyncError (node:child_process:925:11)\n    at execSync (node:child_process:997:15)\n    at execSync (~/projects/stacktape-packaging-benchmark/generated/apps/fullstack-nextjs-drizzle/cdk/node_modules/aws-cdk-lib/core/lib/private/perf.js:1:778)\n    at NextjsBuild.build (~/projects/stacktape-packaging-benchmark/generated/apps/fullstack-nextjs-drizzle/cdk/node_modules/cdk-nextjs-standalone/src/NextjsBuild.ts:155:13)\n    at new NextjsBuild (~/projects/stacktape-packaging-benchmark/generated/apps/fullstack-nextjs-drizzle/cdk/node_modules/cdk-nextjs-standalone/src/NextjsBuild.ts:120:14)\n    at new Nextjs (~/projects/stacktape-packaging-benchmark/generated/apps/fullstack-nextjs-drizzle/cdk/node_modules/cdk-nextjs-standalone/src/Nextjs.ts:161:22)\n    at new FullstackNextjsDrizzleStack (~/projects/stacktape-packaging-benchmark/generated/apps/fullstack-nextjs-drizzle/cdk/lib/fullstack-nextjs-drizzle-stack.ts:23:17)\n    at <anonymous> (~/projects/stacktape-packaging-benchmark/generated/apps/fullstack-nextjs-drizzle/cdk/bin/fullstack-nextjs-drizzle.ts:6:1) {\n  status: 1,\n  signal: null,\n  output: [ null, null, null ],\n  pid: 45188,\n  stdout: null,\n  stderr: null\n}\n\nNode.js v24.15.0\nnpx tsc && npx tsx bin/fullstack-nextjs-drizzle.ts: Subprocess exited with error 1\n",
+      "command": "BENCH_CONFIG=app JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 ~/projects/stacktape-packaging-benchmark/generated/apps/fullstack-nextjs-drizzle/cdk/node_modules/.bin/cdk synth --output ~/projects/stacktape-packaging-benchmark/generated/apps/fullstack-nextjs-drizzle/cdk/cdk.out.app --quiet",
+      "cold": null,
+      "edit": null,
+      "artifacts": [],
+      "totals": null,
+      "toolReportedMs": null,
+      "notes": [],
+      "load1m": {
+        "before": 1.44,
+        "after": null,
+        "waitedMs": 0
+      },
+      "measuredAt": "2026-09-26T23:44:41.591Z"
+    }
+  ],
+  "appsSst": null,
+  "appContainers": [],
   "lambda": [
     {
       "shape": "n1",

@@ -98,6 +98,30 @@ const createStacktapeAdapter = (ctx: ToolContext): ToolAdapter => ({
     const artifacts: Artifact[] = [];
     const notes: string[] = [];
 
+    // nextjs-web: the zips Stacktape deploys (one directory per function) and the files it uploads to the bucket.
+    const nextjsDir = join(buildDir, 'nextjs');
+    if (exists(nextjsDir)) {
+      for (const site of readdirSync(nextjsDir, { withFileTypes: true }).filter((e) => e.isDirectory())) {
+        for (const entry of readdirSync(join(nextjsDir, site.name), { withFileTypes: true })) {
+          const path = join(nextjsDir, site.name, entry.name);
+          if (entry.isDirectory() && entry.name === 'bucket-content') {
+            artifacts.push(measureDirectory({ root: path, name: `${site.name}/bucket-content`, kind: 'asset' }));
+            continue;
+          }
+          if (!entry.isDirectory() || !/^[a-z]+[A-Z]/.test(entry.name)) continue;
+          for (const zip of readdirSync(path).filter((name) => name.endsWith('.zip'))) {
+            const target = mkdtempSync(join(tmpdir(), 'stacktape-nextjs-'));
+            try {
+              runOnce({ command: 'unzip', args: ['-q', '-o', join(path, zip), '-d', target], cwd: path });
+              artifacts.push(measureDirectory({ root: target, name: `${site.name}/${entry.name}`, kind: 'function', toolZipBytes: statSync(join(path, zip)).size }));
+            } finally {
+              removePaths([target]);
+            }
+          }
+        }
+      }
+    }
+
     const lambdasDir = join(buildDir, 'lambdas');
     if (exists(lambdasDir)) {
       const entries = readdirSync(lambdasDir, { withFileTypes: true });
@@ -239,22 +263,24 @@ const createCdkAdapter = (): ToolAdapter => ({
         if (!path || path.endsWith('.template.json') || seen.has(path)) continue;
         seen.add(path);
         const { name, kind } = usage.get(path) ?? { name: `asset ${hash.slice(0, 12)}`, kind: 'asset' as const };
+        // Code aws-cdk-lib adds for its own custom resources (the VPC's default security group, bucket deployments).
+        const toolPlumbing = /^Custom|CustomResource|AwsCliLayer|BucketDeployment|^AWS679f53fac/.test(name);
         const full = join(out, path);
         if (entry.source?.packaging === 'file') {
           if (path.endsWith('.zip')) {
             const target = mkdtempSync(join(tmpdir(), 'cdk-file-asset-'));
             try {
               runOnce({ command: 'unzip', args: ['-q', '-o', full, '-d', target], cwd: out });
-              artifacts.push({ ...measureDirectory({ root: target, name, kind, toolZipBytes: statSync(full).size }) });
+              artifacts.push({ ...measureDirectory({ root: target, name, kind, toolZipBytes: statSync(full).size }), toolPlumbing });
             } finally {
               removePaths([target]);
             }
           } else {
             const bytes = statSync(full).size;
-            artifacts.push({ name, kind, unzippedBytes: bytes, zippedBytes: bytes, toolZipBytes: null, contentHash: hash, fileCount: 1 });
+            artifacts.push({ name, kind, unzippedBytes: bytes, zippedBytes: bytes, toolZipBytes: null, contentHash: hash, fileCount: 1, toolPlumbing });
           }
         } else {
-          artifacts.push(measureDirectory({ root: full, name, kind }));
+          artifacts.push({ ...measureDirectory({ root: full, name, kind }), toolPlumbing });
         }
       }
     }

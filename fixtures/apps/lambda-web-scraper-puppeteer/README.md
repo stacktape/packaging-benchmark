@@ -6,6 +6,7 @@ A Lambda function behind an HTTP API that opens a page in headless Chromium thro
 
 The application is Stacktape's starter project `lambda-web-scraper-puppeteer` (`apps/cli/starter-projects/` in the Stacktape repository), in `app/`. Changes from the starter:
 
+- `event.pathParameters!` instead of `event.pathParameters`: the starter's handler fails a strict type check there (and on the browser-side `document`), and CDK's default `cdk.json` runs `tsc` before every synth. The CDK project adds `dom` to `lib` for the `page.evaluate` callback. Behaviour is unchanged.
 - Every direct dependency is pinned to an exact version, the newest within the starter's own range.
 
 The incremental measurement changes one line of `src/scrape-links.ts`, from `await page.goto(`http://${url}`);` to `await page.goto(`https://${url}`);`, and packages again.
@@ -20,7 +21,7 @@ The incremental measurement changes one line of `src/scrape-links.ts`, from `awa
 <tr>
 <td valign="top">
 
-`stacktape.yml`, 21 lines
+`stacktape.yml`, 23 lines
 
 ```yaml
 resources:
@@ -38,6 +39,8 @@ resources:
             - puppeteer
           languageSpecificConfig:
             disableSourceMaps: true
+            dependenciesToExcludeFromBundle:
+              - '@sparticuz/chromium'
       events:
         - type: http-api-gateway
           properties:

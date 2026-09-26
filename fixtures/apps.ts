@@ -109,11 +109,17 @@ const copyTree = async (from: string, to: string, skip: (name: string) => boolea
 const writeProject = async (fixture: AppFixture, tool: AppTool) => {
   const dir = join(outRoot, fixture.id, tool);
   const fixtureDir = join(appsRoot, fixture.id);
-  // Keep an installed node_modules and lockfile, so regenerating does not force a reinstall.
+  // Keep installed node_modules directories (at any depth: a workspace links its packages there) and lockfiles, so
+  // regenerating does not force a reinstall.
   const keep = new Set(['node_modules', 'package-lock.json', 'pnpm-lock.yaml']);
-  if (await exists(dir)) {
-    for (const entry of await readdir(dir)) if (!keep.has(entry)) await rm(join(dir, entry), { recursive: true, force: true });
-  }
+  const clean = async (path: string) => {
+    for (const entry of await readdir(path, { withFileTypes: true })) {
+      if (keep.has(entry.name)) continue;
+      if (entry.isDirectory()) await clean(join(path, entry.name));
+      else await rm(join(path, entry.name), { force: true });
+    }
+  };
+  if (await exists(dir)) await clean(dir);
   await mkdir(dir, { recursive: true });
   await copyTree(join(fixtureDir, 'app'), dir, (name) => name === 'package.json');
   await copyTree(join(fixtureDir, tool), dir, (name) => name === 'package.json');

@@ -10,7 +10,7 @@ const handler: APIGatewayProxyHandlerV2 = async (event, _context) => {
     headless: chromium.headless
   });
 
-  const { url } = event.pathParameters;
+  const { url } = event.pathParameters!;
 
   const page = await browser.newPage();
   await page.goto(`http://${url}`);

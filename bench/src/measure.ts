@@ -41,6 +41,8 @@ export type Artifact = {
    * one package for the whole service, so a single artifact serves every function in the stack.
    */
   servesFunctionCount?: number;
+  /** Code the tool itself deploys for its own custom resources, not the application's; reported apart. */
+  toolPlumbing?: boolean;
 };
 
 export const walkFiles = (root: string): FileEntry[] => {

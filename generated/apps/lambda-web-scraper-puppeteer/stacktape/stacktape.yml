@@ -13,6 +13,8 @@ resources:
             - puppeteer
           languageSpecificConfig:
             disableSourceMaps: true
+            dependenciesToExcludeFromBundle:
+              - '@sparticuz/chromium'
       events:
         - type: http-api-gateway
           properties:

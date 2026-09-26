@@ -7,7 +7,6 @@ A pnpm workspace with three packages: a Lambda function, an Express server and a
 The application is Stacktape's starter project `monorepo-typescript-pnpm` (`apps/cli/starter-projects/` in the Stacktape repository), in `app/`. Changes from the starter:
 
 - Only the Lambda function is deployed. The starter also deploys `packages/server` as a container (`web-service`); that path is covered by the container comparison, and three of the four tools have no container packaging to compare. The package stays in the workspace.
-- `hello` in `packages/utils` takes `name?: string` instead of `name: string`. The Lambda handler passes `event?.queryStringParameters?.name`, which can be undefined, so the starter fails a strict type check; CDK's default `cdk.json` runs `tsc` before every synth and stops there. The output is unchanged.
 - The workspace file allows the builds pnpm 11 asks approval for (esbuild and the tools' own binaries) and turns off its 24-hour minimum release age, so the pinned versions install.
 - Every direct dependency is pinned to an exact version.
 

@@ -41,7 +41,7 @@ export type AppMeasurement = {
 };
 
 export const summarizeArtifacts = (artifacts: Artifact[]) => {
-  const functions = artifacts.filter((a) => a.kind === 'function');
+  const functions = artifacts.filter((a) => a.kind === 'function' && !a.toolPlumbing);
   const layers = artifacts.filter((a) => a.kind === 'layer');
   const others = artifacts.filter((a) => a.kind === 'asset');
   const distinct = new Map<string, Artifact>();
@@ -55,7 +55,9 @@ export const summarizeArtifacts = (artifacts: Artifact[]) => {
     layerZippedBytes: layers.reduce((s, a) => s + a.zippedBytes, 0),
     otherAssetZippedBytes: others.reduce((s, a) => s + a.zippedBytes, 0),
     largestFunctionUnzippedBytes: Math.max(0, ...functions.map((a) => a.unzippedBytes)),
-    firstDeployUploadZippedBytes: [...distinct.values()].reduce((s, a) => s + a.zippedBytes, 0)
+    /** The application's code: every distinct artifact except the tool's own custom-resource code. */
+    firstDeployUploadZippedBytes: [...distinct.values()].filter((a) => !a.toolPlumbing).reduce((s, a) => s + a.zippedBytes, 0),
+    toolPlumbingZippedBytes: [...distinct.values()].filter((a) => a.toolPlumbing).reduce((s, a) => s + a.zippedBytes, 0)
   };
 };
 

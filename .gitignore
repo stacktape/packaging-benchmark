@@ -21,3 +21,6 @@ generated/**/package-lock.json
 
 *.tsbuildinfo
 .DS_Store
+generated/**/.next/
+generated/**/.open-next/
+generated/**/next-env.d.ts.bak

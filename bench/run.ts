@@ -31,7 +31,7 @@
  */
 
 import { appendFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { loadavg } from 'node:os';
+import { homedir, loadavg } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { CONTAINER_VARIANTS, SHAPES, TOOLS, handlerFileName } from '../fixtures/generate.ts';
@@ -193,9 +193,17 @@ const emptyResults = (): Results => ({
 const loadResults = (): Results =>
   exists(resultsFile) ? { ...emptyResults(), ...JSON.parse(readFileSync(resultsFile, 'utf8')) } : emptyResults();
 
+/** Recorded output never carries this machine's home directory or the AWS account the SST runs used. */
+const redact = (text: string) => {
+  let out = text.replaceAll(homedir(), '~');
+  const account = process.env.BENCH_EXPECTED_ACCOUNT;
+  if (account) out = out.replaceAll(account, '<account>');
+  return out;
+};
+
 const saveResults = (results: Results) => {
   mkdirSync(resultsDir, { recursive: true });
-  writeFileSync(resultsFile, `${JSON.stringify(results, null, 2)}\n`);
+  writeFileSync(resultsFile, redact(`${JSON.stringify(results, null, 2)}\n`));
 };
 
 // ---------------------------------------------------------------------------
