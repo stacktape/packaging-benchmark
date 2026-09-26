@@ -442,7 +442,7 @@ export const writeReport = (results: Any, path: string) => {
 
     const footprint = sst.accountFootprint as Any | undefined;
     if (footprint) {
-      lines.push(`### Outside the per-stage lifecycle (account ${footprint.account}, ${footprint.region})`, '');
+      lines.push(`### Outside the per-stage lifecycle (${footprint.region})`, '');
       lines.push(footprint.note, '');
       lines.push('**Created**', '');
       for (const item of footprint.created as Any[]) {

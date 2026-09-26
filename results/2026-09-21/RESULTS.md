@@ -240,7 +240,7 @@ Only the SST measurements touch AWS with anything other than a read. Every stage
 | created | SST stage bench-aca5c9 of app pkgbench, shape n50, configuration defaults | 50 Lambda functions with their IAM roles and log groups |
 | removed | SST stage bench-aca5c9 of app pkgbench, shape n50 | sst remove reported success |
 
-### Outside the per-stage lifecycle (account 977946299200, eu-west-1)
+### Outside the per-stage lifecycle (eu-west-1)
 
 Resources outside the per-stage lifecycle: SST bootstraps the account once, and `sst remove` does not undo the bootstrap or the per-stage passphrase parameter. These were removed by hand after the last shape, and the account was re-listed to confirm nothing remained.
 

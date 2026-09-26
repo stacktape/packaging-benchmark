@@ -70,7 +70,7 @@ export const captureEnvironment = ({
   stacktape: stacktapeRepo
     ? {
         source: 'Linux release build from the Stacktape monorepo, made by its production release functions',
-        repoPath: stacktapeRepo,
+        repoPath: stacktapeRepo.replaceAll(homedir(), '~'),
         builtFromCommit: stacktapeBinaryCommit,
         repoHeadWhenReported: tryExec('git rev-parse HEAD', stacktapeRepo),
         // The private Console submodule is not part of the CLI build.

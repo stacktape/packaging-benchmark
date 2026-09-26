@@ -32,7 +32,7 @@
     },
     "stacktape": {
       "source": "source-built CLI from the Stacktape monorepo",
-      "repoPath": "/home/congy/projects/stacktape",
+      "repoPath": "~/projects/stacktape",
       "commit": "f667db00588d3920df0d9e074b8b9775f97e1ce0",
       "dirtyFiles": 119
     }
@@ -58,7 +58,7 @@
       "minMs": 2357,
       "maxMs": 2376,
       "toolReportedMs": 251,
-      "command": "/home/congy/projects/stacktape/apps/cli/__dist/linux/stacktape package --configPath /home/congy/projects/stacktape-packaging-benchmark/generated/n5/stacktape/stacktape.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
+      "command": "~/projects/stacktape/apps/cli/__dist/linux/stacktape package --configPath ~/projects/stacktape-packaging-benchmark/generated/n5/stacktape/stacktape.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
       "error": null,
       "artifacts": [
         {
@@ -165,7 +165,7 @@
       "minMs": 2378,
       "maxMs": 2451,
       "toolReportedMs": 267,
-      "command": "/home/congy/projects/stacktape/apps/cli/__dist/linux/stacktape package --configPath /home/congy/projects/stacktape-packaging-benchmark/generated/n5/stacktape/stacktape.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
+      "command": "~/projects/stacktape/apps/cli/__dist/linux/stacktape package --configPath ~/projects/stacktape-packaging-benchmark/generated/n5/stacktape/stacktape.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
       "error": null,
       "artifacts": [
         {
@@ -272,7 +272,7 @@
       "minMs": 2324,
       "maxMs": 2429,
       "toolReportedMs": 277,
-      "command": "/home/congy/projects/stacktape/apps/cli/__dist/linux/stacktape package --configPath /home/congy/projects/stacktape-packaging-benchmark/generated/n5/stacktape/stacktape.defaults.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
+      "command": "~/projects/stacktape/apps/cli/__dist/linux/stacktape package --configPath ~/projects/stacktape-packaging-benchmark/generated/n5/stacktape/stacktape.defaults.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
       "error": null,
       "artifacts": [
         {
@@ -379,7 +379,7 @@
       "minMs": 2348,
       "maxMs": 2394,
       "toolReportedMs": 276,
-      "command": "/home/congy/projects/stacktape/apps/cli/__dist/linux/stacktape package --configPath /home/congy/projects/stacktape-packaging-benchmark/generated/n5/stacktape/stacktape.defaults.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
+      "command": "~/projects/stacktape/apps/cli/__dist/linux/stacktape package --configPath ~/projects/stacktape-packaging-benchmark/generated/n5/stacktape/stacktape.defaults.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
       "error": null,
       "artifacts": [
         {
@@ -486,7 +486,7 @@
       "minMs": 2781,
       "maxMs": 3052,
       "toolReportedMs": null,
-      "command": "BENCH_CONFIG=likeforlike JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 /home/congy/projects/stacktape-packaging-benchmark/generated/n5/cdk/node_modules/.bin/cdk synth --output /home/congy/projects/stacktape-packaging-benchmark/generated/n5/cdk/cdk.out.likeforlike --quiet",
+      "command": "BENCH_CONFIG=likeforlike JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 ~/projects/stacktape-packaging-benchmark/generated/n5/cdk/node_modules/.bin/cdk synth --output ~/projects/stacktape-packaging-benchmark/generated/n5/cdk/cdk.out.likeforlike --quiet",
       "error": null,
       "artifacts": [
         {
@@ -577,7 +577,7 @@
       "minMs": 2609,
       "maxMs": 2835,
       "toolReportedMs": null,
-      "command": "BENCH_CONFIG=likeforlike JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 /home/congy/projects/stacktape-packaging-benchmark/generated/n5/cdk/node_modules/.bin/cdk synth --output /home/congy/projects/stacktape-packaging-benchmark/generated/n5/cdk/cdk.out.likeforlike --quiet",
+      "command": "BENCH_CONFIG=likeforlike JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 ~/projects/stacktape-packaging-benchmark/generated/n5/cdk/node_modules/.bin/cdk synth --output ~/projects/stacktape-packaging-benchmark/generated/n5/cdk/cdk.out.likeforlike --quiet",
       "error": null,
       "artifacts": [
         {
@@ -668,7 +668,7 @@
       "minMs": 2822,
       "maxMs": 2902,
       "toolReportedMs": null,
-      "command": "BENCH_CONFIG=defaults JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 /home/congy/projects/stacktape-packaging-benchmark/generated/n5/cdk/node_modules/.bin/cdk synth --output /home/congy/projects/stacktape-packaging-benchmark/generated/n5/cdk/cdk.out.defaults --quiet",
+      "command": "BENCH_CONFIG=defaults JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 ~/projects/stacktape-packaging-benchmark/generated/n5/cdk/node_modules/.bin/cdk synth --output ~/projects/stacktape-packaging-benchmark/generated/n5/cdk/cdk.out.defaults --quiet",
       "error": null,
       "artifacts": [
         {
@@ -759,7 +759,7 @@
       "minMs": 2829,
       "maxMs": 2885,
       "toolReportedMs": null,
-      "command": "BENCH_CONFIG=defaults JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 /home/congy/projects/stacktape-packaging-benchmark/generated/n5/cdk/node_modules/.bin/cdk synth --output /home/congy/projects/stacktape-packaging-benchmark/generated/n5/cdk/cdk.out.defaults --quiet",
+      "command": "BENCH_CONFIG=defaults JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 ~/projects/stacktape-packaging-benchmark/generated/n5/cdk/node_modules/.bin/cdk synth --output ~/projects/stacktape-packaging-benchmark/generated/n5/cdk/cdk.out.defaults --quiet",
       "error": null,
       "artifacts": [
         {
@@ -850,7 +850,7 @@
       "minMs": 3745,
       "maxMs": 5548,
       "toolReportedMs": 1000,
-      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 /home/congy/projects/stacktape-packaging-benchmark/generated/n5/serverless/node_modules/.bin/serverless package --config serverless.yml --stage dev --region eu-west-1",
+      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 ~/projects/stacktape-packaging-benchmark/generated/n5/serverless/node_modules/.bin/serverless package --config serverless.yml --stage dev --region eu-west-1",
       "error": null,
       "artifacts": [
         {
@@ -908,7 +908,7 @@
       "minMs": 3766,
       "maxMs": 3909,
       "toolReportedMs": 1000,
-      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 /home/congy/projects/stacktape-packaging-benchmark/generated/n5/serverless/node_modules/.bin/serverless package --config serverless.yml --stage dev --region eu-west-1",
+      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 ~/projects/stacktape-packaging-benchmark/generated/n5/serverless/node_modules/.bin/serverless package --config serverless.yml --stage dev --region eu-west-1",
       "error": null,
       "artifacts": [
         {
@@ -966,7 +966,7 @@
       "minMs": 3885,
       "maxMs": 14310,
       "toolReportedMs": 1000,
-      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 /home/congy/projects/stacktape-packaging-benchmark/generated/n5/serverless/node_modules/.bin/serverless package --config serverless.defaults.yml --stage dev --region eu-west-1",
+      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 ~/projects/stacktape-packaging-benchmark/generated/n5/serverless/node_modules/.bin/serverless package --config serverless.defaults.yml --stage dev --region eu-west-1",
       "error": null,
       "artifacts": [
         {
@@ -1024,7 +1024,7 @@
       "minMs": 3873,
       "maxMs": 3983,
       "toolReportedMs": 1000,
-      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 /home/congy/projects/stacktape-packaging-benchmark/generated/n5/serverless/node_modules/.bin/serverless package --config serverless.defaults.yml --stage dev --region eu-west-1",
+      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 ~/projects/stacktape-packaging-benchmark/generated/n5/serverless/node_modules/.bin/serverless package --config serverless.defaults.yml --stage dev --region eu-west-1",
       "error": null,
       "artifacts": [
         {
@@ -1082,7 +1082,7 @@
       "minMs": 2346,
       "maxMs": 2419,
       "toolReportedMs": 280,
-      "command": "/home/congy/projects/stacktape/apps/cli/__dist/linux/stacktape package --configPath /home/congy/projects/stacktape-packaging-benchmark/generated/n10/stacktape/stacktape.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
+      "command": "~/projects/stacktape/apps/cli/__dist/linux/stacktape package --configPath ~/projects/stacktape-packaging-benchmark/generated/n10/stacktape/stacktape.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
       "error": null,
       "artifacts": [
         {
@@ -1244,7 +1244,7 @@
       "minMs": 2366,
       "maxMs": 2467,
       "toolReportedMs": 278,
-      "command": "/home/congy/projects/stacktape/apps/cli/__dist/linux/stacktape package --configPath /home/congy/projects/stacktape-packaging-benchmark/generated/n10/stacktape/stacktape.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
+      "command": "~/projects/stacktape/apps/cli/__dist/linux/stacktape package --configPath ~/projects/stacktape-packaging-benchmark/generated/n10/stacktape/stacktape.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
       "error": null,
       "artifacts": [
         {
@@ -1406,7 +1406,7 @@
       "minMs": 2377,
       "maxMs": 2485,
       "toolReportedMs": 300,
-      "command": "/home/congy/projects/stacktape/apps/cli/__dist/linux/stacktape package --configPath /home/congy/projects/stacktape-packaging-benchmark/generated/n10/stacktape/stacktape.defaults.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
+      "command": "~/projects/stacktape/apps/cli/__dist/linux/stacktape package --configPath ~/projects/stacktape-packaging-benchmark/generated/n10/stacktape/stacktape.defaults.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
       "error": null,
       "artifacts": [
         {
@@ -1568,7 +1568,7 @@
       "minMs": 2407,
       "maxMs": 2466,
       "toolReportedMs": 297,
-      "command": "/home/congy/projects/stacktape/apps/cli/__dist/linux/stacktape package --configPath /home/congy/projects/stacktape-packaging-benchmark/generated/n10/stacktape/stacktape.defaults.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
+      "command": "~/projects/stacktape/apps/cli/__dist/linux/stacktape package --configPath ~/projects/stacktape-packaging-benchmark/generated/n10/stacktape/stacktape.defaults.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
       "error": null,
       "artifacts": [
         {
@@ -1730,7 +1730,7 @@
       "minMs": 3624,
       "maxMs": 3905,
       "toolReportedMs": null,
-      "command": "BENCH_CONFIG=likeforlike JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 /home/congy/projects/stacktape-packaging-benchmark/generated/n10/cdk/node_modules/.bin/cdk synth --output /home/congy/projects/stacktape-packaging-benchmark/generated/n10/cdk/cdk.out.likeforlike --quiet",
+      "command": "BENCH_CONFIG=likeforlike JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 ~/projects/stacktape-packaging-benchmark/generated/n10/cdk/node_modules/.bin/cdk synth --output ~/projects/stacktape-packaging-benchmark/generated/n10/cdk/cdk.out.likeforlike --quiet",
       "error": null,
       "artifacts": [
         {
@@ -1871,7 +1871,7 @@
       "minMs": 3648,
       "maxMs": 3777,
       "toolReportedMs": null,
-      "command": "BENCH_CONFIG=likeforlike JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 /home/congy/projects/stacktape-packaging-benchmark/generated/n10/cdk/node_modules/.bin/cdk synth --output /home/congy/projects/stacktape-packaging-benchmark/generated/n10/cdk/cdk.out.likeforlike --quiet",
+      "command": "BENCH_CONFIG=likeforlike JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 ~/projects/stacktape-packaging-benchmark/generated/n10/cdk/node_modules/.bin/cdk synth --output ~/projects/stacktape-packaging-benchmark/generated/n10/cdk/cdk.out.likeforlike --quiet",
       "error": null,
       "artifacts": [
         {
@@ -2012,7 +2012,7 @@
       "minMs": 3548,
       "maxMs": 4079,
       "toolReportedMs": null,
-      "command": "BENCH_CONFIG=defaults JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 /home/congy/projects/stacktape-packaging-benchmark/generated/n10/cdk/node_modules/.bin/cdk synth --output /home/congy/projects/stacktape-packaging-benchmark/generated/n10/cdk/cdk.out.defaults --quiet",
+      "command": "BENCH_CONFIG=defaults JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 ~/projects/stacktape-packaging-benchmark/generated/n10/cdk/node_modules/.bin/cdk synth --output ~/projects/stacktape-packaging-benchmark/generated/n10/cdk/cdk.out.defaults --quiet",
       "error": null,
       "artifacts": [
         {
@@ -2153,7 +2153,7 @@
       "minMs": 3599,
       "maxMs": 4052,
       "toolReportedMs": null,
-      "command": "BENCH_CONFIG=defaults JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 /home/congy/projects/stacktape-packaging-benchmark/generated/n10/cdk/node_modules/.bin/cdk synth --output /home/congy/projects/stacktape-packaging-benchmark/generated/n10/cdk/cdk.out.defaults --quiet",
+      "command": "BENCH_CONFIG=defaults JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 ~/projects/stacktape-packaging-benchmark/generated/n10/cdk/node_modules/.bin/cdk synth --output ~/projects/stacktape-packaging-benchmark/generated/n10/cdk/cdk.out.defaults --quiet",
       "error": null,
       "artifacts": [
         {
@@ -2294,7 +2294,7 @@
       "minMs": 3893,
       "maxMs": 4125,
       "toolReportedMs": null,
-      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 /home/congy/projects/stacktape-packaging-benchmark/generated/n10/serverless/node_modules/.bin/serverless package --config serverless.yml --stage dev --region eu-west-1",
+      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 ~/projects/stacktape-packaging-benchmark/generated/n10/serverless/node_modules/.bin/serverless package --config serverless.yml --stage dev --region eu-west-1",
       "error": null,
       "artifacts": [
         {
@@ -2357,7 +2357,7 @@
       "minMs": 3860,
       "maxMs": 4924,
       "toolReportedMs": 1000,
-      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 /home/congy/projects/stacktape-packaging-benchmark/generated/n10/serverless/node_modules/.bin/serverless package --config serverless.yml --stage dev --region eu-west-1",
+      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 ~/projects/stacktape-packaging-benchmark/generated/n10/serverless/node_modules/.bin/serverless package --config serverless.yml --stage dev --region eu-west-1",
       "error": null,
       "artifacts": [
         {
@@ -2420,7 +2420,7 @@
       "minMs": 4026,
       "maxMs": 4449,
       "toolReportedMs": 1000,
-      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 /home/congy/projects/stacktape-packaging-benchmark/generated/n10/serverless/node_modules/.bin/serverless package --config serverless.defaults.yml --stage dev --region eu-west-1",
+      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 ~/projects/stacktape-packaging-benchmark/generated/n10/serverless/node_modules/.bin/serverless package --config serverless.defaults.yml --stage dev --region eu-west-1",
       "error": null,
       "artifacts": [
         {
@@ -2483,7 +2483,7 @@
       "minMs": 3944,
       "maxMs": 4212,
       "toolReportedMs": 1000,
-      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 /home/congy/projects/stacktape-packaging-benchmark/generated/n10/serverless/node_modules/.bin/serverless package --config serverless.defaults.yml --stage dev --region eu-west-1",
+      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 ~/projects/stacktape-packaging-benchmark/generated/n10/serverless/node_modules/.bin/serverless package --config serverless.defaults.yml --stage dev --region eu-west-1",
       "error": null,
       "artifacts": [
         {
@@ -2546,7 +2546,7 @@
       "minMs": 2373,
       "maxMs": 2476,
       "toolReportedMs": 330,
-      "command": "/home/congy/projects/stacktape/apps/cli/__dist/linux/stacktape package --configPath /home/congy/projects/stacktape-packaging-benchmark/generated/n25/stacktape/stacktape.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
+      "command": "~/projects/stacktape/apps/cli/__dist/linux/stacktape package --configPath ~/projects/stacktape-packaging-benchmark/generated/n25/stacktape/stacktape.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
       "error": null,
       "artifacts": [
         {
@@ -2873,7 +2873,7 @@
       "minMs": 2441,
       "maxMs": 2531,
       "toolReportedMs": 335,
-      "command": "/home/congy/projects/stacktape/apps/cli/__dist/linux/stacktape package --configPath /home/congy/projects/stacktape-packaging-benchmark/generated/n25/stacktape/stacktape.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
+      "command": "~/projects/stacktape/apps/cli/__dist/linux/stacktape package --configPath ~/projects/stacktape-packaging-benchmark/generated/n25/stacktape/stacktape.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
       "error": null,
       "artifacts": [
         {
@@ -3200,7 +3200,7 @@
       "minMs": 2430,
       "maxMs": 2546,
       "toolReportedMs": 339,
-      "command": "/home/congy/projects/stacktape/apps/cli/__dist/linux/stacktape package --configPath /home/congy/projects/stacktape-packaging-benchmark/generated/n25/stacktape/stacktape.defaults.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
+      "command": "~/projects/stacktape/apps/cli/__dist/linux/stacktape package --configPath ~/projects/stacktape-packaging-benchmark/generated/n25/stacktape/stacktape.defaults.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
       "error": null,
       "artifacts": [
         {
@@ -3527,7 +3527,7 @@
       "minMs": 2458,
       "maxMs": 2596,
       "toolReportedMs": 388,
-      "command": "/home/congy/projects/stacktape/apps/cli/__dist/linux/stacktape package --configPath /home/congy/projects/stacktape-packaging-benchmark/generated/n25/stacktape/stacktape.defaults.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
+      "command": "~/projects/stacktape/apps/cli/__dist/linux/stacktape package --configPath ~/projects/stacktape-packaging-benchmark/generated/n25/stacktape/stacktape.defaults.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
       "error": null,
       "artifacts": [
         {
@@ -3854,7 +3854,7 @@
       "minMs": 6041,
       "maxMs": 6578,
       "toolReportedMs": null,
-      "command": "BENCH_CONFIG=likeforlike JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 /home/congy/projects/stacktape-packaging-benchmark/generated/n25/cdk/node_modules/.bin/cdk synth --output /home/congy/projects/stacktape-packaging-benchmark/generated/n25/cdk/cdk.out.likeforlike --quiet",
+      "command": "BENCH_CONFIG=likeforlike JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 ~/projects/stacktape-packaging-benchmark/generated/n25/cdk/node_modules/.bin/cdk synth --output ~/projects/stacktape-packaging-benchmark/generated/n25/cdk/cdk.out.likeforlike --quiet",
       "error": null,
       "artifacts": [
         {
@@ -4145,7 +4145,7 @@
       "minMs": 6170,
       "maxMs": 6393,
       "toolReportedMs": null,
-      "command": "BENCH_CONFIG=likeforlike JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 /home/congy/projects/stacktape-packaging-benchmark/generated/n25/cdk/node_modules/.bin/cdk synth --output /home/congy/projects/stacktape-packaging-benchmark/generated/n25/cdk/cdk.out.likeforlike --quiet",
+      "command": "BENCH_CONFIG=likeforlike JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 ~/projects/stacktape-packaging-benchmark/generated/n25/cdk/node_modules/.bin/cdk synth --output ~/projects/stacktape-packaging-benchmark/generated/n25/cdk/cdk.out.likeforlike --quiet",
       "error": null,
       "artifacts": [
         {
@@ -4436,7 +4436,7 @@
       "minMs": 6332,
       "maxMs": 6841,
       "toolReportedMs": null,
-      "command": "BENCH_CONFIG=defaults JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 /home/congy/projects/stacktape-packaging-benchmark/generated/n25/cdk/node_modules/.bin/cdk synth --output /home/congy/projects/stacktape-packaging-benchmark/generated/n25/cdk/cdk.out.defaults --quiet",
+      "command": "BENCH_CONFIG=defaults JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 ~/projects/stacktape-packaging-benchmark/generated/n25/cdk/node_modules/.bin/cdk synth --output ~/projects/stacktape-packaging-benchmark/generated/n25/cdk/cdk.out.defaults --quiet",
       "error": null,
       "artifacts": [
         {
@@ -4727,7 +4727,7 @@
       "minMs": 6061,
       "maxMs": 6306,
       "toolReportedMs": null,
-      "command": "BENCH_CONFIG=defaults JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 /home/congy/projects/stacktape-packaging-benchmark/generated/n25/cdk/node_modules/.bin/cdk synth --output /home/congy/projects/stacktape-packaging-benchmark/generated/n25/cdk/cdk.out.defaults --quiet",
+      "command": "BENCH_CONFIG=defaults JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 ~/projects/stacktape-packaging-benchmark/generated/n25/cdk/node_modules/.bin/cdk synth --output ~/projects/stacktape-packaging-benchmark/generated/n25/cdk/cdk.out.defaults --quiet",
       "error": null,
       "artifacts": [
         {
@@ -5018,7 +5018,7 @@
       "minMs": 4239,
       "maxMs": 11608,
       "toolReportedMs": 1000,
-      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 /home/congy/projects/stacktape-packaging-benchmark/generated/n25/serverless/node_modules/.bin/serverless package --config serverless.yml --stage dev --region eu-west-1",
+      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 ~/projects/stacktape-packaging-benchmark/generated/n25/serverless/node_modules/.bin/serverless package --config serverless.yml --stage dev --region eu-west-1",
       "error": null,
       "artifacts": [
         {
@@ -5096,7 +5096,7 @@
       "minMs": 4231,
       "maxMs": 4322,
       "toolReportedMs": 1000,
-      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 /home/congy/projects/stacktape-packaging-benchmark/generated/n25/serverless/node_modules/.bin/serverless package --config serverless.yml --stage dev --region eu-west-1",
+      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 ~/projects/stacktape-packaging-benchmark/generated/n25/serverless/node_modules/.bin/serverless package --config serverless.yml --stage dev --region eu-west-1",
       "error": null,
       "artifacts": [
         {
@@ -5174,7 +5174,7 @@
       "minMs": 4617,
       "maxMs": 4783,
       "toolReportedMs": 1000,
-      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 /home/congy/projects/stacktape-packaging-benchmark/generated/n25/serverless/node_modules/.bin/serverless package --config serverless.defaults.yml --stage dev --region eu-west-1",
+      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 ~/projects/stacktape-packaging-benchmark/generated/n25/serverless/node_modules/.bin/serverless package --config serverless.defaults.yml --stage dev --region eu-west-1",
       "error": null,
       "artifacts": [
         {
@@ -5252,7 +5252,7 @@
       "minMs": 4562,
       "maxMs": 4707,
       "toolReportedMs": 1000,
-      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 /home/congy/projects/stacktape-packaging-benchmark/generated/n25/serverless/node_modules/.bin/serverless package --config serverless.defaults.yml --stage dev --region eu-west-1",
+      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 ~/projects/stacktape-packaging-benchmark/generated/n25/serverless/node_modules/.bin/serverless package --config serverless.defaults.yml --stage dev --region eu-west-1",
       "error": null,
       "artifacts": [
         {
@@ -5330,7 +5330,7 @@
       "minMs": 2537,
       "maxMs": 2621,
       "toolReportedMs": 436,
-      "command": "/home/congy/projects/stacktape/apps/cli/__dist/linux/stacktape package --configPath /home/congy/projects/stacktape-packaging-benchmark/generated/n50/stacktape/stacktape.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
+      "command": "~/projects/stacktape/apps/cli/__dist/linux/stacktape package --configPath ~/projects/stacktape-packaging-benchmark/generated/n50/stacktape/stacktape.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
       "error": null,
       "artifacts": [
         {
@@ -5932,7 +5932,7 @@
       "minMs": 2521,
       "maxMs": 2619,
       "toolReportedMs": 470,
-      "command": "/home/congy/projects/stacktape/apps/cli/__dist/linux/stacktape package --configPath /home/congy/projects/stacktape-packaging-benchmark/generated/n50/stacktape/stacktape.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
+      "command": "~/projects/stacktape/apps/cli/__dist/linux/stacktape package --configPath ~/projects/stacktape-packaging-benchmark/generated/n50/stacktape/stacktape.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
       "error": null,
       "artifacts": [
         {
@@ -6534,7 +6534,7 @@
       "minMs": 2541,
       "maxMs": 2605,
       "toolReportedMs": 481,
-      "command": "/home/congy/projects/stacktape/apps/cli/__dist/linux/stacktape package --configPath /home/congy/projects/stacktape-packaging-benchmark/generated/n50/stacktape/stacktape.defaults.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
+      "command": "~/projects/stacktape/apps/cli/__dist/linux/stacktape package --configPath ~/projects/stacktape-packaging-benchmark/generated/n50/stacktape/stacktape.defaults.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
       "error": null,
       "artifacts": [
         {
@@ -7136,7 +7136,7 @@
       "minMs": 2558,
       "maxMs": 2655,
       "toolReportedMs": 510,
-      "command": "/home/congy/projects/stacktape/apps/cli/__dist/linux/stacktape package --configPath /home/congy/projects/stacktape-packaging-benchmark/generated/n50/stacktape/stacktape.defaults.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
+      "command": "~/projects/stacktape/apps/cli/__dist/linux/stacktape package --configPath ~/projects/stacktape-packaging-benchmark/generated/n50/stacktape/stacktape.defaults.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
       "error": null,
       "artifacts": [
         {
@@ -7738,7 +7738,7 @@
       "minMs": 10436,
       "maxMs": 10721,
       "toolReportedMs": null,
-      "command": "BENCH_CONFIG=likeforlike JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 /home/congy/projects/stacktape-packaging-benchmark/generated/n50/cdk/node_modules/.bin/cdk synth --output /home/congy/projects/stacktape-packaging-benchmark/generated/n50/cdk/cdk.out.likeforlike --quiet",
+      "command": "BENCH_CONFIG=likeforlike JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 ~/projects/stacktape-packaging-benchmark/generated/n50/cdk/node_modules/.bin/cdk synth --output ~/projects/stacktape-packaging-benchmark/generated/n50/cdk/cdk.out.likeforlike --quiet",
       "error": null,
       "artifacts": [
         {
@@ -8279,7 +8279,7 @@
       "minMs": 10390,
       "maxMs": 10649,
       "toolReportedMs": null,
-      "command": "BENCH_CONFIG=likeforlike JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 /home/congy/projects/stacktape-packaging-benchmark/generated/n50/cdk/node_modules/.bin/cdk synth --output /home/congy/projects/stacktape-packaging-benchmark/generated/n50/cdk/cdk.out.likeforlike --quiet",
+      "command": "BENCH_CONFIG=likeforlike JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 ~/projects/stacktape-packaging-benchmark/generated/n50/cdk/node_modules/.bin/cdk synth --output ~/projects/stacktape-packaging-benchmark/generated/n50/cdk/cdk.out.likeforlike --quiet",
       "error": null,
       "artifacts": [
         {
@@ -8820,7 +8820,7 @@
       "minMs": 10615,
       "maxMs": 10767,
       "toolReportedMs": null,
-      "command": "BENCH_CONFIG=defaults JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 /home/congy/projects/stacktape-packaging-benchmark/generated/n50/cdk/node_modules/.bin/cdk synth --output /home/congy/projects/stacktape-packaging-benchmark/generated/n50/cdk/cdk.out.defaults --quiet",
+      "command": "BENCH_CONFIG=defaults JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 ~/projects/stacktape-packaging-benchmark/generated/n50/cdk/node_modules/.bin/cdk synth --output ~/projects/stacktape-packaging-benchmark/generated/n50/cdk/cdk.out.defaults --quiet",
       "error": null,
       "artifacts": [
         {
@@ -9361,7 +9361,7 @@
       "minMs": 10660,
       "maxMs": 11246,
       "toolReportedMs": null,
-      "command": "BENCH_CONFIG=defaults JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 /home/congy/projects/stacktape-packaging-benchmark/generated/n50/cdk/node_modules/.bin/cdk synth --output /home/congy/projects/stacktape-packaging-benchmark/generated/n50/cdk/cdk.out.defaults --quiet",
+      "command": "BENCH_CONFIG=defaults JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 ~/projects/stacktape-packaging-benchmark/generated/n50/cdk/node_modules/.bin/cdk synth --output ~/projects/stacktape-packaging-benchmark/generated/n50/cdk/cdk.out.defaults --quiet",
       "error": null,
       "artifacts": [
         {
@@ -9902,7 +9902,7 @@
       "minMs": 4877,
       "maxMs": 5601,
       "toolReportedMs": 2000,
-      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 /home/congy/projects/stacktape-packaging-benchmark/generated/n50/serverless/node_modules/.bin/serverless package --config serverless.yml --stage dev --region eu-west-1",
+      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 ~/projects/stacktape-packaging-benchmark/generated/n50/serverless/node_modules/.bin/serverless package --config serverless.yml --stage dev --region eu-west-1",
       "error": null,
       "artifacts": [
         {
@@ -10005,7 +10005,7 @@
       "minMs": 4837,
       "maxMs": 5049,
       "toolReportedMs": 2000,
-      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 /home/congy/projects/stacktape-packaging-benchmark/generated/n50/serverless/node_modules/.bin/serverless package --config serverless.yml --stage dev --region eu-west-1",
+      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 ~/projects/stacktape-packaging-benchmark/generated/n50/serverless/node_modules/.bin/serverless package --config serverless.yml --stage dev --region eu-west-1",
       "error": null,
       "artifacts": [
         {
@@ -10108,7 +10108,7 @@
       "minMs": 6370,
       "maxMs": 6894,
       "toolReportedMs": 1000,
-      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 /home/congy/projects/stacktape-packaging-benchmark/generated/n50/serverless/node_modules/.bin/serverless package --config serverless.defaults.yml --stage dev --region eu-west-1",
+      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 ~/projects/stacktape-packaging-benchmark/generated/n50/serverless/node_modules/.bin/serverless package --config serverless.defaults.yml --stage dev --region eu-west-1",
       "error": null,
       "artifacts": [
         {
@@ -10211,7 +10211,7 @@
       "minMs": 6363,
       "maxMs": 16413,
       "toolReportedMs": 3000,
-      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 /home/congy/projects/stacktape-packaging-benchmark/generated/n50/serverless/node_modules/.bin/serverless package --config serverless.defaults.yml --stage dev --region eu-west-1",
+      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 ~/projects/stacktape-packaging-benchmark/generated/n50/serverless/node_modules/.bin/serverless package --config serverless.defaults.yml --stage dev --region eu-west-1",
       "error": null,
       "artifacts": [
         {
@@ -10314,7 +10314,7 @@
       "minMs": 2376,
       "maxMs": 2426,
       "toolReportedMs": 284,
-      "command": "/home/congy/projects/stacktape/apps/cli/__dist/linux/stacktape package --configPath /home/congy/projects/stacktape-packaging-benchmark/generated/mono10/stacktape/stacktape.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
+      "command": "~/projects/stacktape/apps/cli/__dist/linux/stacktape package --configPath ~/projects/stacktape-packaging-benchmark/generated/mono10/stacktape/stacktape.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
       "error": null,
       "artifacts": [
         {
@@ -10476,7 +10476,7 @@
       "minMs": 2386,
       "maxMs": 2438,
       "toolReportedMs": 285,
-      "command": "/home/congy/projects/stacktape/apps/cli/__dist/linux/stacktape package --configPath /home/congy/projects/stacktape-packaging-benchmark/generated/mono10/stacktape/stacktape.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
+      "command": "~/projects/stacktape/apps/cli/__dist/linux/stacktape package --configPath ~/projects/stacktape-packaging-benchmark/generated/mono10/stacktape/stacktape.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
       "error": null,
       "artifacts": [
         {
@@ -10638,7 +10638,7 @@
       "minMs": 2360,
       "maxMs": 2436,
       "toolReportedMs": 278,
-      "command": "/home/congy/projects/stacktape/apps/cli/__dist/linux/stacktape package --configPath /home/congy/projects/stacktape-packaging-benchmark/generated/mono10/stacktape/stacktape.defaults.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
+      "command": "~/projects/stacktape/apps/cli/__dist/linux/stacktape package --configPath ~/projects/stacktape-packaging-benchmark/generated/mono10/stacktape/stacktape.defaults.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
       "error": null,
       "artifacts": [
         {
@@ -10800,7 +10800,7 @@
       "minMs": 2366,
       "maxMs": 2450,
       "toolReportedMs": 265,
-      "command": "/home/congy/projects/stacktape/apps/cli/__dist/linux/stacktape package --configPath /home/congy/projects/stacktape-packaging-benchmark/generated/mono10/stacktape/stacktape.defaults.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
+      "command": "~/projects/stacktape/apps/cli/__dist/linux/stacktape package --configPath ~/projects/stacktape-packaging-benchmark/generated/mono10/stacktape/stacktape.defaults.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
       "error": null,
       "artifacts": [
         {
@@ -10962,7 +10962,7 @@
       "minMs": 5064,
       "maxMs": 5361,
       "toolReportedMs": null,
-      "command": "BENCH_CONFIG=likeforlike JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 /home/congy/projects/stacktape-packaging-benchmark/generated/mono10/cdk/node_modules/.bin/cdk synth --output /home/congy/projects/stacktape-packaging-benchmark/generated/mono10/cdk/cdk.out.likeforlike --quiet",
+      "command": "BENCH_CONFIG=likeforlike JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 ~/projects/stacktape-packaging-benchmark/generated/mono10/cdk/node_modules/.bin/cdk synth --output ~/projects/stacktape-packaging-benchmark/generated/mono10/cdk/cdk.out.likeforlike --quiet",
       "error": null,
       "artifacts": [
         {
@@ -11103,7 +11103,7 @@
       "minMs": 5145,
       "maxMs": 5381,
       "toolReportedMs": null,
-      "command": "BENCH_CONFIG=likeforlike JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 /home/congy/projects/stacktape-packaging-benchmark/generated/mono10/cdk/node_modules/.bin/cdk synth --output /home/congy/projects/stacktape-packaging-benchmark/generated/mono10/cdk/cdk.out.likeforlike --quiet",
+      "command": "BENCH_CONFIG=likeforlike JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 ~/projects/stacktape-packaging-benchmark/generated/mono10/cdk/node_modules/.bin/cdk synth --output ~/projects/stacktape-packaging-benchmark/generated/mono10/cdk/cdk.out.likeforlike --quiet",
       "error": null,
       "artifacts": [
         {
@@ -11244,7 +11244,7 @@
       "minMs": 4994,
       "maxMs": 5262,
       "toolReportedMs": null,
-      "command": "BENCH_CONFIG=defaults JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 /home/congy/projects/stacktape-packaging-benchmark/generated/mono10/cdk/node_modules/.bin/cdk synth --output /home/congy/projects/stacktape-packaging-benchmark/generated/mono10/cdk/cdk.out.defaults --quiet",
+      "command": "BENCH_CONFIG=defaults JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 ~/projects/stacktape-packaging-benchmark/generated/mono10/cdk/node_modules/.bin/cdk synth --output ~/projects/stacktape-packaging-benchmark/generated/mono10/cdk/cdk.out.defaults --quiet",
       "error": null,
       "artifacts": [
         {
@@ -11385,7 +11385,7 @@
       "minMs": 5050,
       "maxMs": 5193,
       "toolReportedMs": null,
-      "command": "BENCH_CONFIG=defaults JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 /home/congy/projects/stacktape-packaging-benchmark/generated/mono10/cdk/node_modules/.bin/cdk synth --output /home/congy/projects/stacktape-packaging-benchmark/generated/mono10/cdk/cdk.out.defaults --quiet",
+      "command": "BENCH_CONFIG=defaults JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 ~/projects/stacktape-packaging-benchmark/generated/mono10/cdk/node_modules/.bin/cdk synth --output ~/projects/stacktape-packaging-benchmark/generated/mono10/cdk/cdk.out.defaults --quiet",
       "error": null,
       "artifacts": [
         {
@@ -11526,7 +11526,7 @@
       "minMs": 4116,
       "maxMs": 7891,
       "toolReportedMs": 1000,
-      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 /home/congy/projects/stacktape-packaging-benchmark/generated/mono10/serverless/node_modules/.bin/serverless package --config serverless.yml --stage dev --region eu-west-1",
+      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 ~/projects/stacktape-packaging-benchmark/generated/mono10/serverless/node_modules/.bin/serverless package --config serverless.yml --stage dev --region eu-west-1",
       "error": null,
       "artifacts": [
         {
@@ -11589,7 +11589,7 @@
       "minMs": 4100,
       "maxMs": 5256,
       "toolReportedMs": 1000,
-      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 /home/congy/projects/stacktape-packaging-benchmark/generated/mono10/serverless/node_modules/.bin/serverless package --config serverless.yml --stage dev --region eu-west-1",
+      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 ~/projects/stacktape-packaging-benchmark/generated/mono10/serverless/node_modules/.bin/serverless package --config serverless.yml --stage dev --region eu-west-1",
       "error": null,
       "artifacts": [
         {
@@ -11652,7 +11652,7 @@
       "minMs": 4238,
       "maxMs": 4418,
       "toolReportedMs": null,
-      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 /home/congy/projects/stacktape-packaging-benchmark/generated/mono10/serverless/node_modules/.bin/serverless package --config serverless.defaults.yml --stage dev --region eu-west-1",
+      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 ~/projects/stacktape-packaging-benchmark/generated/mono10/serverless/node_modules/.bin/serverless package --config serverless.defaults.yml --stage dev --region eu-west-1",
       "error": null,
       "artifacts": [
         {
@@ -11715,7 +11715,7 @@
       "minMs": 4216,
       "maxMs": 4375,
       "toolReportedMs": 1000,
-      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 /home/congy/projects/stacktape-packaging-benchmark/generated/mono10/serverless/node_modules/.bin/serverless package --config serverless.defaults.yml --stage dev --region eu-west-1",
+      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 ~/projects/stacktape-packaging-benchmark/generated/mono10/serverless/node_modules/.bin/serverless package --config serverless.defaults.yml --stage dev --region eu-west-1",
       "error": null,
       "artifacts": [
         {
@@ -11780,7 +11780,7 @@
       "minMs": 2252,
       "maxMs": 2662,
       "toolReportedMs": 238,
-      "command": "/home/congy/projects/stacktape/apps/cli/__dist/linux/stacktape package --configPath /home/congy/projects/stacktape-packaging-benchmark/generated/n1/stacktape/stacktape.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
+      "command": "~/projects/stacktape/apps/cli/__dist/linux/stacktape package --configPath ~/projects/stacktape-packaging-benchmark/generated/n1/stacktape/stacktape.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
       "error": null,
       "artifacts": [
         {
@@ -11833,7 +11833,7 @@
       "minMs": 2259,
       "maxMs": 2339,
       "toolReportedMs": 241,
-      "command": "/home/congy/projects/stacktape/apps/cli/__dist/linux/stacktape package --configPath /home/congy/projects/stacktape-packaging-benchmark/generated/n1/stacktape/stacktape.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
+      "command": "~/projects/stacktape/apps/cli/__dist/linux/stacktape package --configPath ~/projects/stacktape-packaging-benchmark/generated/n1/stacktape/stacktape.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
       "error": null,
       "artifacts": [
         {
@@ -11886,7 +11886,7 @@
       "minMs": 2276,
       "maxMs": 2549,
       "toolReportedMs": 252,
-      "command": "/home/congy/projects/stacktape/apps/cli/__dist/linux/stacktape package --configPath /home/congy/projects/stacktape-packaging-benchmark/generated/n1/stacktape/stacktape.defaults.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
+      "command": "~/projects/stacktape/apps/cli/__dist/linux/stacktape package --configPath ~/projects/stacktape-packaging-benchmark/generated/n1/stacktape/stacktape.defaults.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
       "error": null,
       "artifacts": [
         {
@@ -11939,7 +11939,7 @@
       "minMs": 2277,
       "maxMs": 2351,
       "toolReportedMs": 262,
-      "command": "/home/congy/projects/stacktape/apps/cli/__dist/linux/stacktape package --configPath /home/congy/projects/stacktape-packaging-benchmark/generated/n1/stacktape/stacktape.defaults.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
+      "command": "~/projects/stacktape/apps/cli/__dist/linux/stacktape package --configPath ~/projects/stacktape-packaging-benchmark/generated/n1/stacktape/stacktape.defaults.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
       "error": null,
       "artifacts": [
         {
@@ -11992,7 +11992,7 @@
       "minMs": 2104,
       "maxMs": 2181,
       "toolReportedMs": null,
-      "command": "BENCH_CONFIG=likeforlike JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 /home/congy/projects/stacktape-packaging-benchmark/generated/n1/cdk/node_modules/.bin/cdk synth --output /home/congy/projects/stacktape-packaging-benchmark/generated/n1/cdk/cdk.out.likeforlike --quiet",
+      "command": "BENCH_CONFIG=likeforlike JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 ~/projects/stacktape-packaging-benchmark/generated/n1/cdk/node_modules/.bin/cdk synth --output ~/projects/stacktape-packaging-benchmark/generated/n1/cdk/cdk.out.likeforlike --quiet",
       "error": null,
       "artifacts": [
         {
@@ -12045,7 +12045,7 @@
       "minMs": 1848,
       "maxMs": 2170,
       "toolReportedMs": null,
-      "command": "BENCH_CONFIG=likeforlike JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 /home/congy/projects/stacktape-packaging-benchmark/generated/n1/cdk/node_modules/.bin/cdk synth --output /home/congy/projects/stacktape-packaging-benchmark/generated/n1/cdk/cdk.out.likeforlike --quiet",
+      "command": "BENCH_CONFIG=likeforlike JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 ~/projects/stacktape-packaging-benchmark/generated/n1/cdk/node_modules/.bin/cdk synth --output ~/projects/stacktape-packaging-benchmark/generated/n1/cdk/cdk.out.likeforlike --quiet",
       "error": null,
       "artifacts": [
         {
@@ -12098,7 +12098,7 @@
       "minMs": 1931,
       "maxMs": 2164,
       "toolReportedMs": null,
-      "command": "BENCH_CONFIG=defaults JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 /home/congy/projects/stacktape-packaging-benchmark/generated/n1/cdk/node_modules/.bin/cdk synth --output /home/congy/projects/stacktape-packaging-benchmark/generated/n1/cdk/cdk.out.defaults --quiet",
+      "command": "BENCH_CONFIG=defaults JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 ~/projects/stacktape-packaging-benchmark/generated/n1/cdk/node_modules/.bin/cdk synth --output ~/projects/stacktape-packaging-benchmark/generated/n1/cdk/cdk.out.defaults --quiet",
       "error": null,
       "artifacts": [
         {
@@ -12151,7 +12151,7 @@
       "minMs": 1909,
       "maxMs": 2429,
       "toolReportedMs": null,
-      "command": "BENCH_CONFIG=defaults JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 /home/congy/projects/stacktape-packaging-benchmark/generated/n1/cdk/node_modules/.bin/cdk synth --output /home/congy/projects/stacktape-packaging-benchmark/generated/n1/cdk/cdk.out.defaults --quiet",
+      "command": "BENCH_CONFIG=defaults JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 ~/projects/stacktape-packaging-benchmark/generated/n1/cdk/node_modules/.bin/cdk synth --output ~/projects/stacktape-packaging-benchmark/generated/n1/cdk/cdk.out.defaults --quiet",
       "error": null,
       "artifacts": [
         {
@@ -12204,7 +12204,7 @@
       "minMs": 3678,
       "maxMs": 7666,
       "toolReportedMs": 0,
-      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 /home/congy/projects/stacktape-packaging-benchmark/generated/n1/serverless/node_modules/.bin/serverless package --config serverless.yml --stage dev --region eu-west-1",
+      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 ~/projects/stacktape-packaging-benchmark/generated/n1/serverless/node_modules/.bin/serverless package --config serverless.yml --stage dev --region eu-west-1",
       "error": null,
       "artifacts": [
         {
@@ -12258,7 +12258,7 @@
       "minMs": 3654,
       "maxMs": 13734,
       "toolReportedMs": 0,
-      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 /home/congy/projects/stacktape-packaging-benchmark/generated/n1/serverless/node_modules/.bin/serverless package --config serverless.yml --stage dev --region eu-west-1",
+      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 ~/projects/stacktape-packaging-benchmark/generated/n1/serverless/node_modules/.bin/serverless package --config serverless.yml --stage dev --region eu-west-1",
       "error": null,
       "artifacts": [
         {
@@ -12312,7 +12312,7 @@
       "minMs": 3709,
       "maxMs": 7448,
       "toolReportedMs": 1000,
-      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 /home/congy/projects/stacktape-packaging-benchmark/generated/n1/serverless/node_modules/.bin/serverless package --config serverless.defaults.yml --stage dev --region eu-west-1",
+      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 ~/projects/stacktape-packaging-benchmark/generated/n1/serverless/node_modules/.bin/serverless package --config serverless.defaults.yml --stage dev --region eu-west-1",
       "error": null,
       "artifacts": [
         {
@@ -12366,7 +12366,7 @@
       "minMs": 3721,
       "maxMs": 23496,
       "toolReportedMs": 13000,
-      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 /home/congy/projects/stacktape-packaging-benchmark/generated/n1/serverless/node_modules/.bin/serverless package --config serverless.defaults.yml --stage dev --region eu-west-1",
+      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 ~/projects/stacktape-packaging-benchmark/generated/n1/serverless/node_modules/.bin/serverless package --config serverless.defaults.yml --stage dev --region eu-west-1",
       "error": null,
       "artifacts": [
         {
@@ -12420,7 +12420,7 @@
       "minMs": 2467,
       "maxMs": 9336,
       "toolReportedMs": 326,
-      "command": "/home/congy/projects/stacktape/apps/cli/__dist/linux/stacktape package --configPath /home/congy/projects/stacktape-packaging-benchmark/generated/noshare25/stacktape/stacktape.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
+      "command": "~/projects/stacktape/apps/cli/__dist/linux/stacktape package --configPath ~/projects/stacktape-packaging-benchmark/generated/noshare25/stacktape/stacktape.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
       "error": null,
       "artifacts": [
         {
@@ -12749,7 +12749,7 @@
       "minMs": 2402,
       "maxMs": 2467,
       "toolReportedMs": 327,
-      "command": "/home/congy/projects/stacktape/apps/cli/__dist/linux/stacktape package --configPath /home/congy/projects/stacktape-packaging-benchmark/generated/noshare25/stacktape/stacktape.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
+      "command": "~/projects/stacktape/apps/cli/__dist/linux/stacktape package --configPath ~/projects/stacktape-packaging-benchmark/generated/noshare25/stacktape/stacktape.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
       "error": null,
       "artifacts": [
         {
@@ -13078,7 +13078,7 @@
       "minMs": 2482,
       "maxMs": 3513,
       "toolReportedMs": 365,
-      "command": "/home/congy/projects/stacktape/apps/cli/__dist/linux/stacktape package --configPath /home/congy/projects/stacktape-packaging-benchmark/generated/noshare25/stacktape/stacktape.defaults.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
+      "command": "~/projects/stacktape/apps/cli/__dist/linux/stacktape package --configPath ~/projects/stacktape-packaging-benchmark/generated/noshare25/stacktape/stacktape.defaults.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
       "error": null,
       "artifacts": [
         {
@@ -13407,7 +13407,7 @@
       "minMs": 2429,
       "maxMs": 2557,
       "toolReportedMs": 383,
-      "command": "/home/congy/projects/stacktape/apps/cli/__dist/linux/stacktape package --configPath /home/congy/projects/stacktape-packaging-benchmark/generated/noshare25/stacktape/stacktape.defaults.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
+      "command": "~/projects/stacktape/apps/cli/__dist/linux/stacktape package --configPath ~/projects/stacktape-packaging-benchmark/generated/noshare25/stacktape/stacktape.defaults.yml --projectName pkgbench --stage dev --region eu-west-1 --profile default",
       "error": null,
       "artifacts": [
         {
@@ -13736,7 +13736,7 @@
       "minMs": 5981,
       "maxMs": 6443,
       "toolReportedMs": null,
-      "command": "BENCH_CONFIG=likeforlike JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 /home/congy/projects/stacktape-packaging-benchmark/generated/noshare25/cdk/node_modules/.bin/cdk synth --output /home/congy/projects/stacktape-packaging-benchmark/generated/noshare25/cdk/cdk.out.likeforlike --quiet",
+      "command": "BENCH_CONFIG=likeforlike JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 ~/projects/stacktape-packaging-benchmark/generated/noshare25/cdk/node_modules/.bin/cdk synth --output ~/projects/stacktape-packaging-benchmark/generated/noshare25/cdk/cdk.out.likeforlike --quiet",
       "error": null,
       "artifacts": [
         {
@@ -14029,7 +14029,7 @@
       "minMs": 5840,
       "maxMs": 6424,
       "toolReportedMs": null,
-      "command": "BENCH_CONFIG=likeforlike JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 /home/congy/projects/stacktape-packaging-benchmark/generated/noshare25/cdk/node_modules/.bin/cdk synth --output /home/congy/projects/stacktape-packaging-benchmark/generated/noshare25/cdk/cdk.out.likeforlike --quiet",
+      "command": "BENCH_CONFIG=likeforlike JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 ~/projects/stacktape-packaging-benchmark/generated/noshare25/cdk/node_modules/.bin/cdk synth --output ~/projects/stacktape-packaging-benchmark/generated/noshare25/cdk/cdk.out.likeforlike --quiet",
       "error": null,
       "artifacts": [
         {
@@ -14322,7 +14322,7 @@
       "minMs": 5823,
       "maxMs": 6215,
       "toolReportedMs": null,
-      "command": "BENCH_CONFIG=defaults JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 /home/congy/projects/stacktape-packaging-benchmark/generated/noshare25/cdk/node_modules/.bin/cdk synth --output /home/congy/projects/stacktape-packaging-benchmark/generated/noshare25/cdk/cdk.out.defaults --quiet",
+      "command": "BENCH_CONFIG=defaults JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 ~/projects/stacktape-packaging-benchmark/generated/noshare25/cdk/node_modules/.bin/cdk synth --output ~/projects/stacktape-packaging-benchmark/generated/noshare25/cdk/cdk.out.defaults --quiet",
       "error": null,
       "artifacts": [
         {
@@ -14615,7 +14615,7 @@
       "minMs": 6010,
       "maxMs": 6180,
       "toolReportedMs": null,
-      "command": "BENCH_CONFIG=defaults JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 /home/congy/projects/stacktape-packaging-benchmark/generated/noshare25/cdk/node_modules/.bin/cdk synth --output /home/congy/projects/stacktape-packaging-benchmark/generated/noshare25/cdk/cdk.out.defaults --quiet",
+      "command": "BENCH_CONFIG=defaults JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1 ~/projects/stacktape-packaging-benchmark/generated/noshare25/cdk/node_modules/.bin/cdk synth --output ~/projects/stacktape-packaging-benchmark/generated/noshare25/cdk/cdk.out.defaults --quiet",
       "error": null,
       "artifacts": [
         {
@@ -14908,7 +14908,7 @@
       "minMs": 3931,
       "maxMs": 11853,
       "toolReportedMs": 1000,
-      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 /home/congy/projects/stacktape-packaging-benchmark/generated/noshare25/serverless/node_modules/.bin/serverless package --config serverless.yml --stage dev --region eu-west-1",
+      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 ~/projects/stacktape-packaging-benchmark/generated/noshare25/serverless/node_modules/.bin/serverless package --config serverless.yml --stage dev --region eu-west-1",
       "error": null,
       "artifacts": [
         {
@@ -14988,7 +14988,7 @@
       "minMs": 3981,
       "maxMs": 5143,
       "toolReportedMs": 1000,
-      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 /home/congy/projects/stacktape-packaging-benchmark/generated/noshare25/serverless/node_modules/.bin/serverless package --config serverless.yml --stage dev --region eu-west-1",
+      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 ~/projects/stacktape-packaging-benchmark/generated/noshare25/serverless/node_modules/.bin/serverless package --config serverless.yml --stage dev --region eu-west-1",
       "error": null,
       "artifacts": [
         {
@@ -15068,7 +15068,7 @@
       "minMs": 4121,
       "maxMs": 4292,
       "toolReportedMs": null,
-      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 /home/congy/projects/stacktape-packaging-benchmark/generated/noshare25/serverless/node_modules/.bin/serverless package --config serverless.defaults.yml --stage dev --region eu-west-1",
+      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 ~/projects/stacktape-packaging-benchmark/generated/noshare25/serverless/node_modules/.bin/serverless package --config serverless.defaults.yml --stage dev --region eu-west-1",
       "error": null,
       "artifacts": [
         {
@@ -15148,7 +15148,7 @@
       "minMs": 4089,
       "maxMs": 14214,
       "toolReportedMs": 2000,
-      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 /home/congy/projects/stacktape-packaging-benchmark/generated/noshare25/serverless/node_modules/.bin/serverless package --config serverless.defaults.yml --stage dev --region eu-west-1",
+      "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 ~/projects/stacktape-packaging-benchmark/generated/noshare25/serverless/node_modules/.bin/serverless package --config serverless.defaults.yml --stage dev --region eu-west-1",
       "error": null,
       "artifacts": [
         {
@@ -15579,7 +15579,7 @@
         "api-service-container:latest"
       ],
       "baseImage": "Alpine Linux v3.24",
-      "command": "docker builder prune -af && stacktape package --configPath /home/congy/projects/stacktape-packaging-benchmark/generated/container/stacktape/stacktape.yml ...",
+      "command": "docker builder prune -af && stacktape package --configPath ~/projects/stacktape-packaging-benchmark/generated/container/stacktape/stacktape.yml ...",
       "error": null
     }
   ],
@@ -24867,7 +24867,7 @@
     ],
     "accountFootprint": {
       "note": "Resources outside the per-stage lifecycle: SST bootstraps the account once, and `sst remove` does not undo the bootstrap or the per-stage passphrase parameter. These were removed by hand after the last shape, and the account was re-listed to confirm nothing remained.",
-      "account": "977946299200",
+      "account": "redacted",
       "region": "eu-west-1",
       "created": [
         {
@@ -24933,7 +24933,7 @@
   },
   "overhead": {
     "what": "Wall clock of `stacktape version`: the CLI binary starting up and printing its version. It is the floor under every Stacktape measurement here, and it excludes configuration loading, the AWS identity lookup and packaging itself.",
-    "binary": "/home/congy/projects/stacktape/apps/cli/__dist/linux/stacktape",
+    "binary": "~/projects/stacktape/apps/cli/__dist/linux/stacktape",
     "samples": [
       1746,
       1694,
