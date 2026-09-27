@@ -11,8 +11,9 @@ $ serverless package
 ✖ Error: You must sign in or use a license key with Serverless Framework V.4 and later versions.
 ```
 
-`serverless package` does not deploy and needs no AWS credentials, but it does need
-`SERVERLESS_ACCESS_KEY`. With the variable set the runner includes Serverless in every table; without it
+`serverless package` does not deploy, but it needs `SERVERLESS_ACCESS_KEY` and AWS credentials: it reads
+CloudFormation and the SSM parameter `/serverless-framework/deployment/s3-bucket`, and when that parameter is missing
+it creates it and a `serverless-framework-deployments-<region>-<id>` bucket. The first run of this benchmark did so. With the variable set the runner includes Serverless in every table; without it
 the runner records it as blocked and carries on.
 
 ## Configuration
