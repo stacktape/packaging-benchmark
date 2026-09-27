@@ -690,6 +690,93 @@ const main = async (): Promise<void> => {
     return;
   }
   if (command === 'apps') return apps();
+  if (command === 'export-website') {
+    const target = process.argv[3];
+    if (!target) throw new Error('Usage: node bench/run.ts export-website <path to the JSON file to write>');
+    const results = loadResults();
+    const fixtures = await loadAppFixtures();
+    const env = results.environment as Any;
+    const APP_TOOLS = ['stacktape', 'cdk', 'serverless'] as const;
+    /** The website shows the text as it is, so Markdown code marks go. */
+    const plain = (text: string) => text.replaceAll('`', '');
+    const appMeasurement = (fixture: string, tool: string) =>
+      (results.apps as Any[]).find((m) => m.fixture === fixture && m.tool === tool);
+    const lambdaMedian = (shape: string, tool: string) =>
+      (results.lambda as Any[]).find((m) => m.shape === shape && m.tool === tool && m.config === 'likeforlike' && m.mode === 'cold' && m.ok)?.medianMs ?? null;
+    const extract = {
+      source: 'https://github.com/stacktape/packaging-benchmark',
+      measuredOn: String(env.capturedAt).slice(0, 10),
+      machine: `${env.cpu.model.trim()}, ${env.os.distribution}${env.os.wsl ? ' on WSL2' : ''}`,
+      stacktapeCommit: env.stacktape.builtFromCommit,
+      stacktapeVersion: env.stacktape.binary.version,
+      toolVersions: {
+        'aws-cdk': env.toolVersions['aws-cdk'],
+        'aws-cdk-lib': env.toolVersions['aws-cdk-lib'],
+        serverless: '4.43.0',
+        sst: env.toolVersions.sst
+      },
+      samples: SAMPLES,
+      applications: [
+        'expressjs-api-postgres',
+        'hono-api',
+        'lambda-api-dynamo-db',
+        'event-driven-pipeline',
+        'multi-step-workflow',
+        'monorepo-typescript-pnpm',
+        'lambda-web-scraper-puppeteer',
+        'fullstack-nextjs-drizzle'
+      ].map((id) => fixtures.find((fixture) => fixture.id === id)!).map((fixture) => ({
+        id: fixture.id,
+        name: fixture.title,
+        description: plain(fixture.about),
+        tools: APP_TOOLS.map((tool) => {
+          const reason =
+            (fixture.notPackageable?.[tool] && plain(fixture.notPackageable[tool]!)) ??
+            (fixture.tools.includes(tool) ? null : 'Not part of this comparison.');
+          const m = reason ? null : appMeasurement(fixture.id, tool);
+          return {
+            tool,
+            coldMs: m?.ok ? m.cold.medianMs : null,
+            oneEditMs: m?.ok ? m.edit.medianMs : null,
+            firstDeployBytes: m?.ok ? m.totals.firstDeployUploadZippedBytes : null,
+            notMeasured: reason ?? (m?.ok ? null : 'Not measured.')
+          };
+        })
+      })),
+      containers: ['stacktape', 'typical', 'nixpacks', 'paketo'].map((variant) => {
+        const c = (results.appContainers as Any[]).find((entry) => entry.variant === variant);
+        return {
+          build: c.label,
+          runtimeBase: c.baseImage,
+          imageCompressedBytes: c.imageCompressedBytes,
+          coldBuildMs: c.coldBuildMs,
+          sourceEditRebuildMs: c.sourceEditRebuildMs,
+          dependencyChangeRebuildMs: c.dependencyChangeRebuildMs,
+          pushAfterSourceEditBytes: c.registryBytes?.sourceEdit?.bytes ?? null,
+          pushAfterDependencyChangeBytes: c.registryBytes?.dependencyChange?.bytes ?? null
+        };
+      }),
+      appendix: {
+        description:
+          'One generated API with 1 to 50 functions, the same minification and source-map settings in every tool, ' +
+          'cold. Stacktape re-measured on the date above; AWS CDK and Serverless Framework from 26 September 2026.',
+        rows: [1, 5, 10, 25, 50].map((functions) => ({
+          functions,
+          stacktapeMs: lambdaMedian(`n${functions}`, 'stacktape'),
+          cdkMs: lambdaMedian(`n${functions}`, 'cdk'),
+          serverlessMs: lambdaMedian(`n${functions}`, 'serverless')
+        }))
+      },
+      sstCaveat:
+        'SST has no packaging command. It builds function bundles only while previewing or deploying a stage that ' +
+        'already exists, so its numbers come from `sst diff` against a deployed stage: a rebuild plus a Pulumi preview ' +
+        'against AWS. They are not comparable with the other tools and are published only in the repository.'
+    };
+    mkdirSync(dirname(resolve(target)), { recursive: true });
+    writeFileSync(resolve(target), `${JSON.stringify(extract, null, 2)}\n`);
+    log(`wrote ${target}`);
+    return;
+  }
   if (command === 'app-containers') {
     const results = loadResults();
     const variants = (process.env.BENCH_CONTAINER_VARIANTS?.split(',').filter(Boolean) ?? []) as string[];
