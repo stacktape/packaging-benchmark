@@ -2,7 +2,7 @@
 
 import { execSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { cpus, totalmem, release, type as osType } from 'node:os';
+import { cpus, homedir, totalmem, release, type as osType } from 'node:os';
 import { readFileSync, statSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 

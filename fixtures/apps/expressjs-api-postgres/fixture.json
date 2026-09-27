@@ -33,6 +33,27 @@
       "sst.config.ts"
     ]
   },
-  "notes": {},
-  "sstNotDeployed": "SST builds function bundles only for a deployed stage, and this stage includes an RDS instance and a VPC with a NAT gateway. The benchmark's AWS rules keep RDS and NAT gateways for tests that are about them, so the stage was not deployed."
+  "notes": {
+    "stacktape": [
+      "Stacktape's defaults: Node.js 24, ESM, a source map without embedded sources, `@aws-sdk/*` left to the runtime, shared code split into a layer when several functions use it."
+    ],
+    "cdk": [
+      "Project layout, `cdk.json` (87 feature flags, `\"app\": \"npx tsc && npx tsx bin/<app>.ts\"`) and `tsconfig.json` are what `cdk init app --language typescript` writes (aws-cdk 2.1142.0), minus Jest. Every synth type-checks the project first, as a CDK user's does. `esbuild` is a devDependency, so bundling is local, not in Docker.",
+      "`NodejsFunction` defaults: no minification, no source map, CommonJS, `@aws-sdk/*` left to the runtime for an explicit Node.js 24 runtime.",
+      "Prisma follows the recipe CDK users share (Prisma's dev.to post, aws-samples/prisma-lambda-cdk): `nodeModules: ['@prisma/client', 'prisma']`, the schema copied in, `prisma generate` after bundling. CDK runs `npm ci` inside the asset on every synth. The function is 227 MB unzipped, near Lambda's 250 MB limit."
+    ],
+    "serverless": [
+      "Built-in esbuild (no plugin). Its defaults: bundle, no minification, a source map inside the zip (with `NODE_OPTIONS=--enable-source-maps`), `@aws-sdk/*` left to the runtime, one zip for the whole service.",
+      "`serverless package` needs a licence key and AWS credentials: it reads CloudFormation and an SSM parameter, and creates a deployment bucket and that parameter when they are missing (it did so in this account on 21 September). The `serverless` npm package does not pin the framework: the runs used 4.43.0 from `~/.serverless/releases`.",
+      "Prisma setup from Prisma's docs for bundled Serverless builds: the engine and schema added with `package.patterns`; the database URL from `.env`."
+    ],
+    "sst": [
+      "`sst.aws.Function` defaults in 4.17.1: Node.js 24, ESM, not minified (the docs say `minify` defaults to true; 4.17.1 does not apply it), a source map uploaded to SST's bucket rather than shipped in the zip, and the AWS SDK bundled unless `nodejs.esbuild.external` names it, which these configurations do where the application imports the SDK.",
+      "Prisma setup from SST's \"Prisma in Lambda\" example: `copyFiles` for the generated client; Postgres and a VPC with a managed NAT gateway."
+    ]
+  },
+  "sstNotDeployed": "SST builds function bundles only for a deployed stage, and this stage includes an RDS instance and a VPC with a NAT gateway. The benchmark's AWS rules keep RDS and NAT gateways for tests that are about them, so the stage was not deployed.",
+  "notPackageable": {
+    "serverless": "The framework's build reinstalls the dependencies in `.serverless/build` and runs the project's `postinstall: prisma generate` there, where no schema exists (serverless#13149). Removing the hook and generating the client another way is the workaround."
+  }
 }

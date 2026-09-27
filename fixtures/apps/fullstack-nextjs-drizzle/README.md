@@ -145,4 +145,21 @@ export default $config({
 
 ## Notes per tool
 
+**Stacktape**
+
+- Stacktape's defaults: Node.js 24, ESM, a source map without embedded sources, `@aws-sdk/*` left to the runtime, shared code split into a layer when several functions use it.
+
+**AWS CDK**
+
+- Project layout, `cdk.json` (87 feature flags, `"app": "npx tsc && npx tsx bin/<app>.ts"`) and `tsconfig.json` are what `cdk init app --language typescript` writes (aws-cdk 2.1142.0), minus Jest. Every synth type-checks the project first, as a CDK user's does. `esbuild` is a devDependency, so bundling is local, not in Docker.
+- `NodejsFunction` defaults: no minification, no source map, CommonJS, `@aws-sdk/*` left to the runtime for an explicit Node.js 24 runtime.
+- `cdk-nextjs-standalone` 4.3.3, the first CDK option in OpenNext's docs; every synth runs `npx @opennextjs/aws@^3 build` (3.10.4) and needs a `zip` executable. The CDK project keeps the application's TypeScript 5.9.3.
+
+**SST**
+
+- `sst.aws.Function` defaults in 4.17.1: Node.js 24, ESM, not minified (the docs say `minify` defaults to true; 4.17.1 does not apply it), a source map uploaded to SST's bucket rather than shipped in the zip, and the AWS SDK bundled unless `nodejs.esbuild.external` names it, which these configurations do where the application imports the SDK.
+- `sst.aws.Nextjs` builds with OpenNext 3.9.14.
+
+**AWS CDK could not package this fixture without extra work.** `cdk-nextjs-standalone` 4.3.3 passes `environment` to `next build` as unresolved CDK tokens; the application parses the database URL when the page module loads, so `next build` fails with `Invalid URL` (`postgresql://${Token[TOKEN.127]}:...`).
+
 **SST was not measured for this fixture.** `sst diff` builds the site only when its inputs are known. This site's environment carries the database's outputs, so a preview of a stage that was never deployed builds nothing (measured: the preview ran, `.open-next` was not created), and deploying it needs RDS, a NAT gateway and CloudFront, which the benchmark's AWS rules keep for tests that are about them.

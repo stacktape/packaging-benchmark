@@ -29,7 +29,8 @@ import type { ToolContext } from './tools.ts';
 
 const BASE_IMAGES = ['node:24-slim', 'node:24'];
 
-const DEPENDENCY_CHANGE = { name: 'jose', from: '6.2.12', to: '6.2.11' };
+let DEPENDENCY_CHANGE = { name: 'jose', from: '6.2.12', to: '6.2.11' };
+let SOURCE_FILE = join('src', 'server.ts');
 
 const VARIANTS: Record<string, { label: string; builtBy: 'docker' | 'stacktape' }> = {
   stacktape: { label: 'Stacktape image buildpack', builtBy: 'stacktape' },
@@ -140,7 +141,7 @@ const removePackCacheVolumes = () => {
 };
 
 const appendToSource = (dir: string, marker: string) => {
-  const file = join(dir, 'src', 'server.ts');
+  const file = join(dir, SOURCE_FILE);
   const original = readFileSync(file, 'utf8');
   writeFileSync(file, `${original}\nexport const benchmarkTouch = '${marker}';\n`);
   return () => writeFileSync(file, original);
@@ -168,7 +169,7 @@ const changeDependency = (dir: string) => {
     writeFileSync(join(scratch, 'package-lock.json'), lockfile);
     const lock = runOnce({
       command: 'npm',
-      args: ['install', '--package-lock-only', '--no-audit', '--no-fund'],
+      args: ['install', '--package-lock-only', '--ignore-scripts', '--no-audit', '--no-fund'],
       cwd: scratch,
       timeoutMs: 300000
     });
@@ -196,15 +197,23 @@ export const runContainerBenchmark = ({
   ctx,
   log,
   variants,
-  load1m
+  load1m,
+  base = join(repoRoot, 'generated', 'container'),
+  sourceFile,
+  dependencyChange
 }: {
   repoRoot: string;
   ctx: ToolContext;
   log: (message: string) => void;
   variants: string[];
   load1m: () => number;
+  /** Where the variants' projects are, the file the source edit appends to, and the dependency the rebuild moves. */
+  base?: string;
+  sourceFile?: string;
+  dependencyChange?: { name: string; from: string; to: string };
 }) => {
-  const base = join(repoRoot, 'generated', 'container');
+  if (sourceFile) SOURCE_FILE = sourceFile;
+  if (dependencyChange) DEPENDENCY_CHANGE = dependencyChange;
   const out: Record<string, unknown>[] = [];
 
   if (docker(['version']).exitCode !== 0) return [{ error: 'docker is not available' }];

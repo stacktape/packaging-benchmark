@@ -1,0 +1,12 @@
+# Cloud Native Buildpacks project descriptor for the `paketo` variant. Paketo runs only the npm scripts that
+# BP_NODE_RUN_SCRIPTS names, so without it the TypeScript is never compiled. The local node_modules and build output
+# stay out of the build, as .dockerignore keeps them out of the Docker builds.
+[_]
+schema-version = "0.2"
+
+[io.buildpacks]
+exclude = ["node_modules", "dist", ".stacktape", "tmp"]
+
+[[io.buildpacks.build.env]]
+name = "BP_NODE_RUN_SCRIPTS"
+value = "build"

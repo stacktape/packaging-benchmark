@@ -45,6 +45,8 @@ export type AppFixture = {
   notes: Partial<Record<AppTool, string[]>>;
   /** Why SST was not deployed for this fixture, when it was not. */
   sstNotDeployed?: string;
+  /** Tools that could not package the fixture after one reasonable attempt, and why. */
+  notPackageable?: Partial<Record<AppTool, string>>;
 };
 
 const readJson = async <T>(path: string): Promise<T> => JSON.parse(await readFile(path, 'utf8')) as T;
@@ -180,6 +182,9 @@ const renderReadme = async (fixture: AppFixture) => {
     for (const tool of noted) {
       lines.push(`**${TOOL_LABELS[tool]}**`, '', ...(fixture.notes[tool] ?? []).map((note) => `- ${note}`), '');
     }
+    for (const [tool, reason] of Object.entries(fixture.notPackageable ?? {})) {
+      lines.push(`**${TOOL_LABELS[tool as AppTool]} could not package this fixture without extra work.** ${reason}`, '');
+    }
     if (fixture.sstNotDeployed) lines.push(`**SST was not measured for this fixture.** ${fixture.sstNotDeployed}`, '');
   }
   return `${lines.join('\n').replace(/\n{3,}/g, '\n\n').trimEnd()}\n`;
@@ -199,7 +204,17 @@ const main = async () => {
     await writeFile(join(appsRoot, fixture.id, 'README.md'), readme);
     process.stdout.write(`generated ${fixture.id} (${fixture.tools.join(', ')})\n`);
   }
+  // The container comparison: the Express starter as a long-running service, one project per build path.
+  if (!only.length || only.includes(CONTAINER_FIXTURE)) {
+    for (const variant of CONTAINER_VARIANTS) {
+      await writeProject({ id: CONTAINER_FIXTURE } as AppFixture, variant as unknown as AppTool);
+    }
+    process.stdout.write(`generated ${CONTAINER_FIXTURE} (${CONTAINER_VARIANTS.join(', ')})\n`);
+  }
 };
+
+export const CONTAINER_FIXTURE = 'container-expressjs-api-postgres';
+export const CONTAINER_VARIANTS = ['stacktape', 'typical', 'nixpacks', 'paketo'] as const;
 
 const invokedDirectly = process.argv[1] !== undefined && fileURLToPath(import.meta.url) === resolve(process.argv[1]);
 if (invokedDirectly) await main();

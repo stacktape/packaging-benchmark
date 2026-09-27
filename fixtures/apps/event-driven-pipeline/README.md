@@ -316,3 +316,23 @@ export default $config({
 </td>
 </tr>
 </table>
+
+## Notes per tool
+
+**Stacktape**
+
+- Stacktape's defaults: Node.js 24, ESM, a source map without embedded sources, `@aws-sdk/*` left to the runtime, shared code split into a layer when several functions use it.
+
+**AWS CDK**
+
+- Project layout, `cdk.json` (87 feature flags, `"app": "npx tsc && npx tsx bin/<app>.ts"`) and `tsconfig.json` are what `cdk init app --language typescript` writes (aws-cdk 2.1142.0), minus Jest. Every synth type-checks the project first, as a CDK user's does. `esbuild` is a devDependency, so bundling is local, not in Docker.
+- `NodejsFunction` defaults: no minification, no source map, CommonJS, `@aws-sdk/*` left to the runtime for an explicit Node.js 24 runtime.
+
+**Serverless Framework**
+
+- Built-in esbuild (no plugin). Its defaults: bundle, no minification, a source map inside the zip (with `NODE_OPTIONS=--enable-source-maps`), `@aws-sdk/*` left to the runtime, one zip for the whole service.
+- `serverless package` needs a licence key and AWS credentials: it reads CloudFormation and an SSM parameter, and creates a deployment bucket and that parameter when they are missing (it did so in this account on 21 September). The `serverless` npm package does not pin the framework: the runs used 4.43.0 from `~/.serverless/releases`.
+
+**SST**
+
+- `sst.aws.Function` defaults in 4.17.1: Node.js 24, ESM, not minified (the docs say `minify` defaults to true; 4.17.1 does not apply it), a source map uploaded to SST's bucket rather than shipped in the zip, and the AWS SDK bundled unless `nodejs.esbuild.external` names it, which these configurations do where the application imports the SDK.
