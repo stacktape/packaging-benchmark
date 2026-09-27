@@ -706,7 +706,7 @@ const main = async (): Promise<void> => {
     const extract = {
       source: 'https://github.com/stacktape/packaging-benchmark',
       measuredOn: String(env.capturedAt).slice(0, 10),
-      machine: `${env.cpu.model.trim()}, ${env.os.distribution}${env.os.wsl ? ' on WSL2' : ''}`,
+      machine: `${String(env.cpu.model).replace(/\(R\)|\(TM\)|\d+th Gen /g, '').replace(/\s+/g, ' ').trim()}, ${env.os.distribution}${env.os.wsl ? ' on WSL2' : ''}`,
       stacktapeCommit: env.stacktape.builtFromCommit,
       stacktapeVersion: env.stacktape.binary.version,
       toolVersions: {
@@ -715,7 +715,8 @@ const main = async (): Promise<void> => {
         serverless: '4.43.0',
         sst: env.toolVersions.sst
       },
-      samples: SAMPLES,
+      // The samples each median is taken from, as recorded, not this command's setting.
+      samples: Math.max(...(results.apps as Any[]).filter((m) => m.ok).map((m) => m.cold.samples.length)),
       applications: [
         'expressjs-api-postgres',
         'hono-api',
