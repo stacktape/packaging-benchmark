@@ -142,3 +142,7 @@ export default $config({
 </td>
 </tr>
 </table>
+
+## Notes per tool
+
+**SST was not measured for this fixture.** `sst diff` builds the site only when its inputs are known. This site's environment carries the database's outputs, so a preview of a stage that was never deployed builds nothing (measured: the preview ran, `.open-next` was not created), and deploying it needs RDS, a NAT gateway and CloudFront, which the benchmark's AWS rules keep for tests that are about them.

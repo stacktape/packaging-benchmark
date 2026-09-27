@@ -225,3 +225,7 @@ export default $config({
 </td>
 </tr>
 </table>
+
+## Notes per tool
+
+**SST was not measured for this fixture.** SST builds function bundles only for a deployed stage, and this stage includes an RDS instance and a VPC with a NAT gateway. The benchmark's AWS rules keep RDS and NAT gateways for tests that are about them, so the stage was not deployed.

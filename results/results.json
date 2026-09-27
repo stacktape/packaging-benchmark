@@ -1865,7 +1865,7 @@
       "fixture": "expressjs-api-postgres",
       "tool": "serverless",
       "ok": false,
-      "error": "exit 1: Packaging \"expressjs-api-postgres\" for stage \"dev\" (eu-west-1)\n(node:31484) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.\n(Use `node --trace-deprecation ...` to show where the warning was created)\n\n✖ Error: Failed to install dependencies with the \"npm\" packager.\n\nError: Could not find Prisma Schema that is required for this command.\nYou can either provide it with `--schema` argument,\nset it in your Prisma Config file (e.g., `prisma.config.ts`),\nset it as `prisma.schema` in your package.json,\nor put it into the default location (`./prisma/schema.prisma`, or `./schema.prisma`.\nChecked following paths:\n\nschema.prisma: file not found\nprisma/schema.prisma: file not found\n\nSee also https://pris.ly/d/prisma-schema-location\nnpm error code 1\nnpm error path ~/projects/stacktape-packaging-benchmark/generated/apps/expressjs-api-postgres/serverless/.serverless/build\nnpm error command failed\nnpm error command sh -c prisma generate\nnpm error A complete log of this run can be found in: ~/.npm/_logs/2026-09-26T23_36_03_642Z-debug-0.log\n\n\n\n> expressjs-api-postgres@1.0.0 postinstall\n> prisma generate\n\n\n    at ChildProcess.<anonymous> (file://~/.serverless/releases/4.43.0/package/dist/sf-core.js:4138:20)\n    at ChildProcess.emit (node:events:521:24)\n    at ChildProcess.emit (node:domain:489:12)\n    at maybeClose (node:internal/child_process:1124:16)\n    at ChildProcess._handle.onexit (node:internal/child_process:306:5)\n\nFor help, try the following:\n  • Run the command again with the \"--debug\" option\n  • Review the docs: https://www.serverless.com/framework/docs/\n\n",
+      "error": "exit 1: Packaging \"expressjs-api-postgres\" for stage \"dev\" (eu-west-1)\n(node:31484) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.\n(Use `node --trace-deprecation ...` to show where the warning was created)\n\n\u2716 Error: Failed to install dependencies with the \"npm\" packager.\n\nError: Could not find Prisma Schema that is required for this command.\nYou can either provide it with `--schema` argument,\nset it in your Prisma Config file (e.g., `prisma.config.ts`),\nset it as `prisma.schema` in your package.json,\nor put it into the default location (`./prisma/schema.prisma`, or `./schema.prisma`.\nChecked following paths:\n\nschema.prisma: file not found\nprisma/schema.prisma: file not found\n\nSee also https://pris.ly/d/prisma-schema-location\nnpm error code 1\nnpm error path ~/projects/stacktape-packaging-benchmark/generated/apps/expressjs-api-postgres/serverless/.serverless/build\nnpm error command failed\nnpm error command sh -c prisma generate\nnpm error A complete log of this run can be found in: ~/.npm/_logs/2026-09-26T23_36_03_642Z-debug-0.log\n\n\n\n> expressjs-api-postgres@1.0.0 postinstall\n> prisma generate\n\n\n    at ChildProcess.<anonymous> (file://~/.serverless/releases/4.43.0/package/dist/sf-core.js:4138:20)\n    at ChildProcess.emit (node:events:521:24)\n    at ChildProcess.emit (node:domain:489:12)\n    at maybeClose (node:internal/child_process:1124:16)\n    at ChildProcess._handle.onexit (node:internal/child_process:306:5)\n\nFor help, try the following:\n  \u2022 Run the command again with the \"--debug\" option\n  \u2022 Review the docs: https://www.serverless.com/framework/docs/\n\n",
       "command": "SERVERLESS_ACCESS_KEY=AK1OIbkIxokCdJJNULdXHPAiIzTZTRT0k30WLQPG3MIfu AWS_PROFILE=default AWS_REGION=eu-west-1 SLS_TELEMETRY_DISABLED=1 ~/projects/stacktape-packaging-benchmark/generated/apps/expressjs-api-postgres/serverless/node_modules/.bin/serverless package --config serverless.yml --stage dev --region eu-west-1",
       "cold": null,
       "edit": null,
@@ -2358,7 +2358,539 @@
       "measuredAt": "2026-09-26T23:44:41.591Z"
     }
   ],
-  "appsSst": null,
+  "appsSst": {
+    "measurements": [
+      {
+        "fixture": "hono-api",
+        "tool": "sst",
+        "app": "hono-api",
+        "stage": "bench-a68482",
+        "deployed": true,
+        "load1mBefore": 0.22,
+        "deployMs": 29963,
+        "ok": true,
+        "cold": {
+          "samples": [
+            4199,
+            4176,
+            4398,
+            4263,
+            4377
+          ],
+          "medianMs": 4263
+        },
+        "edit": {
+          "samples": [
+            4636,
+            4372,
+            4375,
+            4348,
+            4271
+          ],
+          "medianMs": 4372,
+          "changes": [
+            {
+              "changedCount": 2,
+              "totalCount": 2,
+              "changedZippedBytes": 49425,
+              "changedNames": [
+                "ApiGatewayRouteBbovcaHandler",
+                "ApiGatewayRouteBbovcaHandler source map"
+              ]
+            },
+            {
+              "changedCount": 2,
+              "totalCount": 2,
+              "changedZippedBytes": 49411,
+              "changedNames": [
+                "ApiGatewayRouteBbovcaHandler",
+                "ApiGatewayRouteBbovcaHandler source map"
+              ]
+            },
+            {
+              "changedCount": 2,
+              "totalCount": 2,
+              "changedZippedBytes": 49425,
+              "changedNames": [
+                "ApiGatewayRouteBbovcaHandler",
+                "ApiGatewayRouteBbovcaHandler source map"
+              ]
+            },
+            {
+              "changedCount": 2,
+              "totalCount": 2,
+              "changedZippedBytes": 49411,
+              "changedNames": [
+                "ApiGatewayRouteBbovcaHandler",
+                "ApiGatewayRouteBbovcaHandler source map"
+              ]
+            },
+            {
+              "changedCount": 2,
+              "totalCount": 2,
+              "changedZippedBytes": 49425,
+              "changedNames": [
+                "ApiGatewayRouteBbovcaHandler",
+                "ApiGatewayRouteBbovcaHandler source map"
+              ]
+            }
+          ]
+        },
+        "artifacts": [
+          {
+            "name": "ApiGatewayRouteBbovcaHandler",
+            "kind": "function",
+            "unzippedBytes": 75486,
+            "zippedBytes": 18443,
+            "toolZipBytes": 22142,
+            "contentHash": "bc6379386672cd71e0df68a0309a038e1033afe0775e4af9fbf846984dea8852",
+            "fileCount": 2
+          },
+          {
+            "name": "ApiGatewayRouteBbovcaHandler source map",
+            "kind": "asset",
+            "unzippedBytes": 132736,
+            "zippedBytes": 30968,
+            "toolZipBytes": 132736,
+            "contentHash": "1f30c39905d07d9e1d18926b8b768fd270d1e1dafdd22c5f6b1d2d5667fff162",
+            "fileCount": 1
+          }
+        ],
+        "totals": {
+          "functionArtifacts": 1,
+          "layerArtifacts": 0,
+          "otherAssets": 1,
+          "functionZippedBytes": 18443,
+          "functionUnzippedBytes": 75486,
+          "layerZippedBytes": 0,
+          "otherAssetZippedBytes": 30968,
+          "largestFunctionUnzippedBytes": 75486,
+          "firstDeployUploadZippedBytes": 49411,
+          "toolPlumbingZippedBytes": 0
+        },
+        "cleanup": {
+          "status": "removed",
+          "verifiedGone": true,
+          "events": [
+            {
+              "at": "2026-09-26T23:47:16.521Z",
+              "what": "sst deploy started"
+            },
+            {
+              "at": "2026-09-26T23:47:44.672Z",
+              "what": "sst deploy exit 0 in 29963 ms"
+            },
+            {
+              "at": "2026-09-26T23:48:29.060Z",
+              "what": "sst remove started"
+            },
+            {
+              "at": "2026-09-26T23:48:41.501Z",
+              "what": "sst remove exit 0 in 12440 ms"
+            },
+            {
+              "at": "2026-09-26T23:48:43.278Z",
+              "what": "verified: 0 tagged resources left, passphrase parameter gone"
+            }
+          ]
+        },
+        "awsMs": 92080,
+        "load1mAfter": 0.35
+      },
+      {
+        "fixture": "monorepo-typescript-pnpm",
+        "tool": "sst",
+        "app": "monorepo-typescript-pnpm",
+        "stage": "bench-a06561",
+        "deployed": true,
+        "load1mBefore": 0.57,
+        "deployMs": 23803,
+        "ok": true,
+        "cold": {
+          "samples": [
+            12009,
+            15679,
+            4421,
+            4324,
+            4545
+          ],
+          "medianMs": 4545
+        },
+        "edit": {
+          "samples": [
+            4477,
+            4558,
+            4544,
+            4514,
+            4802
+          ],
+          "medianMs": 4544,
+          "changes": [
+            {
+              "changedCount": 2,
+              "totalCount": 2,
+              "changedZippedBytes": 1376,
+              "changedNames": [
+                "MyApiGatewayRouteTzvnftHandler",
+                "MyApiGatewayRouteTzvnftHandler source map"
+              ]
+            },
+            {
+              "changedCount": 2,
+              "totalCount": 2,
+              "changedZippedBytes": 1357,
+              "changedNames": [
+                "MyApiGatewayRouteTzvnftHandler",
+                "MyApiGatewayRouteTzvnftHandler source map"
+              ]
+            },
+            {
+              "changedCount": 2,
+              "totalCount": 2,
+              "changedZippedBytes": 1376,
+              "changedNames": [
+                "MyApiGatewayRouteTzvnftHandler",
+                "MyApiGatewayRouteTzvnftHandler source map"
+              ]
+            },
+            {
+              "changedCount": 2,
+              "totalCount": 2,
+              "changedZippedBytes": 1357,
+              "changedNames": [
+                "MyApiGatewayRouteTzvnftHandler",
+                "MyApiGatewayRouteTzvnftHandler source map"
+              ]
+            },
+            {
+              "changedCount": 2,
+              "totalCount": 2,
+              "changedZippedBytes": 1376,
+              "changedNames": [
+                "MyApiGatewayRouteTzvnftHandler",
+                "MyApiGatewayRouteTzvnftHandler source map"
+              ]
+            }
+          ]
+        },
+        "artifacts": [
+          {
+            "name": "MyApiGatewayRouteTzvnftHandler",
+            "kind": "function",
+            "unzippedBytes": 971,
+            "zippedBytes": 725,
+            "toolZipBytes": 849,
+            "contentHash": "5f977a6a91a339500107e4d181744fc475674e22fcba2cc2c291fc6a104e25f1",
+            "fileCount": 2
+          },
+          {
+            "name": "MyApiGatewayRouteTzvnftHandler source map",
+            "kind": "asset",
+            "unzippedBytes": 908,
+            "zippedBytes": 632,
+            "toolZipBytes": 908,
+            "contentHash": "b5b9ef0543b5a12cc18fae7b179b525a61d2839521d68bb02caf3e1c62f84e19",
+            "fileCount": 1
+          }
+        ],
+        "totals": {
+          "functionArtifacts": 1,
+          "layerArtifacts": 0,
+          "otherAssets": 1,
+          "functionZippedBytes": 725,
+          "functionUnzippedBytes": 971,
+          "layerZippedBytes": 0,
+          "otherAssetZippedBytes": 632,
+          "largestFunctionUnzippedBytes": 971,
+          "firstDeployUploadZippedBytes": 1357,
+          "toolPlumbingZippedBytes": 0
+        },
+        "cleanup": {
+          "status": "removed",
+          "verifiedGone": true,
+          "events": [
+            {
+              "at": "2026-09-26T23:55:09.776Z",
+              "what": "sst deploy started"
+            },
+            {
+              "at": "2026-09-26T23:55:31.799Z",
+              "what": "sst deploy exit 0 in 23803 ms"
+            },
+            {
+              "at": "2026-09-26T23:56:43.789Z",
+              "what": "sst remove started"
+            },
+            {
+              "at": "2026-09-26T23:56:54.425Z",
+              "what": "sst remove exit 0 in 12500 ms"
+            },
+            {
+              "at": "2026-09-26T23:56:56.253Z",
+              "what": "verified: 0 tagged resources left, passphrase parameter gone"
+            }
+          ]
+        },
+        "awsMs": 113716,
+        "load1mAfter": 0.91
+      },
+      {
+        "fixture": "multi-step-workflow",
+        "tool": "sst",
+        "app": "multi-step-workflow",
+        "stage": "bench-0eda4c",
+        "deployed": true,
+        "load1mBefore": 1.23,
+        "deployMs": 62386,
+        "ok": true,
+        "cold": {
+          "samples": [
+            13193,
+            10534,
+            4664,
+            4733,
+            17884
+          ],
+          "medianMs": 10534
+        },
+        "edit": {
+          "samples": [
+            10627,
+            12409,
+            7923,
+            4651,
+            13238
+          ],
+          "medianMs": 10627,
+          "changes": [
+            {
+              "changedCount": 2,
+              "totalCount": 8,
+              "changedZippedBytes": 49930,
+              "changedNames": [
+                "StartWorkflow",
+                "StartWorkflow source map"
+              ]
+            },
+            {
+              "changedCount": 2,
+              "totalCount": 8,
+              "changedZippedBytes": 49919,
+              "changedNames": [
+                "StartWorkflow",
+                "StartWorkflow source map"
+              ]
+            },
+            {
+              "changedCount": 2,
+              "totalCount": 8,
+              "changedZippedBytes": 49930,
+              "changedNames": [
+                "StartWorkflow",
+                "StartWorkflow source map"
+              ]
+            },
+            {
+              "changedCount": 2,
+              "totalCount": 8,
+              "changedZippedBytes": 49919,
+              "changedNames": [
+                "StartWorkflow",
+                "StartWorkflow source map"
+              ]
+            },
+            {
+              "changedCount": 2,
+              "totalCount": 8,
+              "changedZippedBytes": 49930,
+              "changedNames": [
+                "StartWorkflow",
+                "StartWorkflow source map"
+              ]
+            }
+          ]
+        },
+        "artifacts": [
+          {
+            "name": "GenerateReportFunction",
+            "kind": "function",
+            "unzippedBytes": 1127,
+            "zippedBytes": 749,
+            "toolZipBytes": 879,
+            "contentHash": "37cca003106dd66a0409e69796138ac7e362632ae83affa7fcef1da8faac636d",
+            "fileCount": 2
+          },
+          {
+            "name": "GenerateReportFunction source map",
+            "kind": "asset",
+            "unzippedBytes": 1103,
+            "zippedBytes": 645,
+            "toolZipBytes": 1103,
+            "contentHash": "ca128ddf244d1a7fd19ff4214b9f1733b28d6d0347613698565c7d0af788e353",
+            "fileCount": 1
+          },
+          {
+            "name": "ProcessDataFunction",
+            "kind": "function",
+            "unzippedBytes": 960,
+            "zippedBytes": 710,
+            "toolZipBytes": 834,
+            "contentHash": "ccf61776f8f1f67722c63fd7d555e264ed4e133ac666b442630f7d0c1a799516",
+            "fileCount": 2
+          },
+          {
+            "name": "ProcessDataFunction source map",
+            "kind": "asset",
+            "unzippedBytes": 782,
+            "zippedBytes": 577,
+            "toolZipBytes": 782,
+            "contentHash": "3c87250bd4dc7a25ff9a1cf19360584dbea6fcd6d9afdcedcb47e632e3166c5d",
+            "fileCount": 1
+          },
+          {
+            "name": "StartWorkflow",
+            "kind": "function",
+            "unzippedBytes": 76238,
+            "zippedBytes": 18773,
+            "toolZipBytes": 22496,
+            "contentHash": "1cd96e7b33ea025f7e61ae0f0784764eb4ad5899c1113e7b5bfc8f693531bdfa",
+            "fileCount": 2
+          },
+          {
+            "name": "StartWorkflow source map",
+            "kind": "asset",
+            "unzippedBytes": 133642,
+            "zippedBytes": 31146,
+            "toolZipBytes": 133642,
+            "contentHash": "575ef44aa8545620a32244903066e57149d111e5d4851394de8b55cb47d66626",
+            "fileCount": 1
+          },
+          {
+            "name": "ValidateInputFunction",
+            "kind": "function",
+            "unzippedBytes": 926,
+            "zippedBytes": 692,
+            "toolZipBytes": 822,
+            "contentHash": "c181f4f1a7b3f592e6118a05c8b745e67dc4ac627cbdba5ee720ea5556c93133",
+            "fileCount": 2
+          },
+          {
+            "name": "ValidateInputFunction source map",
+            "kind": "asset",
+            "unzippedBytes": 682,
+            "zippedBytes": 538,
+            "toolZipBytes": 682,
+            "contentHash": "f6df197b947701ed1d74e0ee991cc7b0b798addfa8f85ea8739998393b563315",
+            "fileCount": 1
+          }
+        ],
+        "totals": {
+          "functionArtifacts": 4,
+          "layerArtifacts": 0,
+          "otherAssets": 4,
+          "functionZippedBytes": 20924,
+          "functionUnzippedBytes": 79251,
+          "layerZippedBytes": 0,
+          "otherAssetZippedBytes": 32906,
+          "largestFunctionUnzippedBytes": 76238,
+          "firstDeployUploadZippedBytes": 53830,
+          "toolPlumbingZippedBytes": 0
+        },
+        "cleanup": {
+          "status": "removed",
+          "verifiedGone": true,
+          "events": [
+            {
+              "at": "2026-09-27T00:01:46.859Z",
+              "what": "sst deploy started"
+            },
+            {
+              "at": "2026-09-27T00:02:45.606Z",
+              "what": "sst deploy exit 0 in 62386 ms"
+            },
+            {
+              "at": "2026-09-27T00:04:25.146Z",
+              "what": "sst remove started"
+            },
+            {
+              "at": "2026-09-27T00:04:46.288Z",
+              "what": "sst remove exit 0 in 22962 ms"
+            },
+            {
+              "at": "2026-09-27T00:04:48.116Z",
+              "what": "verified: 0 tagged resources left, passphrase parameter gone"
+            }
+          ]
+        },
+        "awsMs": 192197,
+        "load1mAfter": 0.49
+      }
+    ],
+    "notMeasured": [
+      {
+        "fixture": "fullstack-nextjs-drizzle",
+        "reason": "sst diff of a stage that was never deployed ran only the Pulumi preview (5-15 s) and built nothing: the site environment carries the database outputs, which are unknown before a first deploy. Deploying needs RDS, a NAT gateway and CloudFront.",
+        "discardedPreviewSamplesMs": [
+          5061,
+          14568,
+          6362,
+          6462,
+          12241
+        ],
+        "stage": "bench-f7de0e",
+        "cleanup": {
+          "status": "removed",
+          "verifiedGone": true,
+          "events": [
+            {
+              "at": "2026-09-27T00:04:59.593Z",
+              "what": "diff only, nothing deployed"
+            },
+            {
+              "at": "2026-09-27T00:06:59.759Z",
+              "what": "verified: 0 tagged resources left, passphrase parameter gone"
+            }
+          ]
+        }
+      },
+      {
+        "fixture": "expressjs-api-postgres",
+        "reason": "not deployed: the stage includes RDS and a NAT gateway"
+      }
+    ],
+    "bootstrapCleanup": {
+      "removed": true,
+      "buckets": 2,
+      "bucketsLeft": 0,
+      "repoLeft": false,
+      "parameterLeft": false
+    },
+    "interruptedStage": {
+      "fixture": "multi-step-workflow",
+      "stage": "bench-b4b609",
+      "deployedFor": "about 13 minutes, idle",
+      "removal": "by exact ARN from its tags after the runner was killed; 17 resources plus the passphrase parameter; verified gone"
+    },
+    "finalVerification": {
+      "at": "2026-09-27T00:11:36.821930+00:00",
+      "stages": [
+        "bench-a68482",
+        "bench-137d5a",
+        "bench-1cc261",
+        "bench-a06561",
+        "bench-b4b609",
+        "bench-c55f6b",
+        "bench-0eda4c",
+        "bench-f7de0e",
+        "bench-probe1"
+      ],
+      "taggedResourcesLeft": 0,
+      "iamRolesLeft": 0,
+      "sstParametersInRegion": 0,
+      "sstBucketsInRegion": 0,
+      "sstAssetRepository": "absent"
+    }
+  },
   "appContainers": [],
   "lambda": [
     {

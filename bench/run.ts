@@ -52,6 +52,7 @@ import { runContainerBenchmark } from './src/containers.ts';
 import { runSstBenchmark } from './src/sst.ts';
 import { loadAppFixtures, appsOutRoot } from '../fixtures/apps.ts';
 import { type AppMeasurement, measureApp } from './src/apps.ts';
+import { checkAccount, cleanupOnly, removeBootstrap, runSstApp } from './src/sst-apps.ts';
 
 const repoRoot = dirname(dirname(fileURLToPath(import.meta.url)));
 const generatedDir = join(repoRoot, 'generated');
@@ -660,6 +661,34 @@ const main = async (): Promise<void> => {
   mkdirSync(resultsDir, { recursive: true });
 
   if (command === 'apps-install') return appsInstall();
+  if (command === 'sst-apps') {
+    const statePath = join(tmpDir, 'sst-apps-state.json');
+    const dirFor = (fixture: string) => join(appsOutRoot, fixture, 'sst');
+    if (!ctx.allowSstAwsBootstrap) throw new Error('Refusing to run SST: it deploys to AWS. Set BENCH_ALLOW_SST_AWS_BOOTSTRAP=1.');
+    checkAccount();
+    if (process.argv.includes('--cleanup-only')) return cleanupOnly(statePath, dirFor, log);
+    if (process.argv.includes('--cleanup-bootstrap')) {
+      const results = loadResults();
+      results.appsSst = { ...((results.appsSst as Any) ?? {}), bootstrapCleanup: removeBootstrap(statePath, log) };
+      saveResults(results);
+      return;
+    }
+    const results = loadResults();
+    const previous = ((results.appsSst as Any)?.measurements ?? []) as Any[];
+    for (const fixture of await selectedApps()) {
+      if (!fixture.tools.includes('sst') || fixture.sstNotDeployed) continue;
+      log(`sst ${fixture.id}: one-minute load ${load1m()}`);
+      waitForQuiet();
+      const measurement = runSstApp({ fixture, dir: dirFor(fixture.id), samples: SAMPLES, tmpDir, statePath, log, load1m });
+      results.appsSst = {
+        ...((results.appsSst as Any) ?? {}),
+        measurements: [...previous.filter((m) => m.fixture !== fixture.id), measurement]
+      };
+      saveResults(results);
+      log(`sst ${fixture.id}: ${measurement.ok ? `cold ${(measurement.cold as Any)?.medianMs} ms, edit ${(measurement.edit as Any)?.medianMs} ms` : `FAILED ${String(measurement.error).slice(0, 300)}`}, AWS ${measurement.awsMs} ms`);
+    }
+    return;
+  }
   if (command === 'apps') return apps();
 
   if (command === 'install') return install();
