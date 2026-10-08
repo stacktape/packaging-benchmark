@@ -24,3 +24,7 @@ generated/**/package-lock.json
 generated/**/.next/
 generated/**/.open-next/
 generated/**/next-env.d.ts.bak
+
+# Substantial fixtures are generated from pinned sources and locks.
+generated/reports-*/
+bench/__pycache__/
